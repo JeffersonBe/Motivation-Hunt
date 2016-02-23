@@ -56,9 +56,9 @@
 		B41BF3361C7D0D7200E27074 /* Motivation Hunt */ = {
 			isa = PBXGroup;
 			children = (
+				B41BF33B1C7D0D7200E27074 /* Main.storyboard */,
 				B41BF3371C7D0D7200E27074 /* AppDelegate.swift */,
 				B41BF3391C7D0D7200E27074 /* ViewController.swift */,
-				B41BF33B1C7D0D7200E27074 /* Main.storyboard */,
 				B41BF3411C7D0D7200E27074 /* Assets.xcassets */,
 				B41BF3431C7D0D7200E27074 /* LaunchScreen.storyboard */,
 				B41BF3461C7D0D7200E27074 /* Info.plist */,
