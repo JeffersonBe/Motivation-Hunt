@@ -7,12 +7,15 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		B41A9E271C7DAADB001635C2 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B41BF3391C7D0D7200E27074 /* ViewController.swift */; };
 		B41BF3381C7D0D7200E27074 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = B41BF3371C7D0D7200E27074 /* AppDelegate.swift */; };
-		B41BF33A1C7D0D7200E27074 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B41BF3391C7D0D7200E27074 /* ViewController.swift */; };
 		B41BF33D1C7D0D7200E27074 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = B41BF33B1C7D0D7200E27074 /* Main.storyboard */; };
-		B41BF3401C7D0D7200E27074 /* Motivation_Hunt.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = B41BF33E1C7D0D7200E27074 /* Motivation_Hunt.xcdatamodeld */; };
 		B41BF3421C7D0D7200E27074 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = B41BF3411C7D0D7200E27074 /* Assets.xcassets */; };
 		B41BF3451C7D0D7200E27074 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = B41BF3431C7D0D7200E27074 /* LaunchScreen.storyboard */; };
+		B41BF34E1C7D124600E27074 /* ChallengeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B41BF34D1C7D124600E27074 /* ChallengeViewController.swift */; };
+		B41BF3521C7D12C800E27074 /* MotivationHuntModel.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = B41BF3501C7D12C800E27074 /* MotivationHuntModel.xcdatamodeld */; };
+		B41BF3541C7D149500E27074 /* CoreDataStackManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = B41BF3531C7D149500E27074 /* CoreDataStackManager.swift */; };
+		B41BF3561C7D153300E27074 /* Challenge.swift in Sources */ = {isa = PBXBuildFile; fileRef = B41BF3551C7D153300E27074 /* Challenge.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -20,10 +23,13 @@
 		B41BF3371C7D0D7200E27074 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		B41BF3391C7D0D7200E27074 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
 		B41BF33C1C7D0D7200E27074 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
-		B41BF33F1C7D0D7200E27074 /* Motivation_Hunt.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = Motivation_Hunt.xcdatamodel; sourceTree = "<group>"; };
 		B41BF3411C7D0D7200E27074 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		B41BF3441C7D0D7200E27074 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		B41BF3461C7D0D7200E27074 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		B41BF34D1C7D124600E27074 /* ChallengeViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ChallengeViewController.swift; sourceTree = "<group>"; };
+		B41BF3511C7D12C800E27074 /* MotivationHuntModel.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = MotivationHuntModel.xcdatamodel; sourceTree = "<group>"; };
+		B41BF3531C7D149500E27074 /* CoreDataStackManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CoreDataStackManager.swift; sourceTree = "<group>"; };
+		B41BF3551C7D153300E27074 /* Challenge.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Challenge.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -56,15 +62,34 @@
 		B41BF3361C7D0D7200E27074 /* Motivation Hunt */ = {
 			isa = PBXGroup;
 			children = (
-				B41BF33B1C7D0D7200E27074 /* Main.storyboard */,
 				B41BF3371C7D0D7200E27074 /* AppDelegate.swift */,
-				B41BF3391C7D0D7200E27074 /* ViewController.swift */,
+				B41BF33B1C7D0D7200E27074 /* Main.storyboard */,
+				B41BF34F1C7D12A600E27074 /* Models */,
+				B41BF34C1C7D122400E27074 /* Controllers */,
 				B41BF3411C7D0D7200E27074 /* Assets.xcassets */,
 				B41BF3431C7D0D7200E27074 /* LaunchScreen.storyboard */,
 				B41BF3461C7D0D7200E27074 /* Info.plist */,
-				B41BF33E1C7D0D7200E27074 /* Motivation_Hunt.xcdatamodeld */,
 			);
 			path = "Motivation Hunt";
+			sourceTree = "<group>";
+		};
+		B41BF34C1C7D122400E27074 /* Controllers */ = {
+			isa = PBXGroup;
+			children = (
+				B41BF3391C7D0D7200E27074 /* ViewController.swift */,
+				B41BF34D1C7D124600E27074 /* ChallengeViewController.swift */,
+			);
+			name = Controllers;
+			sourceTree = "<group>";
+		};
+		B41BF34F1C7D12A600E27074 /* Models */ = {
+			isa = PBXGroup;
+			children = (
+				B41BF3501C7D12C800E27074 /* MotivationHuntModel.xcdatamodeld */,
+				B41BF3551C7D153300E27074 /* Challenge.swift */,
+				B41BF3531C7D149500E27074 /* CoreDataStackManager.swift */,
+			);
+			name = Models;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -138,9 +163,12 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				B41BF3401C7D0D7200E27074 /* Motivation_Hunt.xcdatamodeld in Sources */,
-				B41BF33A1C7D0D7200E27074 /* ViewController.swift in Sources */,
+				B41A9E271C7DAADB001635C2 /* ViewController.swift in Sources */,
+				B41BF3521C7D12C800E27074 /* MotivationHuntModel.xcdatamodeld in Sources */,
+				B41BF34E1C7D124600E27074 /* ChallengeViewController.swift in Sources */,
+				B41BF3561C7D153300E27074 /* Challenge.swift in Sources */,
 				B41BF3381C7D0D7200E27074 /* AppDelegate.swift in Sources */,
+				B41BF3541C7D149500E27074 /* CoreDataStackManager.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -290,17 +318,18 @@
 				B41BF34B1C7D0D7200E27074 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 
 /* Begin XCVersionGroup section */
-		B41BF33E1C7D0D7200E27074 /* Motivation_Hunt.xcdatamodeld */ = {
+		B41BF3501C7D12C800E27074 /* MotivationHuntModel.xcdatamodeld */ = {
 			isa = XCVersionGroup;
 			children = (
-				B41BF33F1C7D0D7200E27074 /* Motivation_Hunt.xcdatamodel */,
+				B41BF3511C7D12C800E27074 /* MotivationHuntModel.xcdatamodel */,
 			);
-			currentVersion = B41BF33F1C7D0D7200E27074 /* Motivation_Hunt.xcdatamodel */;
-			path = Motivation_Hunt.xcdatamodeld;
+			currentVersion = B41BF3511C7D12C800E27074 /* MotivationHuntModel.xcdatamodel */;
+			path = MotivationHuntModel.xcdatamodeld;
 			sourceTree = "<group>";
 			versionGroupType = wrapper.xcdatamodel;
 		};
