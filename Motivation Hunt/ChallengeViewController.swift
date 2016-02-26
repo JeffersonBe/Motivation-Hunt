@@ -55,7 +55,7 @@ class ChallengeViewController: UIViewController {
     lazy var fetchedResultsController: NSFetchedResultsController = {
 
         let fetchRequest = NSFetchRequest(entityName: "Challenge")
-        fetchRequest.sortDescriptors = [NSSortDescriptor(key: "endDate", ascending: true)]
+        fetchRequest.sortDescriptors = [NSSortDescriptor(key: "completed", ascending: true)]
 
         let fetchedResultsController = NSFetchedResultsController(fetchRequest: fetchRequest,
             managedObjectContext: self.sharedContext,
@@ -70,7 +70,6 @@ class ChallengeViewController: UIViewController {
 
     func showAddChallenge() {
         editMode = editMode ? false : true
-
         if editMode {
             showAddChallengeView()
         } else {
@@ -90,6 +89,7 @@ class ChallengeViewController: UIViewController {
 
     func showAddChallengeView() {
         dispatch_async(dispatch_get_main_queue()) {
+            self.challengeTextField.text = ""
             let button = UIBarButtonItem(barButtonSystemItem: UIBarButtonSystemItem.Cancel, target: self, action: "showAddChallenge")
             self.addChallengeView.hidden = false
             self.view.insertSubview(self.dimView, belowSubview: (self.navigationController?.navigationBar)!)
@@ -106,8 +106,8 @@ class ChallengeViewController: UIViewController {
             self.addChallengeView.hidden = true
             UIView.animateWithDuration(0.3, animations: {
                 self.dimView.alpha = 0
-            }, completion: { finished in
-                self.dimView.removeFromSuperview()
+                }, completion: { finished in
+                    self.dimView.removeFromSuperview()
             })
             let button = UIBarButtonItem(barButtonSystemItem: UIBarButtonSystemItem.Add, target: self, action: "showAddChallenge")
             self.navigationItem.rightBarButtonItem = button
@@ -125,35 +125,47 @@ extension ChallengeViewController: UITableViewDataSource, UITableViewDelegate {
     func tableView(tableView: UITableView,
         cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
             let cell = tableView.dequeueReusableCellWithIdentifier("Cell", forIndexPath: indexPath)
-            let challenge = fetchedResultsController.objectAtIndexPath(indexPath) as! Challenge
-
-            if let detailTextLabel = cell.detailTextLabel {
-                detailTextLabel.text = challenge.endDate.description
-            }
-
-            if let textLabel = cell.textLabel {
-                textLabel.text = challenge.challengeDescription
-            }
-
+            configureCell(cell, atIndexPath: indexPath)
             return cell
     }
 
-    func tableView(tableView: UITableView,
-        commitEditingStyle editingStyle: UITableViewCellEditingStyle,
-        forRowAtIndexPath indexPath: NSIndexPath) {
+    func tableView(tableView: UITableView, editActionsForRowAtIndexPath indexPath: NSIndexPath) -> [UITableViewRowAction]? {
+        let challenge = self.fetchedResultsController.objectAtIndexPath(indexPath) as! Challenge
 
-            switch (editingStyle) {
-            case .Delete:
-                let challenge = fetchedResultsController.objectAtIndexPath(indexPath) as! Challenge
-                sharedContext.deleteObject(challenge)
+        if challenge.completed {
+            let delete = UITableViewRowAction(style: .Normal, title: "Delete") { action, index in
+                let challenge = self.fetchedResultsController.objectAtIndexPath(indexPath) as! Challenge
+                self.sharedContext.deleteObject(challenge)
                 CoreDataStackManager.sharedInstance.saveContext()
-            default:
-                break
             }
+            delete.backgroundColor = UIColor.redColor()
+
+            return [delete]
+        } else {
+            let complete = UITableViewRowAction(style: .Normal, title: "Completed") { action, index in
+                let challenge = self.fetchedResultsController.objectAtIndexPath(indexPath) as! Challenge
+                challenge.completed = true
+                CoreDataStackManager.sharedInstance.saveContext()
+                tableView.setEditing(false, animated: true)
+            }
+            complete.backgroundColor = UIColor.greenColor()
+
+            let delete = UITableViewRowAction(style: .Normal, title: "Delete") { action, index in
+                let challenge = self.fetchedResultsController.objectAtIndexPath(indexPath) as! Challenge
+                self.sharedContext.deleteObject(challenge)
+                CoreDataStackManager.sharedInstance.saveContext()
+            }
+            delete.backgroundColor = UIColor.redColor()
+            return [complete, delete]
+        }
     }
 
     func configureCell(cell: UITableViewCell, atIndexPath indexPath: NSIndexPath) {
         let challenge = fetchedResultsController.objectAtIndexPath(indexPath) as! Challenge
+
+        if challenge.completed {
+            cell.backgroundColor = UIColor.greenColor()
+        }
 
         if let detailTextLabel = cell.detailTextLabel {
             detailTextLabel.text = challenge.endDate.description
@@ -205,7 +217,7 @@ extension ChallengeViewController: NSFetchedResultsControllerDelegate {
             }
         }
     }
-
+    
     func controllerWillChangeContent(controller: NSFetchedResultsController) {
         tableView.beginUpdates()
     }
