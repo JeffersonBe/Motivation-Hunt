@@ -1,5 +1,5 @@
 //
-//  ViewController.swift
+//  NewsFeedViewController.swift
 //  Motivation Hunt
 //
 //  Created by Jefferson Bonnaire on 23/02/2016.
@@ -7,9 +7,12 @@
 //
 
 import UIKit
+import YouTubePlayer
 
-class ViewController: UIViewController {
+class NewsFeedViewController: UIViewController {
 
+    @IBOutlet weak var collectionView: UICollectionView!
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view, typically from a nib.
@@ -21,3 +24,5 @@ class ViewController: UIViewController {
     }
 }
 
+extension NewsFeedViewController: UICollectionViewDelegate {
+}

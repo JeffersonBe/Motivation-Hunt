@@ -193,7 +193,7 @@
         <!--Item 1-->
         <scene sceneID="r1M-em-FTm">
             <objects>
-                <viewController id="Mbg-L5-1i3" sceneMemberID="viewController">
+                <viewController automaticallyAdjustsScrollViewInsets="NO" id="Mbg-L5-1i3" customClass="NewsFeedViewController" customModule="Motivation_Hunt" customModuleProvider="target" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="edL-EE-U1J"/>
                         <viewControllerLayoutGuide type="bottom" id="VpH-r8-WWS"/>
@@ -201,10 +201,45 @@
                     <view key="view" contentMode="scaleToFill" id="ba2-6I-Vxh">
                         <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="yGc-r1-FtD">
+                                <rect key="frame" x="0.0" y="64" width="600" height="487"/>
+                                <collectionViewFlowLayout key="collectionViewLayout" minimumLineSpacing="10" minimumInteritemSpacing="10" id="WNX-qI-PkX">
+                                    <size key="itemSize" width="600" height="222"/>
+                                    <size key="headerReferenceSize" width="0.0" height="0.0"/>
+                                    <size key="footerReferenceSize" width="0.0" height="0.0"/>
+                                    <inset key="sectionInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
+                                </collectionViewFlowLayout>
+                                <cells>
+                                    <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="Cell" id="SJQ-fq-jpD">
+                                        <rect key="frame" x="0.0" y="0.0" width="600" height="222"/>
+                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                        <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
+                                            <rect key="frame" x="0.0" y="0.0" width="600" height="222"/>
+                                            <autoresizingMask key="autoresizingMask"/>
+                                            <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                                        </view>
+                                    </collectionViewCell>
+                                </cells>
+                                <connections>
+                                    <outlet property="dataSource" destination="Mbg-L5-1i3" id="tDj-zs-Ere"/>
+                                    <outlet property="delegate" destination="Mbg-L5-1i3" id="iPc-xd-7hC"/>
+                                </connections>
+                            </collectionView>
+                        </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <constraints>
+                            <constraint firstItem="yGc-r1-FtD" firstAttribute="leading" secondItem="ba2-6I-Vxh" secondAttribute="leadingMargin" constant="-20" id="HpD-r6-KtE"/>
+                            <constraint firstItem="yGc-r1-FtD" firstAttribute="top" secondItem="edL-EE-U1J" secondAttribute="bottom" id="Kvq-nI-7Nx"/>
+                            <constraint firstAttribute="trailingMargin" secondItem="yGc-r1-FtD" secondAttribute="trailing" constant="-20" id="g08-qg-82Z"/>
+                            <constraint firstItem="VpH-r8-WWS" firstAttribute="top" secondItem="yGc-r1-FtD" secondAttribute="bottom" id="ovf-Zb-0YB"/>
+                        </constraints>
                     </view>
                     <tabBarItem key="tabBarItem" title="Item 1" id="BIa-w1-MBO"/>
                     <navigationItem key="navigationItem" id="aM3-Wq-znL"/>
+                    <connections>
+                        <outlet property="collectionView" destination="yGc-r1-FtD" id="00E-Nk-qcj"/>
+                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="v91-9t-YqE" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>

@@ -7,7 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		B41A9E271C7DAADB001635C2 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B41BF3391C7D0D7200E27074 /* ViewController.swift */; };
+		B41A9E271C7DAADB001635C2 /* NewsFeedViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B41BF3391C7D0D7200E27074 /* NewsFeedViewController.swift */; };
 		B41BF3381C7D0D7200E27074 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = B41BF3371C7D0D7200E27074 /* AppDelegate.swift */; };
 		B41BF33D1C7D0D7200E27074 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = B41BF33B1C7D0D7200E27074 /* Main.storyboard */; };
 		B41BF3421C7D0D7200E27074 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = B41BF3411C7D0D7200E27074 /* Assets.xcassets */; };
@@ -16,12 +16,29 @@
 		B41BF3521C7D12C800E27074 /* MotivationHuntModel.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = B41BF3501C7D12C800E27074 /* MotivationHuntModel.xcdatamodeld */; };
 		B41BF3541C7D149500E27074 /* CoreDataStackManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = B41BF3531C7D149500E27074 /* CoreDataStackManager.swift */; };
 		B41BF3561C7D153300E27074 /* Challenge.swift in Sources */ = {isa = PBXBuildFile; fileRef = B41BF3551C7D153300E27074 /* Challenge.swift */; };
+		B42E427C1C81C7930095B9BF /* YouTubePlayer.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B42E427B1C81C7930095B9BF /* YouTubePlayer.framework */; };
+		B42E427D1C81C9B60095B9BF /* YouTubePlayer.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B42E427B1C81C7930095B9BF /* YouTubePlayer.framework */; };
+		B42E427E1C81C9B60095B9BF /* YouTubePlayer.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = B42E427B1C81C7930095B9BF /* YouTubePlayer.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 /* End PBXBuildFile section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		B42E427F1C81C9B60095B9BF /* Embed Frameworks */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 10;
+			files = (
+				B42E427E1C81C9B60095B9BF /* YouTubePlayer.framework in Embed Frameworks */,
+			);
+			name = "Embed Frameworks";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
 		B41BF3341C7D0D7200E27074 /* Motivation Hunt.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Motivation Hunt.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		B41BF3371C7D0D7200E27074 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
-		B41BF3391C7D0D7200E27074 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
+		B41BF3391C7D0D7200E27074 /* NewsFeedViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewsFeedViewController.swift; sourceTree = "<group>"; };
 		B41BF33C1C7D0D7200E27074 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		B41BF3411C7D0D7200E27074 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		B41BF3441C7D0D7200E27074 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
@@ -30,6 +47,7 @@
 		B41BF3511C7D12C800E27074 /* MotivationHuntModel.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = MotivationHuntModel.xcdatamodel; sourceTree = "<group>"; };
 		B41BF3531C7D149500E27074 /* CoreDataStackManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CoreDataStackManager.swift; sourceTree = "<group>"; };
 		B41BF3551C7D153300E27074 /* Challenge.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Challenge.swift; sourceTree = "<group>"; };
+		B42E427B1C81C7930095B9BF /* YouTubePlayer.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = YouTubePlayer.framework; path = Carthage/Build/iOS/YouTubePlayer.framework; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -37,6 +55,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				B42E427C1C81C7930095B9BF /* YouTubePlayer.framework in Frameworks */,
+				B42E427D1C81C9B60095B9BF /* YouTubePlayer.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -46,6 +66,7 @@
 		B41BF32B1C7D0D7200E27074 = {
 			isa = PBXGroup;
 			children = (
+				B42E427B1C81C7930095B9BF /* YouTubePlayer.framework */,
 				B41BF3361C7D0D7200E27074 /* Motivation Hunt */,
 				B41BF3351C7D0D7200E27074 /* Products */,
 			);
@@ -76,7 +97,7 @@
 		B41BF34C1C7D122400E27074 /* Controllers */ = {
 			isa = PBXGroup;
 			children = (
-				B41BF3391C7D0D7200E27074 /* ViewController.swift */,
+				B41BF3391C7D0D7200E27074 /* NewsFeedViewController.swift */,
 				B41BF34D1C7D124600E27074 /* ChallengeViewController.swift */,
 			);
 			name = Controllers;
@@ -102,6 +123,7 @@
 				B41BF3301C7D0D7200E27074 /* Sources */,
 				B41BF3311C7D0D7200E27074 /* Frameworks */,
 				B41BF3321C7D0D7200E27074 /* Resources */,
+				B42E427F1C81C9B60095B9BF /* Embed Frameworks */,
 			);
 			buildRules = (
 			);
@@ -163,7 +185,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				B41A9E271C7DAADB001635C2 /* ViewController.swift in Sources */,
+				B41A9E271C7DAADB001635C2 /* NewsFeedViewController.swift in Sources */,
 				B41BF3521C7D12C800E27074 /* MotivationHuntModel.xcdatamodeld in Sources */,
 				B41BF34E1C7D124600E27074 /* ChallengeViewController.swift in Sources */,
 				B41BF3561C7D153300E27074 /* Challenge.swift in Sources */,
@@ -281,6 +303,10 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/Carthage/Build/iOS",
+				);
 				INFOPLIST_FILE = "Motivation Hunt/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = "com.jeffersonbonnaire.Motivation-Hunt";
@@ -292,6 +318,10 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/Carthage/Build/iOS",
+				);
 				INFOPLIST_FILE = "Motivation Hunt/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = "com.jeffersonbonnaire.Motivation-Hunt";
