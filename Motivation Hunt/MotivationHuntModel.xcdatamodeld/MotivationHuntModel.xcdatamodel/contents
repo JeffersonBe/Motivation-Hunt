@@ -9,9 +9,10 @@
         <attribute name="itemDescription" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="itemID" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="itemUrl" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="saved" optional="YES" attributeType="Boolean" syncable="YES"/>
     </entity>
     <elements>
         <element name="Challenge" positionX="-63" positionY="-18" width="128" height="90"/>
-        <element name="MotivationFeedItem" positionX="-63" positionY="9" width="128" height="90"/>
+        <element name="MotivationFeedItem" positionX="-63" positionY="9" width="128" height="105"/>
     </elements>
 </model>

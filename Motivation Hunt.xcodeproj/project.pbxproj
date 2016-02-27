@@ -105,8 +105,8 @@
 			isa = PBXGroup;
 			children = (
 				B41BF3391C7D0D7200E27074 /* MotivationFeedViewController.swift */,
-				B41BF34D1C7D124600E27074 /* ChallengeViewController.swift */,
 				B42E42851C81DE720095B9BF /* SavedMotivationItemViewController.swift */,
+				B41BF34D1C7D124600E27074 /* ChallengeViewController.swift */,
 			);
 			name = Controllers;
 			sourceTree = "<group>";

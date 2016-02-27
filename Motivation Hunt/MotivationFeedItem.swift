@@ -26,6 +26,6 @@ class MotivationFeedItem: NSManagedObject {
         self.itemDescription = itemDescription
         self.itemUrl = itemUrl
         self.itemID = itemID
-        self.saved = false
+        self.saved = saved
     }
 }
