@@ -7,7 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		B41A9E271C7DAADB001635C2 /* NewsFeedViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B41BF3391C7D0D7200E27074 /* NewsFeedViewController.swift */; };
+		B41A9E271C7DAADB001635C2 /* MotivationFeedViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B41BF3391C7D0D7200E27074 /* MotivationFeedViewController.swift */; };
 		B41BF3381C7D0D7200E27074 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = B41BF3371C7D0D7200E27074 /* AppDelegate.swift */; };
 		B41BF33D1C7D0D7200E27074 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = B41BF33B1C7D0D7200E27074 /* Main.storyboard */; };
 		B41BF3421C7D0D7200E27074 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = B41BF3411C7D0D7200E27074 /* Assets.xcassets */; };
@@ -19,6 +19,9 @@
 		B42E427C1C81C7930095B9BF /* YouTubePlayer.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B42E427B1C81C7930095B9BF /* YouTubePlayer.framework */; };
 		B42E427D1C81C9B60095B9BF /* YouTubePlayer.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B42E427B1C81C7930095B9BF /* YouTubePlayer.framework */; };
 		B42E427E1C81C9B60095B9BF /* YouTubePlayer.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = B42E427B1C81C7930095B9BF /* YouTubePlayer.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		B42E42811C81CB6C0095B9BF /* MotivationFeedItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = B42E42801C81CB6C0095B9BF /* MotivationFeedItem.swift */; };
+		B42E42841C81D1350095B9BF /* youtubeCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = B42E42831C81D1350095B9BF /* youtubeCollectionViewCell.swift */; };
+		B42E42861C81DE720095B9BF /* SavedMotivationItemViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B42E42851C81DE720095B9BF /* SavedMotivationItemViewController.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -38,7 +41,7 @@
 /* Begin PBXFileReference section */
 		B41BF3341C7D0D7200E27074 /* Motivation Hunt.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Motivation Hunt.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		B41BF3371C7D0D7200E27074 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
-		B41BF3391C7D0D7200E27074 /* NewsFeedViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewsFeedViewController.swift; sourceTree = "<group>"; };
+		B41BF3391C7D0D7200E27074 /* MotivationFeedViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MotivationFeedViewController.swift; sourceTree = "<group>"; };
 		B41BF33C1C7D0D7200E27074 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		B41BF3411C7D0D7200E27074 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		B41BF3441C7D0D7200E27074 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
@@ -48,6 +51,9 @@
 		B41BF3531C7D149500E27074 /* CoreDataStackManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CoreDataStackManager.swift; sourceTree = "<group>"; };
 		B41BF3551C7D153300E27074 /* Challenge.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Challenge.swift; sourceTree = "<group>"; };
 		B42E427B1C81C7930095B9BF /* YouTubePlayer.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = YouTubePlayer.framework; path = Carthage/Build/iOS/YouTubePlayer.framework; sourceTree = "<group>"; };
+		B42E42801C81CB6C0095B9BF /* MotivationFeedItem.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MotivationFeedItem.swift; sourceTree = "<group>"; };
+		B42E42831C81D1350095B9BF /* youtubeCollectionViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = youtubeCollectionViewCell.swift; sourceTree = "<group>"; };
+		B42E42851C81DE720095B9BF /* SavedMotivationItemViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SavedMotivationItemViewController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -87,6 +93,7 @@
 				B41BF33B1C7D0D7200E27074 /* Main.storyboard */,
 				B41BF34F1C7D12A600E27074 /* Models */,
 				B41BF34C1C7D122400E27074 /* Controllers */,
+				B42E42821C81D1080095B9BF /* View */,
 				B41BF3411C7D0D7200E27074 /* Assets.xcassets */,
 				B41BF3431C7D0D7200E27074 /* LaunchScreen.storyboard */,
 				B41BF3461C7D0D7200E27074 /* Info.plist */,
@@ -97,8 +104,9 @@
 		B41BF34C1C7D122400E27074 /* Controllers */ = {
 			isa = PBXGroup;
 			children = (
-				B41BF3391C7D0D7200E27074 /* NewsFeedViewController.swift */,
+				B41BF3391C7D0D7200E27074 /* MotivationFeedViewController.swift */,
 				B41BF34D1C7D124600E27074 /* ChallengeViewController.swift */,
+				B42E42851C81DE720095B9BF /* SavedMotivationItemViewController.swift */,
 			);
 			name = Controllers;
 			sourceTree = "<group>";
@@ -106,11 +114,20 @@
 		B41BF34F1C7D12A600E27074 /* Models */ = {
 			isa = PBXGroup;
 			children = (
+				B41BF3531C7D149500E27074 /* CoreDataStackManager.swift */,
 				B41BF3501C7D12C800E27074 /* MotivationHuntModel.xcdatamodeld */,
 				B41BF3551C7D153300E27074 /* Challenge.swift */,
-				B41BF3531C7D149500E27074 /* CoreDataStackManager.swift */,
+				B42E42801C81CB6C0095B9BF /* MotivationFeedItem.swift */,
 			);
 			name = Models;
+			sourceTree = "<group>";
+		};
+		B42E42821C81D1080095B9BF /* View */ = {
+			isa = PBXGroup;
+			children = (
+				B42E42831C81D1350095B9BF /* youtubeCollectionViewCell.swift */,
+			);
+			name = View;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -185,11 +202,14 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				B41A9E271C7DAADB001635C2 /* NewsFeedViewController.swift in Sources */,
+				B41A9E271C7DAADB001635C2 /* MotivationFeedViewController.swift in Sources */,
 				B41BF3521C7D12C800E27074 /* MotivationHuntModel.xcdatamodeld in Sources */,
+				B42E42861C81DE720095B9BF /* SavedMotivationItemViewController.swift in Sources */,
 				B41BF34E1C7D124600E27074 /* ChallengeViewController.swift in Sources */,
 				B41BF3561C7D153300E27074 /* Challenge.swift in Sources */,
+				B42E42811C81CB6C0095B9BF /* MotivationFeedItem.swift in Sources */,
 				B41BF3381C7D0D7200E27074 /* AppDelegate.swift in Sources */,
+				B42E42841C81D1350095B9BF /* youtubeCollectionViewCell.swift in Sources */,
 				B41BF3541C7D149500E27074 /* CoreDataStackManager.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

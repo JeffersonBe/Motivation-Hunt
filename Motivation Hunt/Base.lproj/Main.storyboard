@@ -6,23 +6,38 @@
         <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
     </dependencies>
     <scenes>
-        <!--Item 2-->
-        <scene sceneID="GH2-3g-Pe6">
+        <!--Collection View Controller-->
+        <scene sceneID="gP0-1l-Hpj">
             <objects>
-                <viewController id="JGE-FJ-eBS" sceneMemberID="viewController">
-                    <layoutGuides>
-                        <viewControllerLayoutGuide type="top" id="YwM-JM-F6j"/>
-                        <viewControllerLayoutGuide type="bottom" id="x7d-ya-K9x"/>
-                    </layoutGuides>
-                    <view key="view" contentMode="scaleToFill" id="F3T-mz-Fca">
+                <collectionViewController id="joa-fg-Hpq" sceneMemberID="viewController">
+                    <collectionView key="view" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" dataMode="prototypes" id="HlK-nn-Igu">
                         <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                    </view>
-                    <tabBarItem key="tabBarItem" title="Item 2" id="oDN-Vc-Nbm"/>
-                    <navigationItem key="navigationItem" id="tgf-zr-df8"/>
-                </viewController>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="3Ux-ZT-AmN" userLabel="First Responder" sceneMemberID="firstResponder"/>
+                        <collectionViewFlowLayout key="collectionViewLayout" minimumLineSpacing="10" minimumInteritemSpacing="10" id="xcJ-ff-Iwk">
+                            <size key="itemSize" width="50" height="50"/>
+                            <size key="headerReferenceSize" width="0.0" height="0.0"/>
+                            <size key="footerReferenceSize" width="0.0" height="0.0"/>
+                            <inset key="sectionInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
+                        </collectionViewFlowLayout>
+                        <cells>
+                            <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" id="lXw-mZ-scY">
+                                <rect key="frame" x="0.0" y="64" width="50" height="50"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
+                                    <rect key="frame" x="0.0" y="0.0" width="50" height="50"/>
+                                    <autoresizingMask key="autoresizingMask"/>
+                                    <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                                </view>
+                            </collectionViewCell>
+                        </cells>
+                        <connections>
+                            <outlet property="dataSource" destination="joa-fg-Hpq" id="jV9-J4-YG7"/>
+                            <outlet property="delegate" destination="joa-fg-Hpq" id="t49-Rr-wAz"/>
+                        </connections>
+                    </collectionView>
+                    <navigationItem key="navigationItem" id="Qnz-d9-pl3"/>
+                </collectionViewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="gMq-oh-DtW" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="1190" y="620"/>
         </scene>
@@ -166,12 +181,12 @@
                         <autoresizingMask key="autoresizingMask"/>
                     </navigationBar>
                     <connections>
-                        <segue destination="JGE-FJ-eBS" kind="relationship" relationship="rootViewController" id="wPb-DI-4oo"/>
+                        <segue destination="joa-fg-Hpq" kind="relationship" relationship="rootViewController" id="PQI-jZ-5qR"/>
                     </connections>
                 </navigationController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="vtv-uH-M3G" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="434" y="620"/>
+            <point key="canvasLocation" x="460" y="620"/>
         </scene>
         <!--Item-->
         <scene sceneID="bpb-de-Eys">
@@ -188,12 +203,12 @@
                 </navigationController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="CqM-L8-nLP" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="434" y="1300"/>
+            <point key="canvasLocation" x="434" y="1458"/>
         </scene>
-        <!--Item 1-->
+        <!--Motivation Feed-->
         <scene sceneID="r1M-em-FTm">
             <objects>
-                <viewController automaticallyAdjustsScrollViewInsets="NO" id="Mbg-L5-1i3" customClass="NewsFeedViewController" customModule="Motivation_Hunt" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="MotivationFeedViewController" automaticallyAdjustsScrollViewInsets="NO" id="Mbg-L5-1i3" customClass="MotivationFeedViewController" customModule="Motivation_Hunt" customModuleProvider="target" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="edL-EE-U1J"/>
                         <viewControllerLayoutGuide type="bottom" id="VpH-r8-WWS"/>
@@ -235,8 +250,8 @@
                             <constraint firstItem="VpH-r8-WWS" firstAttribute="top" secondItem="yGc-r1-FtD" secondAttribute="bottom" id="ovf-Zb-0YB"/>
                         </constraints>
                     </view>
-                    <tabBarItem key="tabBarItem" title="Item 1" id="BIa-w1-MBO"/>
-                    <navigationItem key="navigationItem" id="aM3-Wq-znL"/>
+                    <tabBarItem key="tabBarItem" systemItem="mostViewed" id="BIa-w1-MBO"/>
+                    <navigationItem key="navigationItem" title="Motivation Feed" id="aM3-Wq-znL"/>
                     <connections>
                         <outlet property="collectionView" destination="yGc-r1-FtD" id="00E-Nk-qcj"/>
                     </connections>
