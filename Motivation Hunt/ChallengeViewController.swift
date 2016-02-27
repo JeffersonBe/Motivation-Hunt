@@ -26,6 +26,7 @@ class ChallengeViewController: UIViewController {
 
         // Initialize delegate
         fetchedResultsController.delegate = self
+        challengeTextField.delegate = self
 
         do {
             try fetchedResultsController.performFetch()
@@ -111,7 +112,15 @@ class ChallengeViewController: UIViewController {
             })
             let button = UIBarButtonItem(barButtonSystemItem: UIBarButtonSystemItem.Add, target: self, action: "showAddChallenge")
             self.navigationItem.rightBarButtonItem = button
+            self.challengeTextField.resignFirstResponder()
         }
+    }
+}
+
+extension ChallengeViewController: UITextFieldDelegate {
+    func textFieldShouldReturn(textField: UITextField) -> Bool {
+        self.view.endEditing(true)
+        return false
     }
 }
 
