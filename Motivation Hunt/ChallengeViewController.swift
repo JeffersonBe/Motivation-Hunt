@@ -40,6 +40,11 @@ class ChallengeViewController: UIViewController {
         dimView = UIView(frame: view.frame)
         dimView.backgroundColor = UIColor.blackColor()
         dimView.alpha = 0
+
+        // Set padding on textfield: https://medium.com/@deepdeviant/how-to-set-padding-for-uitextfield-in-swift-2f830d131f40#.v25ja1v42
+        let paddingView = UIView(frame: CGRectMake(0, 0, 15, challengeTextField.frame.height))
+        challengeTextField.leftView = paddingView
+        challengeTextField.leftViewMode = UITextFieldViewMode.Always
     }
 
     override func didReceiveMemoryWarning() {
