@@ -9,7 +9,6 @@
         <!--Favorites-->
         <scene sceneID="JCh-AN-eyW">
             <objects>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="Nwb-bE-o80" userLabel="First Responder" sceneMemberID="firstResponder"/>
                 <tableViewController id="4e5-2d-pVN" customClass="SavedMotivationItemViewController" customModule="Motivation_Hunt" customModuleProvider="target" sceneMemberID="viewController">
                     <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="44" sectionHeaderHeight="28" sectionFooterHeight="28" id="tPz-Rs-3He">
                         <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
@@ -39,12 +38,13 @@
                             <outlet property="delegate" destination="4e5-2d-pVN" id="QRM-W4-aBb"/>
                         </connections>
                     </tableView>
-                    <tabBarItem key="tabBarItem" systemItem="favorites" id="zos-iE-awn"/>
+                    <tabBarItem key="tabBarItem" title="Favorites" image="iconFeatured" id="zos-iE-awn"/>
                     <navigationItem key="navigationItem" title="Favorites" id="jED-8s-Qxf"/>
                     <connections>
                         <outlet property="tableView" destination="tPz-Rs-3He" id="WNU-R7-nTE"/>
                     </connections>
                 </tableViewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="Nwb-bE-o80" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="1190" y="620"/>
         </scene>
@@ -147,7 +147,7 @@
                             <constraint firstItem="jud-XC-hyJ" firstAttribute="leading" secondItem="t8r-nq-cxc" secondAttribute="leadingMargin" constant="-20" id="uM7-In-csa"/>
                         </constraints>
                     </view>
-                    <tabBarItem key="tabBarItem" systemItem="featured" id="QaD-Y7-qdU"/>
+                    <tabBarItem key="tabBarItem" title="Challenges" image="iconChallenge" id="QaD-Y7-qdU"/>
                     <navigationItem key="navigationItem" title="Challenge" id="g8L-1f-9ut"/>
                     <connections>
                         <outlet property="addChallengeButton" destination="blm-xS-V3i" id="aYh-xw-OGs"/>
@@ -166,7 +166,8 @@
             <objects>
                 <navigationController id="s1B-7n-vZV" sceneMemberID="viewController">
                     <tabBarItem key="tabBarItem" title="Item" id="9FZ-sL-ztH"/>
-                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="3nX-KH-TTd">
+                    <simulatedNavigationBarMetrics key="simulatedTopBarMetrics" barStyle="black" prompted="NO"/>
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" barStyle="black" id="3nX-KH-TTd">
                         <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
                         <autoresizingMask key="autoresizingMask"/>
                     </navigationBar>
@@ -183,7 +184,8 @@
             <objects>
                 <navigationController id="rel-PA-bbF" sceneMemberID="viewController">
                     <tabBarItem key="tabBarItem" title="Item" id="y5M-Ze-GCf"/>
-                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="SzR-LI-Moa">
+                    <simulatedNavigationBarMetrics key="simulatedTopBarMetrics" barStyle="black" prompted="NO"/>
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" barStyle="black" id="SzR-LI-Moa">
                         <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
                         <autoresizingMask key="autoresizingMask"/>
                     </navigationBar>
@@ -200,7 +202,8 @@
             <objects>
                 <navigationController id="weC-uH-6OI" sceneMemberID="viewController">
                     <tabBarItem key="tabBarItem" title="Item" id="0Ul-1y-gZF"/>
-                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="6ui-3z-dSg">
+                    <simulatedNavigationBarMetrics key="simulatedTopBarMetrics" barStyle="black" prompted="NO"/>
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" barStyle="black" id="6ui-3z-dSg">
                         <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
                         <autoresizingMask key="autoresizingMask"/>
                     </navigationBar>
@@ -257,7 +260,7 @@
                             <constraint firstItem="VpH-r8-WWS" firstAttribute="top" secondItem="yGc-r1-FtD" secondAttribute="bottom" id="ovf-Zb-0YB"/>
                         </constraints>
                     </view>
-                    <tabBarItem key="tabBarItem" systemItem="mostViewed" id="BIa-w1-MBO"/>
+                    <tabBarItem key="tabBarItem" title="Feeds" image="iconFeed" id="BIa-w1-MBO"/>
                     <navigationItem key="navigationItem" title="Motivation Feed" id="aM3-Wq-znL"/>
                     <connections>
                         <outlet property="collectionView" destination="yGc-r1-FtD" id="00E-Nk-qcj"/>
@@ -271,7 +274,9 @@
         <scene sceneID="9p6-9d-MYJ">
             <objects>
                 <tabBarController title="Tab Bar" useStoryboardIdentifierAsRestorationIdentifier="YES" id="akH-JK-9Wm" sceneMemberID="viewController">
-                    <tabBar key="tabBar" contentMode="scaleToFill" id="php-d3-Q2K">
+                    <simulatedNavigationBarMetrics key="simulatedTopBarMetrics" barStyle="black" prompted="NO"/>
+                    <simulatedTabBarMetrics key="simulatedBottomBarMetrics" barStyle="black"/>
+                    <tabBar key="tabBar" contentMode="scaleToFill" barStyle="black" id="php-d3-Q2K">
                         <rect key="frame" x="0.0" y="0.0" width="320" height="49"/>
                         <autoresizingMask key="autoresizingMask"/>
                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
@@ -287,4 +292,9 @@
             <point key="canvasLocation" x="-298" y="620"/>
         </scene>
     </scenes>
+    <resources>
+        <image name="iconChallenge" width="26" height="25"/>
+        <image name="iconFeatured" width="28" height="26"/>
+        <image name="iconFeed" width="27" height="27"/>
+    </resources>
 </document>
