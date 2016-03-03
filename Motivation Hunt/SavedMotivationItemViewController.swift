@@ -21,6 +21,7 @@ class SavedMotivationItemViewController: UITableViewController {
         } catch let error as NSError {
             print("Error: \(error.localizedDescription)")
         }
+        view.backgroundColor = UIColor(patternImage: UIImage(named: "backgroundFeed.png")!)
     }
 
     override func didReceiveMemoryWarning() {
@@ -39,7 +40,7 @@ class SavedMotivationItemViewController: UITableViewController {
         let fetchRequest = NSFetchRequest(entityName: "MotivationFeedItem")
         let predicate = NSPredicate(format: "saved == 1")
         fetchRequest.predicate = predicate
-        fetchRequest.sortDescriptors = [NSSortDescriptor(key: "itemUrl", ascending: true)]
+        fetchRequest.sortDescriptors = [NSSortDescriptor(key: "itemID", ascending: true)]
 
         let fetchedResultsController = NSFetchedResultsController(fetchRequest: fetchRequest,
             managedObjectContext: self.sharedContext,

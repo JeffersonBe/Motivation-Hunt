@@ -47,6 +47,8 @@ class ChallengeViewController: UIViewController {
         let paddingView = UIView(frame: CGRectMake(0, 0, 15, challengeTextField.frame.height))
         challengeTextField.leftView = paddingView
         challengeTextField.leftViewMode = UITextFieldViewMode.Always
+
+        view.backgroundColor = UIColor(patternImage: UIImage(named: "backgroundFeed.png")!)
     }
 
     override func didReceiveMemoryWarning() {

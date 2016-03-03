@@ -14,6 +14,7 @@ import YouTubePlayer
 class MotivationFeedViewController: UIViewController {
 
     @IBOutlet weak var collectionView: UICollectionView!
+    var nextPageToken: String! = ""
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -39,6 +40,8 @@ class MotivationFeedViewController: UIViewController {
         } catch let error as NSError {
             print("Error: \(error.localizedDescription)")
         }
+
+        view.backgroundColor = UIColor(patternImage: UIImage(named: "backgroundFeed.png")!)
     }
 
     // Initialize CoreData and NSFetchedResultsController
@@ -67,7 +70,7 @@ class MotivationFeedViewController: UIViewController {
     lazy var fetchedResultsController: NSFetchedResultsController = {
 
         let fetchRequest = NSFetchRequest(entityName: "MotivationFeedItem")
-        fetchRequest.sortDescriptors = [NSSortDescriptor(key: "itemID", ascending: true)]
+        fetchRequest.sortDescriptors = [NSSortDescriptor(key: "addedDate", ascending: false)]
 
         let fetchedResultsController = NSFetchedResultsController(fetchRequest: fetchRequest,
             managedObjectContext: self.sharedContext,
@@ -87,8 +90,59 @@ class MotivationFeedViewController: UIViewController {
     var blockOperations: [NSBlockOperation] = []
 
     func refreshData() {
-        let _ = MotivationFeedItem(itemDescription: "Eric Thomas - Secrets to Success Full", itemUrl: "https://www.youtube.com/watch?v=sl_kv-6-I_s", itemID: "sl_kv-6-I_s", saved: false, context: sharedContext)
-        CoreDataStackManager.sharedInstance.saveContext()
+        var mutableParameters: [String : AnyObject]
+
+        let parameters: [String : AnyObject] = [
+            "part":"snippet",
+            "order":"viewCount",
+            "q": "motivation+success",
+            "type":"video",
+            "videoDefinition":"high",
+            "maxResults": 10,
+            "key":"AIzaSyA2srNJlj2XWzh8Iwlqm21ImM6U702swQY"
+        ]
+        mutableParameters = parameters
+
+        if !nextPageToken.isEmpty {
+            mutableParameters["pageToken"] = "\(nextPageToken)"
+        }
+
+        print(mutableParameters)
+
+        MHClient.sharedInstance.taskForResource(mutableParameters) { (result, error) -> Void in
+            guard (error == nil) else {
+                print("There was an error with your request: \(error)")
+                return
+            }
+            print(result)
+
+            self.nextPageToken = result.objectForKey("nextPageToken") as! String
+            print(result.objectForKey("nextPageToken"))
+            print(self.nextPageToken)
+
+            guard let results = result["items"] as? [[String:AnyObject]] else {
+                return
+            }
+
+            for item in results {
+                guard let videoSnippet = item["snippet"] as? [String:AnyObject] else {
+                    return
+                }
+                guard let title = videoSnippet["title"] as? String else {
+                    return
+                }
+                guard let description = videoSnippet["description"] as? String else {
+                    return
+                }
+                
+                guard let id = item["id"]!["videoId"] as? String else {
+                    return
+                }
+
+                let _ = MotivationFeedItem(itemTitle: title, itemDescription: description, itemID: id, saved: false, addedDate: NSDate(), context: self.sharedContext)
+                CoreDataStackManager.sharedInstance.saveContext()
+            }
+        }
     }
 
     deinit {
@@ -114,19 +168,16 @@ extension MotivationFeedViewController: UICollectionViewDelegate {
     func collectionView(collectionView: UICollectionView, cellForItemAtIndexPath indexPath: NSIndexPath) -> UICollectionViewCell {
         let MotivationItem = fetchedResultsController.objectAtIndexPath(indexPath) as! MotivationFeedItem
         let cell = collectionView.dequeueReusableCellWithReuseIdentifier("Cell", forIndexPath: indexPath) as! youtubeCollectionViewCell
-        let myVideoURL = NSURL(string: MotivationItem.itemUrl)
+        let myVideoID = MotivationItem.itemID
         cell.textLabel.text = MotivationItem.itemDescription
-        cell.videoPlayer.loadVideoURL(myVideoURL!)
+        cell.videoPlayer.loadVideoID(myVideoID)
         cell.clipsToBounds = true
-        cell.alpha = 0.0
-        cell.backgroundColor = UIColor.greenColor()
         return cell
     }
 
-    func collectionView(collectionView: UICollectionView,
-        layout collectionViewLayout: UICollectionViewLayout,
-        sizeForItemAtIndexPath indexPath: NSIndexPath) -> CGSize {
-            return CGSize(width: 300, height: 300)
+    func collectionView(collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAtIndexPath indexPath: NSIndexPath) -> CGSize {
+        let dimension = view.frame.size.width / 2.0
+        return CGSizeMake(dimension, dimension)
     }
 
     func collectionView(collectionView: UICollectionView,

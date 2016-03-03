@@ -6,13 +6,14 @@
         <attribute name="endDate" attributeType="Date" syncable="YES"/>
     </entity>
     <entity name="MotivationFeedItem" representedClassName=".MotivationFeedItem" syncable="YES">
+        <attribute name="addedDate" optional="YES" attributeType="Date" syncable="YES"/>
         <attribute name="itemDescription" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="itemID" optional="YES" attributeType="String" syncable="YES"/>
-        <attribute name="itemUrl" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="itemTitle" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="saved" optional="YES" attributeType="Boolean" syncable="YES"/>
     </entity>
     <elements>
         <element name="Challenge" positionX="-63" positionY="-18" width="128" height="90"/>
-        <element name="MotivationFeedItem" positionX="-63" positionY="9" width="128" height="105"/>
+        <element name="MotivationFeedItem" positionX="-63" positionY="9" width="128" height="120"/>
     </elements>
 </model>

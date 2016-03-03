@@ -11,21 +11,23 @@ import CoreData
 
 class MotivationFeedItem: NSManagedObject {
 
+    @NSManaged var itemTitle: String
     @NSManaged var itemDescription: String
-    @NSManaged var itemUrl: String
     @NSManaged var itemID: String
     @NSManaged var saved: Bool
+    @NSManaged var addedDate: NSDate
 
     override init(entity: NSEntityDescription, insertIntoManagedObjectContext context: NSManagedObjectContext?) {
         super.init(entity: entity, insertIntoManagedObjectContext: context)
     }
 
-    init(itemDescription: String, itemUrl: String, itemID: String, saved: Bool, context: NSManagedObjectContext) {
+    init(itemTitle: String, itemDescription: String, itemID: String, saved: Bool, addedDate: NSDate, context: NSManagedObjectContext) {
         let entity =  NSEntityDescription.entityForName("MotivationFeedItem", inManagedObjectContext: context)!
         super.init(entity: entity, insertIntoManagedObjectContext: context)
+        self.itemTitle = itemTitle
         self.itemDescription = itemDescription
-        self.itemUrl = itemUrl
         self.itemID = itemID
         self.saved = saved
+        self.addedDate = addedDate
     }
 }
