@@ -100,8 +100,9 @@ class MotivationFeedViewController: UIViewController {
             "type":"video",
             "videoDefinition":"high",
             "maxResults": 10,
-            "key":""
+            "key":"\(MHClient.Constants.ApiKey!)"
         ]
+
         mutableParameters = parameters
 
         let defaults = NSUserDefaults.standardUserDefaults()
