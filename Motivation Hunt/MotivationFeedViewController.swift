@@ -11,10 +11,11 @@ import CoreData
 import YouTubePlayer
 // https://github.com/gilesvangruisen/Swift-YouTube-Player
 
+let nextPageTokenConstant = "nextPageToken"
+
 class MotivationFeedViewController: UIViewController {
 
     @IBOutlet weak var collectionView: UICollectionView!
-    var nextPageToken: String! = ""
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -99,26 +100,24 @@ class MotivationFeedViewController: UIViewController {
             "type":"video",
             "videoDefinition":"high",
             "maxResults": 10,
-            "key":"AIzaSyA2srNJlj2XWzh8Iwlqm21ImM6U702swQY"
+            "key":""
         ]
         mutableParameters = parameters
 
-        if !nextPageToken.isEmpty {
+        let defaults = NSUserDefaults.standardUserDefaults()
+        if let nextPageToken = defaults.stringForKey(nextPageTokenConstant)
+        {
             mutableParameters["pageToken"] = "\(nextPageToken)"
         }
-
-        print(mutableParameters)
 
         MHClient.sharedInstance.taskForResource(mutableParameters) { (result, error) -> Void in
             guard (error == nil) else {
                 print("There was an error with your request: \(error)")
                 return
             }
-            print(result)
 
-            self.nextPageToken = result.objectForKey("nextPageToken") as! String
-            print(result.objectForKey("nextPageToken"))
-            print(self.nextPageToken)
+            let defaults = NSUserDefaults.standardUserDefaults()
+            defaults.setObject(result.objectForKey("nextPageToken") as! String, forKey:nextPageTokenConstant)
 
             guard let results = result["items"] as? [[String:AnyObject]] else {
                 return
