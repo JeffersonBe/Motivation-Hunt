@@ -128,9 +128,11 @@ class MotivationFeedViewController: UIViewController {
                 guard let videoSnippet = item["snippet"] as? [String:AnyObject] else {
                     return
                 }
+                
                 guard let title = videoSnippet["title"] as? String else {
                     return
                 }
+
                 guard let description = videoSnippet["description"] as? String else {
                     return
                 }
@@ -139,7 +141,11 @@ class MotivationFeedViewController: UIViewController {
                     return
                 }
 
-                let _ = MotivationFeedItem(itemTitle: title, itemDescription: description, itemID: id, saved: false, addedDate: NSDate(), context: self.sharedContext)
+                guard let thumbnailsUrl = videoSnippet["thumbnails"]!["high"]!!["url"] as? String else {
+                    return
+                }
+
+                let _ = MotivationFeedItem(itemTitle: title, itemDescription: description, itemID: id, itemThumbnailsUrl: thumbnailsUrl, saved: false, addedDate: NSDate(), context: self.sharedContext)
                 CoreDataStackManager.sharedInstance.saveContext()
             }
         }
@@ -166,14 +172,48 @@ extension MotivationFeedViewController: UICollectionViewDelegate {
     }
 
     func collectionView(collectionView: UICollectionView, cellForItemAtIndexPath indexPath: NSIndexPath) -> UICollectionViewCell {
-        let MotivationItem = fetchedResultsController.objectAtIndexPath(indexPath) as! MotivationFeedItem
+        let motivationItem = fetchedResultsController.objectAtIndexPath(indexPath) as! MotivationFeedItem
         let cell = collectionView.dequeueReusableCellWithReuseIdentifier("Cell", forIndexPath: indexPath) as! youtubeCollectionViewCell
-        let myVideoID = MotivationItem.itemID
-        cell.textLabel.text = MotivationItem.itemDescription
+
+        configureCell(cell, withItem: motivationItem)
+
+        let myVideoID = motivationItem.itemID
+        cell.textLabel.text = motivationItem.itemTitle
         cell.videoPlayer.loadVideoID(myVideoID)
+        cell.imageView.userInteractionEnabled = false
         cell.clipsToBounds = true
         return cell
     }
+
+    func collectionView(collectionView: UICollectionView, didSelectItemAtIndexPath indexPath: NSIndexPath) {
+        print("Touch")
+        let cell = collectionView.dequeueReusableCellWithReuseIdentifier("Cell", forIndexPath: indexPath) as! youtubeCollectionViewCell
+        cell.videoPlayer.play()
+    }
+
+    func configureCell(cell: youtubeCollectionViewCell, withItem item: MotivationFeedItem) {
+        if item.image != nil {
+            dispatch_async(dispatch_get_main_queue()) {
+                cell.imageView.image = item.image
+                UIView.animateWithDuration(0.5, delay: 0.0, options: UIViewAnimationOptions.CurveEaseOut, animations: {
+                    cell.alpha = 1.0
+                    }, completion: nil)
+            }
+        } else {
+            MHClient.sharedInstance.taskForImage(item.itemThumbnailsUrl) { imageData, error in
+                if let image = imageData {
+                    dispatch_async(dispatch_get_main_queue()) {
+                        item.image = UIImage(data: image)
+                        cell.imageView.image = item.image
+                        UIView.animateWithDuration(0.5, delay: 0.0, options: UIViewAnimationOptions.CurveEaseOut, animations: {
+                            cell.alpha = 1.0
+                            }, completion: nil)
+                    }
+                }
+            }
+        }
+    }
+
 
     func collectionView(collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAtIndexPath indexPath: NSIndexPath) -> CGSize {
         let dimension = view.frame.size.width / 2.0

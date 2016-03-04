@@ -23,6 +23,12 @@ class MHClient: NSObject {
         super.init()
     }
 
+    // MARK: - Shared Image Cache
+
+    struct Caches {
+        static let imageCache = ImageCache()
+    }
+
     // MARK: - All purpose task method for data
 
     func taskForResource(parameters: [String : AnyObject], completionHandler: CompletionHander) -> NSURLSessionDataTask {
@@ -43,6 +49,26 @@ class MHClient: NSObject {
 
         task.resume()
 
+        return task
+    }
+
+    func taskForImage(filePath: String, completionHandler: (imageData: NSData?, error: NSError?) ->  Void) -> NSURLSessionTask {
+
+        let url = NSURL(string: filePath)!
+        let request = NSURLRequest(URL: url)
+
+        let task = session.dataTaskWithRequest(request) {data, response, downloadError in
+
+            if let error = downloadError {
+                let newError = MHClient.errorForData(data, response: response, error: error)
+                completionHandler(imageData: nil, error: newError)
+            } else {
+                completionHandler(imageData: data, error: nil)
+            }
+        }
+
+        task.resume()
+        
         return task
     }
 

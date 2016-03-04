@@ -12,6 +12,7 @@ import YouTubePlayer
 class youtubeCollectionViewCell: UICollectionViewCell {
     var videoPlayer: YouTubePlayerView!
     var textLabel: UILabel!
+    var imageView: UIImageView!
 
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -19,13 +20,27 @@ class youtubeCollectionViewCell: UICollectionViewCell {
         videoPlayer.contentMode = UIViewContentMode.ScaleAspectFit
         contentView.addSubview(videoPlayer)
 
-        textLabel = UILabel(frame: CGRect(x: 0, y: videoPlayer.frame.size.height, width: frame.size.width, height: frame.size.height/3))
+        imageView = UIImageView(frame: CGRect(x: 0, y: 0, width: frame.size.width, height: frame.size.height))
+        imageView.contentMode = UIViewContentMode.ScaleAspectFill
+        contentView.addSubview(imageView)
+
+        textLabel = UILabel(frame: CGRect(x: 0, y: 0, width: frame.size.width, height: frame.size.height/3))
         textLabel.font = UIFont.systemFontOfSize(UIFont.smallSystemFontSize())
+        textLabel.textColor = UIColor.whiteColor()
         textLabel.textAlignment = .Center
         contentView.addSubview(textLabel)
+
+        let darkBlur = UIBlurEffect(style: UIBlurEffectStyle.Dark)
+        let blurView = UIVisualEffectView(effect: darkBlur)
+        blurView.frame = CGRect(x: 0, y: 0, width: frame.size.width, height: frame.size.height/3)
+        contentView.insertSubview(blurView, belowSubview: textLabel)
     }
 
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
+    }
+
+    override func prepareForReuse() {
+        super.prepareForReuse()
     }
 }
