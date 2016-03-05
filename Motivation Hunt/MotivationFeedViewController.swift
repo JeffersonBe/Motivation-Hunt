@@ -181,6 +181,7 @@ extension MotivationFeedViewController: UICollectionViewDelegate {
         cell.textLabel.text = motivationItem.itemTitle
         cell.videoPlayer.loadVideoID(myVideoID)
         cell.imageView.userInteractionEnabled = false
+        cell.videoPlayer.userInteractionEnabled = false
         cell.clipsToBounds = true
         return cell
     }
