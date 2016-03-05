@@ -26,6 +26,8 @@ class SavedMotivationItemViewController: UIViewController {
             print("Error: \(error.localizedDescription)")
         }
         view.backgroundColor = UIColor(patternImage: UIImage(named: "backgroundFeed.png")!)
+        tableView.backgroundColor = UIColor.clearColor()
+        tableView.tableFooterView = UIView(frame: CGRect.zero)
     }
 
     override func didReceiveMemoryWarning() {

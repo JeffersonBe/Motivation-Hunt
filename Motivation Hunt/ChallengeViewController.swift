@@ -49,6 +49,8 @@ class ChallengeViewController: UIViewController {
         challengeTextField.leftViewMode = UITextFieldViewMode.Always
 
         view.backgroundColor = UIColor(patternImage: UIImage(named: "backgroundFeed.png")!)
+        tableView.backgroundColor = UIColor.clearColor()
+        tableView.tableFooterView = UIView(frame: CGRect.zero)
     }
 
     override func didReceiveMemoryWarning() {
@@ -143,7 +145,7 @@ extension ChallengeViewController: UITableViewDataSource, UITableViewDelegate {
 
     func tableView(tableView: UITableView,
         cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
-            let cell = tableView.dequeueReusableCellWithIdentifier("Cell", forIndexPath: indexPath)
+            let cell = tableView.dequeueReusableCellWithIdentifier("Cell", forIndexPath: indexPath) as! challengeTableViewCell
             configureCell(cell, atIndexPath: indexPath)
             return cell
     }
@@ -179,18 +181,28 @@ extension ChallengeViewController: UITableViewDataSource, UITableViewDelegate {
         }
     }
 
-    func configureCell(cell: UITableViewCell, atIndexPath indexPath: NSIndexPath) {
+    func configureCell(cell: challengeTableViewCell, atIndexPath indexPath: NSIndexPath) {
         let challenge = fetchedResultsController.objectAtIndexPath(indexPath) as! Challenge
 
         if challenge.completed {
-            cell.backgroundColor = UIColor.greenColor()
+            cell.backgroundColor = UIColor(red:0.52, green:0.86, blue:0.09, alpha:1.0)
         }
 
-        if let detailTextLabel = cell.detailTextLabel {
-            detailTextLabel.text = challenge.endDate.description
+        // http://www.codingexplorer.com/swiftly-getting-human-readable-date-nsdateformatter/
+        if let detailTextLabel = cell.challengeDateTextLabel {
+            let formatter = NSDateFormatter()
+            formatter.dateStyle = NSDateFormatterStyle.LongStyle
+            formatter.timeStyle = .ShortStyle
+            let dateString = formatter.stringFromDate(challenge.endDate)
+            detailTextLabel.text = "Complete by: \(dateString)"
+            if challenge.completed {
+                cell.challengeDateTextLabel.textColor = UIColor.whiteColor()
+            } else {
+                detailTextLabel.textColor = UIColor.grayColor()
+            }
         }
 
-        if let textLabel = cell.textLabel {
+        if let textLabel = cell.challengeDescriptionTextLabel {
             textLabel.text = challenge.challengeDescription
         }
     }
@@ -224,7 +236,7 @@ extension ChallengeViewController: NSFetchedResultsControllerDelegate {
         case .Update:
             if let indexPath = indexPath {
                 if let cell = tableView.cellForRowAtIndexPath(indexPath) {
-                    configureCell(cell, atIndexPath: indexPath)
+                    configureCell(cell as! challengeTableViewCell, atIndexPath: indexPath)
                 }
             }
         case .Move:
