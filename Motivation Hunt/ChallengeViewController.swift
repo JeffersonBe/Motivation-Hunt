@@ -49,6 +49,11 @@ class ChallengeViewController: UIViewController {
         challengeTextField.leftViewMode = UITextFieldViewMode.Always
 
         view.backgroundColor = UIColor(patternImage: UIImage(named: "backgroundFeed.png")!)
+        let blurEffect = UIBlurEffect(style: UIBlurEffectStyle.Dark)
+        let blurEffectView = UIVisualEffectView(effect: blurEffect)
+        blurEffectView.frame = view.bounds
+        blurEffectView.autoresizingMask = [.FlexibleWidth, .FlexibleHeight]
+        view.insertSubview(blurEffectView, belowSubview: tableView)
         tableView.backgroundColor = UIColor.clearColor()
         tableView.tableFooterView = UIView(frame: CGRect.zero)
     }
@@ -65,7 +70,6 @@ class ChallengeViewController: UIViewController {
     }
 
     lazy var fetchedResultsController: NSFetchedResultsController = {
-
         let fetchRequest = NSFetchRequest(entityName: "Challenge")
         fetchRequest.sortDescriptors = [NSSortDescriptor(key: "completed", ascending: true)]
 
@@ -75,7 +79,6 @@ class ChallengeViewController: UIViewController {
             cacheName: nil)
 
         return fetchedResultsController
-
     }()
 
     // MARK: Add Actions
@@ -137,7 +140,7 @@ extension ChallengeViewController: UITextFieldDelegate {
 }
 
 extension ChallengeViewController: UITableViewDataSource, UITableViewDelegate {
-    // MARK: TableView Data Source
+
     func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         let sectionInfo = self.fetchedResultsController.sections![section]
         return sectionInfo.numberOfObjects

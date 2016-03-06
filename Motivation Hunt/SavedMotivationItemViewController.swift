@@ -26,6 +26,11 @@ class SavedMotivationItemViewController: UIViewController {
             print("Error: \(error.localizedDescription)")
         }
         view.backgroundColor = UIColor(patternImage: UIImage(named: "backgroundFeed.png")!)
+        let blurEffect = UIBlurEffect(style: UIBlurEffectStyle.Dark)
+        let blurEffectView = UIVisualEffectView(effect: blurEffect)
+        blurEffectView.frame = view.bounds
+        blurEffectView.autoresizingMask = [.FlexibleWidth, .FlexibleHeight]
+        view.insertSubview(blurEffectView, belowSubview: tableView)
         tableView.backgroundColor = UIColor.clearColor()
         tableView.tableFooterView = UIView(frame: CGRect.zero)
     }

@@ -16,7 +16,8 @@ let nextPageTokenConstant = "nextPageToken"
 class MotivationFeedViewController: UIViewController {
 
     @IBOutlet weak var collectionView: UICollectionView!
-    
+    var indicator = CustomUIActivityIndicatorView()
+
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view, typically from a nib.
@@ -43,6 +44,11 @@ class MotivationFeedViewController: UIViewController {
         }
 
         view.backgroundColor = UIColor(patternImage: UIImage(named: "backgroundFeed.png")!)
+        let blurEffect = UIBlurEffect(style: UIBlurEffectStyle.Dark)
+        let blurEffectView = UIVisualEffectView(effect: blurEffect)
+        blurEffectView.frame = view.bounds
+        blurEffectView.autoresizingMask = [.FlexibleWidth, .FlexibleHeight]
+        view.insertSubview(blurEffectView, belowSubview: collectionView)
     }
 
     // Initialize CoreData and NSFetchedResultsController
@@ -91,6 +97,8 @@ class MotivationFeedViewController: UIViewController {
     var blockOperations: [NSBlockOperation] = []
 
     func refreshData() {
+        indicator.startActivity()
+        view.addSubview(indicator)
         var mutableParameters: [String : AnyObject]
 
         let parameters: [String : AnyObject] = [
@@ -113,9 +121,21 @@ class MotivationFeedViewController: UIViewController {
 
         MHClient.sharedInstance.taskForResource(mutableParameters) { (result, error) -> Void in
             guard (error == nil) else {
+                dispatch_async(dispatch_get_main_queue(), {
+                    self.indicator.stopActivity()
+                    self.indicator.removeFromSuperview()
+                    let errorAlert = UIAlertController(title: "Error", message: "Unable to load the motivation", preferredStyle: UIAlertControllerStyle.Alert)
+                    errorAlert.addAction(UIAlertAction(title: "Dismiss", style: UIAlertActionStyle.Default, handler: nil))
+                    self.presentViewController(errorAlert, animated: true, completion: nil)
+                })
                 print("There was an error with your request: \(error)")
                 return
             }
+
+            dispatch_async(dispatch_get_main_queue(), {
+                self.indicator.stopActivity()
+                self.indicator.removeFromSuperview()
+            })
 
             let defaults = NSUserDefaults.standardUserDefaults()
             defaults.setObject(result.objectForKey("nextPageToken") as! String, forKey:nextPageTokenConstant)
@@ -174,15 +194,7 @@ extension MotivationFeedViewController: UICollectionViewDelegate {
     func collectionView(collectionView: UICollectionView, cellForItemAtIndexPath indexPath: NSIndexPath) -> UICollectionViewCell {
         let motivationItem = fetchedResultsController.objectAtIndexPath(indexPath) as! MotivationFeedItem
         let cell = collectionView.dequeueReusableCellWithReuseIdentifier("Cell", forIndexPath: indexPath) as! youtubeCollectionViewCell
-
         configureCell(cell, withItem: motivationItem)
-
-        let myVideoID = motivationItem.itemID
-        cell.textLabel.text = motivationItem.itemTitle
-        cell.videoPlayer.loadVideoID(myVideoID)
-        cell.imageView.userInteractionEnabled = false
-        cell.videoPlayer.userInteractionEnabled = false
-        cell.clipsToBounds = true
         return cell
     }
 
@@ -192,7 +204,23 @@ extension MotivationFeedViewController: UICollectionViewDelegate {
         cell.videoPlayer.play()
     }
 
+    func collectionView(collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAtIndexPath indexPath: NSIndexPath) -> CGSize {
+        let dimension = view.frame.size.width / 2.0
+        return CGSizeMake(dimension, dimension)
+    }
+
+    func collectionView(collectionView: UICollectionView,
+        layout collectionViewLayout: UICollectionViewLayout,
+        insetForSectionAtIndex section: Int) -> UIEdgeInsets {
+            return UIEdgeInsetsZero
+    }
+
     func configureCell(cell: youtubeCollectionViewCell, withItem item: MotivationFeedItem) {
+        cell.videoPlayer.delegate = self
+        cell.textLabel.text = item.itemTitle
+        cell.videoPlayer.loadVideoID(item.itemID)
+        cell.clipsToBounds = true
+
         if item.image != nil {
             dispatch_async(dispatch_get_main_queue()) {
                 cell.imageView.image = item.image
@@ -214,19 +242,29 @@ extension MotivationFeedViewController: UICollectionViewDelegate {
             }
         }
     }
+}
 
+extension MotivationFeedViewController: YouTubePlayerDelegate {
+    func playerStateChanged(videoPlayer: YouTubePlayerView, playerState: YouTubePlayerState) {
+        if playerState == .Buffering {
+            indicator.startActivity()
+            view.addSubview(indicator)
+        }
 
-    func collectionView(collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAtIndexPath indexPath: NSIndexPath) -> CGSize {
-        let dimension = view.frame.size.width / 2.0
-        return CGSizeMake(dimension, dimension)
+        if playerState == .Playing {
+            indicator.stopActivity()
+            indicator.removeFromSuperview()
+        }
     }
 
-    func collectionView(collectionView: UICollectionView,
-        layout collectionViewLayout: UICollectionViewLayout,
-        insetForSectionAtIndex section: Int) -> UIEdgeInsets {
-            return UIEdgeInsetsZero
+    func playerQualityChanged(videoPlayer: YouTubePlayerView, playbackQuality: YouTubePlaybackQuality) {
+        print("quality")
+    }
+    func playerReady(videoPlayer: YouTubePlayerView) {
+        print("Ready")
     }
 }
+
 
 extension MotivationFeedViewController: NSFetchedResultsControllerDelegate {
     // MARK: NSFetchedResultsController delegate

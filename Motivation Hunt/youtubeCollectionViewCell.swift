@@ -17,7 +17,7 @@ class youtubeCollectionViewCell: UICollectionViewCell {
     override init(frame: CGRect) {
         super.init(frame: frame)
         videoPlayer = YouTubePlayerView(frame: CGRect(x: 0, y: 0, width: frame.size.width, height: frame.size.height))
-        videoPlayer.contentMode = UIViewContentMode.ScaleAspectFit
+        videoPlayer.contentMode = UIViewContentMode.ScaleAspectFill
         contentView.addSubview(videoPlayer)
 
         imageView = UIImageView(frame: CGRect(x: 0, y: 0, width: frame.size.width, height: frame.size.height))
