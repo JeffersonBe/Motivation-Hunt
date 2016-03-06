@@ -17,6 +17,7 @@ class MotivationFeedViewController: UIViewController {
 
     @IBOutlet weak var collectionView: UICollectionView!
     var indicator = CustomUIActivityIndicatorView()
+    var currentFavoriteindexPath: NSIndexPath!
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -29,6 +30,7 @@ class MotivationFeedViewController: UIViewController {
         // Configure CollectionView
         collectionView!.registerClass(youtubeCollectionViewCell.self,forCellWithReuseIdentifier: "Cell")
         collectionView.backgroundColor = UIColor.clearColor()
+        collectionView.allowsMultipleSelection = false
 
         let longTap: UILongPressGestureRecognizer = UILongPressGestureRecognizer(target: self, action: "savedItem:")
         longTap.minimumPressDuration = 0.5
@@ -58,20 +60,68 @@ class MotivationFeedViewController: UIViewController {
     }
 
     func savedItem(gestureRecognizer: UIGestureRecognizer) {
+
         guard gestureRecognizer.state != .Ended else {
             return
         }
 
+        let visibleCell = collectionView.visibleCells()
+
+        for cell in visibleCell {
+            let selectedNSIndexPath = collectionView.indexPathForCell(cell)
+            if selectedNSIndexPath == currentFavoriteindexPath {
+                hideFavoritesMenu(currentFavoriteindexPath)
+            }
+        }
+
         let tapPoint: CGPoint = gestureRecognizer.locationInView(collectionView)
         let indexPath = collectionView.indexPathForItemAtPoint(tapPoint)
+        currentFavoriteindexPath = indexPath
+        let cell = collectionView.cellForItemAtIndexPath(currentFavoriteindexPath) as! youtubeCollectionViewCell
+        let tapRecognizer: UITapGestureRecognizer = UITapGestureRecognizer(target: self, action: "hideFavoritesMenuWhenOpen")
+        tapRecognizer.numberOfTapsRequired = 1
+        cell.blurEffectView.addGestureRecognizer(tapRecognizer)
 
         guard indexPath != nil else {
             return
         }
+        showFavoritesMenu(currentFavoriteindexPath)
+    }
 
-        let objet = fetchedResultsController.objectAtIndexPath(indexPath!) as! MotivationFeedItem
-        objet.saved = true
-        CoreDataStackManager.sharedInstance.saveContext()
+    func hideFavoritesMenuWhenOpen() {
+        hideFavoritesMenu(currentFavoriteindexPath)
+    }
+
+    func buttonAction(sender:UIButton!) {
+        // http://stackoverflow.com/questions/27429652/detecting-uibutton-pressed-in-tableview-swift-best-practices
+        let objet = fetchedResultsController.objectAtIndexPath(currentFavoriteindexPath!) as! MotivationFeedItem
+        if objet.saved {
+            objet.saved = false
+            CoreDataStackManager.sharedInstance.saveContext()
+            hideFavoritesMenu(currentFavoriteindexPath!)
+        } else {
+            objet.saved = true
+            CoreDataStackManager.sharedInstance.saveContext()
+            hideFavoritesMenu(currentFavoriteindexPath!)
+        }
+    }
+
+    func showFavoritesMenu(indexPath: NSIndexPath){
+        let cell = collectionView.cellForItemAtIndexPath(indexPath) as! youtubeCollectionViewCell
+        let objet = fetchedResultsController.objectAtIndexPath(currentFavoriteindexPath!) as! MotivationFeedItem
+
+        if objet.saved {
+            cell.favoriteButton.imageView?.tintColor = UIColor.whiteColor()
+        }
+
+        cell.favoriteButton.hidden = false
+        cell.blurEffectView.hidden = false
+    }
+
+    func hideFavoritesMenu(indexPath: NSIndexPath) {
+        let cell = collectionView.cellForItemAtIndexPath(indexPath) as! youtubeCollectionViewCell
+        cell.favoriteButton.hidden = true
+        cell.blurEffectView.hidden = true
     }
 
     lazy var fetchedResultsController: NSFetchedResultsController = {
@@ -199,10 +249,10 @@ extension MotivationFeedViewController: UICollectionViewDelegate {
     }
 
     func collectionView(collectionView: UICollectionView, didSelectItemAtIndexPath indexPath: NSIndexPath) {
-        print("Touch")
         let cell = collectionView.dequeueReusableCellWithReuseIdentifier("Cell", forIndexPath: indexPath) as! youtubeCollectionViewCell
         cell.videoPlayer.play()
     }
+
 
     func collectionView(collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAtIndexPath indexPath: NSIndexPath) -> CGSize {
         let dimension = view.frame.size.width / 2.0
@@ -219,6 +269,11 @@ extension MotivationFeedViewController: UICollectionViewDelegate {
         cell.videoPlayer.delegate = self
         cell.textLabel.text = item.itemTitle
         cell.videoPlayer.loadVideoID(item.itemID)
+        cell.favoriteButton.hidden = true
+        cell.favoriteButton.addTarget(self, action: "buttonAction:", forControlEvents:
+            UIControlEvents.TouchUpInside)
+        cell.blurEffectView.hidden = true
+        cell.imageView.userInteractionEnabled = false
         cell.clipsToBounds = true
 
         if item.image != nil {
@@ -257,12 +312,8 @@ extension MotivationFeedViewController: YouTubePlayerDelegate {
         }
     }
 
-    func playerQualityChanged(videoPlayer: YouTubePlayerView, playbackQuality: YouTubePlaybackQuality) {
-        print("quality")
-    }
-    func playerReady(videoPlayer: YouTubePlayerView) {
-        print("Ready")
-    }
+    func playerQualityChanged(videoPlayer: YouTubePlayerView, playbackQuality: YouTubePlaybackQuality) {}
+    func playerReady(videoPlayer: YouTubePlayerView) {}
 }
 
 
