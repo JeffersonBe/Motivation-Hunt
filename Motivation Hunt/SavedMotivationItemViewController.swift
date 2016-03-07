@@ -59,7 +59,7 @@ class SavedMotivationItemViewController: UIViewController {
             cacheName: nil)
 
         return fetchedResultsController
-        
+
     }()
 }
 
@@ -80,9 +80,11 @@ extension SavedMotivationItemViewController: UITableViewDataSource, UITableViewD
 
     func tableView(tableView: UITableView, editActionsForRowAtIndexPath indexPath: NSIndexPath) -> [UITableViewRowAction]? {
         let delete = UITableViewRowAction(style: .Normal, title: "Delete") { action, index in
-            let objet = self.fetchedResultsController.objectAtIndexPath(indexPath) as! MotivationFeedItem
-            objet.saved = false
-            CoreDataStackManager.sharedInstance.saveContext()
+            CoreDataStackManager.sharedInstance.managedObjectContext.performBlock() {
+                let objet = self.fetchedResultsController.objectAtIndexPath(indexPath) as! MotivationFeedItem
+                objet.saved = false
+                CoreDataStackManager.sharedInstance.saveContext()
+            }
         }
 
         return [delete]

@@ -104,12 +104,16 @@ class MotivationFeedViewController: UIViewController {
         // http://stackoverflow.com/questions/27429652/detecting-uibutton-pressed-in-tableview-swift-best-practices
         let objet = fetchedResultsController.objectAtIndexPath(currentFavoriteindexPath!) as! MotivationFeedItem
         if objet.saved {
-            objet.saved = false
-            CoreDataStackManager.sharedInstance.saveContext()
+            CoreDataStackManager.sharedInstance.managedObjectContext.performBlock() {
+                objet.saved = false
+                CoreDataStackManager.sharedInstance.saveContext()
+            }
             hideFavoritesMenu()
         } else {
-            objet.saved = true
-            CoreDataStackManager.sharedInstance.saveContext()
+            CoreDataStackManager.sharedInstance.managedObjectContext.performBlock() {
+                objet.saved = true
+                CoreDataStackManager.sharedInstance.saveContext()
+            }
             hideFavoritesMenu()
         }
     }
@@ -143,7 +147,7 @@ class MotivationFeedViewController: UIViewController {
             cacheName: nil)
 
         return fetchedResultsController
-        
+
     }()
 
     // MARK: - NSFetchedResultsController related property
@@ -197,29 +201,32 @@ class MotivationFeedViewController: UIViewController {
                 return
             }
 
-            for item in results {
-                guard let videoSnippet = item["snippet"] as? [String:AnyObject] else {
-                    return
-                }
-                
-                guard let title = videoSnippet["title"] as? String else {
-                    return
-                }
+            CoreDataStackManager.sharedInstance.managedObjectContext.performBlock() {
 
-                guard let description = videoSnippet["description"] as? String else {
-                    return
-                }
-                
-                guard let id = item["id"]!["videoId"] as? String else {
-                    return
-                }
+                for item in results {
+                    guard let videoSnippet = item["snippet"] as? [String:AnyObject] else {
+                        return
+                    }
 
-                guard let thumbnailsUrl = videoSnippet["thumbnails"]!["high"]!!["url"] as? String else {
-                    return
-                }
+                    guard let title = videoSnippet["title"] as? String else {
+                        return
+                    }
 
-                let _ = MotivationFeedItem(itemTitle: title, itemDescription: description, itemID: id, itemThumbnailsUrl: thumbnailsUrl, saved: false, addedDate: NSDate(), context: self.sharedContext)
-                CoreDataStackManager.sharedInstance.saveContext()
+                    guard let description = videoSnippet["description"] as? String else {
+                        return
+                    }
+
+                    guard let id = item["id"]!["videoId"] as? String else {
+                        return
+                    }
+
+                    guard let thumbnailsUrl = videoSnippet["thumbnails"]!["high"]!!["url"] as? String else {
+                        return
+                    }
+
+                    let _ = MotivationFeedItem(itemTitle: title, itemDescription: description, itemID: id, itemThumbnailsUrl: thumbnailsUrl, saved: false, addedDate: NSDate(), context: self.sharedContext)
+                    CoreDataStackManager.sharedInstance.saveContext()
+                }
             }
         }
     }
@@ -401,7 +408,7 @@ extension MotivationFeedViewController: NSFetchedResultsControllerDelegate {
             )
         }
     }
-
+    
     func controllerDidChangeContent(controller: NSFetchedResultsController) {
         collectionView!.performBatchUpdates({ () -> Void in
             for operation: NSBlockOperation in self.blockOperations {

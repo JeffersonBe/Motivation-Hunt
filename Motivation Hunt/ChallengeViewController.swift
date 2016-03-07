@@ -98,8 +98,10 @@ class ChallengeViewController: UIViewController {
             return
         }
 
-        let _ = Challenge(challengeDescription: challengeTextField.text!, completed: false, endDate: challengeDatePicker.date, context: sharedContext)
-        CoreDataStackManager.sharedInstance.saveContext()
+        CoreDataStackManager.sharedInstance.managedObjectContext.performBlock() {
+            let _ = Challenge(challengeDescription: self.challengeTextField.text!, completed: false, endDate: self.challengeDatePicker.date, context: self.sharedContext)
+            CoreDataStackManager.sharedInstance.saveContext()
+        }
         HideAddChallengeView()
     }
 
@@ -251,7 +253,7 @@ extension ChallengeViewController: NSFetchedResultsControllerDelegate {
             }
         }
     }
-    
+
     func controllerWillChangeContent(controller: NSFetchedResultsController) {
         tableView.beginUpdates()
     }
