@@ -9,6 +9,7 @@
 import UIKit
 import CoreData
 import YouTubePlayer
+
 // https://github.com/gilesvangruisen/Swift-YouTube-Player
 
 
@@ -252,7 +253,13 @@ extension MotivationFeedViewController: UICollectionViewDelegate {
 
     func collectionView(collectionView: UICollectionView, didSelectItemAtIndexPath indexPath: NSIndexPath) {
         let cell = collectionView.dequeueReusableCellWithReuseIdentifier("Cell", forIndexPath: indexPath) as! youtubeCollectionViewCell
-        cell.videoPlayer.play()
+        if Reachability.connectedToNetwork() {
+            cell.videoPlayer.play()
+        } else {
+            let errorAlert = UIAlertController(title: "Ops… Unable to load the video", message: "You don't have an internet connection :-(", preferredStyle: UIAlertControllerStyle.Alert)
+            errorAlert.addAction(UIAlertAction(title: "Dismiss", style: UIAlertActionStyle.Default, handler: nil))
+            presentViewController(errorAlert, animated: true, completion: nil)
+        }
     }
 
 

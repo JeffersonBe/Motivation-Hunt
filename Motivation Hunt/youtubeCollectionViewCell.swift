@@ -64,13 +64,4 @@ class youtubeCollectionViewCell: UICollectionViewCell {
     override func prepareForReuse() {
         super.prepareForReuse()
     }
-
-    override var selected: Bool {
-        didSet {
-            if self.selected {
-                // do something
-                print("selected")
-            }
-        }
-    }
 }

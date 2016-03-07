@@ -97,7 +97,13 @@ extension SavedMotivationItemViewController: UITableViewDataSource, UITableViewD
 
     func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
         let cell = tableView.dequeueReusableCellWithIdentifier("Cell", forIndexPath: indexPath) as! savedItemTableViewCell
-        cell.videoPlayer.play()
+        if Reachability.connectedToNetwork() {
+            cell.videoPlayer.play()
+        } else {
+            let errorAlert = UIAlertController(title: "Ops… Unable to load the video", message: "You don't have an internet connection :-(", preferredStyle: UIAlertControllerStyle.Alert)
+            errorAlert.addAction(UIAlertAction(title: "Dismiss", style: UIAlertActionStyle.Default, handler: nil))
+            presentViewController(errorAlert, animated: true, completion: nil)
+        }
     }
 }
 
