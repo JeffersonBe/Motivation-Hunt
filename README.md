@@ -1,6 +1,6 @@
 
 # Motivation Hunt
-*Motivation Hunt is an iOS application which show motivational videos, quotes and story*.
+*Motivation Hunt is an iOS application which show motivational videos*.
 
 ## Features
 - Watch and read new daily motivational videos
