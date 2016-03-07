@@ -3,9 +3,9 @@
 *Motivation Hunt is an iOS application which show motivational videos*.
 
 ## Features
-- Watch and read new daily motivational videos
-- Save the motivational videos for later when you need a boost
-- Set challenge: you choose what you want to be challenge and when you are going to achieve it
+- **Watch and be inspire by new daily motivational videos**. The videos are currently pulled on Youtube based on Motivation and Success.
+- **Save the motivational videos for later** when you need a boost by long pressing the videos you wanted to save. The saved menu will appear and then click on the star icon to save to your favorites.
+- **Set challenge to complete**: you choose what you want to be challenge and when you are going to achieve it! When you accomplish your challenge, just swipe left and click select. Well done!
 
 ## How to get started
 1. Rename a KeyTemplate.plist to Key.plist  the root of your folder
