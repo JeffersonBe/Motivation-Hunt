@@ -11,6 +11,8 @@ import CoreData
 import YouTubePlayer
 // https://github.com/gilesvangruisen/Swift-YouTube-Player
 
+
+// We use this NSUserDefaults.standardUserDefaults() to keep track of page inside Youtube API Call
 let nextPageTokenConstant = "nextPageToken"
 
 class MotivationFeedViewController: UIViewController {
@@ -45,12 +47,19 @@ class MotivationFeedViewController: UIViewController {
             print("Error: \(error.localizedDescription)")
         }
 
+        // Set background View
         view.backgroundColor = UIColor(patternImage: UIImage(named: "backgroundFeed.png")!)
         let blurEffect = UIBlurEffect(style: UIBlurEffectStyle.Dark)
         let blurEffectView = UIVisualEffectView(effect: blurEffect)
         blurEffectView.frame = view.bounds
         blurEffectView.autoresizingMask = [.FlexibleWidth, .FlexibleHeight]
         view.insertSubview(blurEffectView, belowSubview: collectionView)
+    }
+
+
+    override func didReceiveMemoryWarning() {
+        super.didReceiveMemoryWarning()
+        // Dispose of any resources that can be recreated.
     }
 
     // Initialize CoreData and NSFetchedResultsController
@@ -65,31 +74,29 @@ class MotivationFeedViewController: UIViewController {
             return
         }
 
+        // Check if collectionViewCell are already open, then close it
         let visibleCell = collectionView.visibleCells()
-
         for cell in visibleCell {
             let selectedNSIndexPath = collectionView.indexPathForCell(cell)
             if selectedNSIndexPath == currentFavoriteindexPath {
-                hideFavoritesMenu(currentFavoriteindexPath)
+                hideFavoritesMenu()
             }
         }
 
+        // Reinitialise currentFavoriteindexPath to new collectionViewCell touched
         let tapPoint: CGPoint = gestureRecognizer.locationInView(collectionView)
         let indexPath = collectionView.indexPathForItemAtPoint(tapPoint)
         currentFavoriteindexPath = indexPath
+
         let cell = collectionView.cellForItemAtIndexPath(currentFavoriteindexPath) as! youtubeCollectionViewCell
-        let tapRecognizer: UITapGestureRecognizer = UITapGestureRecognizer(target: self, action: "hideFavoritesMenuWhenOpen")
+        let tapRecognizer: UITapGestureRecognizer = UITapGestureRecognizer(target: self, action: "hideFavoritesMenu")
         tapRecognizer.numberOfTapsRequired = 1
         cell.blurEffectView.addGestureRecognizer(tapRecognizer)
 
         guard indexPath != nil else {
             return
         }
-        showFavoritesMenu(currentFavoriteindexPath)
-    }
-
-    func hideFavoritesMenuWhenOpen() {
-        hideFavoritesMenu(currentFavoriteindexPath)
+        showFavoritesMenu()
     }
 
     func buttonAction(sender:UIButton!) {
@@ -98,16 +105,16 @@ class MotivationFeedViewController: UIViewController {
         if objet.saved {
             objet.saved = false
             CoreDataStackManager.sharedInstance.saveContext()
-            hideFavoritesMenu(currentFavoriteindexPath!)
+            hideFavoritesMenu()
         } else {
             objet.saved = true
             CoreDataStackManager.sharedInstance.saveContext()
-            hideFavoritesMenu(currentFavoriteindexPath!)
+            hideFavoritesMenu()
         }
     }
 
-    func showFavoritesMenu(indexPath: NSIndexPath){
-        let cell = collectionView.cellForItemAtIndexPath(indexPath) as! youtubeCollectionViewCell
+    func showFavoritesMenu(){
+        let cell = collectionView.cellForItemAtIndexPath(currentFavoriteindexPath) as! youtubeCollectionViewCell
         let objet = fetchedResultsController.objectAtIndexPath(currentFavoriteindexPath!) as! MotivationFeedItem
 
         if objet.saved {
@@ -118,8 +125,8 @@ class MotivationFeedViewController: UIViewController {
         cell.blurEffectView.hidden = false
     }
 
-    func hideFavoritesMenu(indexPath: NSIndexPath) {
-        let cell = collectionView.cellForItemAtIndexPath(indexPath) as! youtubeCollectionViewCell
+    func hideFavoritesMenu() {
+        let cell = collectionView.cellForItemAtIndexPath(currentFavoriteindexPath) as! youtubeCollectionViewCell
         cell.favoriteButton.hidden = true
         cell.blurEffectView.hidden = true
     }
@@ -137,11 +144,6 @@ class MotivationFeedViewController: UIViewController {
         return fetchedResultsController
         
     }()
-
-    override func didReceiveMemoryWarning() {
-        super.didReceiveMemoryWarning()
-        // Dispose of any resources that can be recreated.
-    }
 
     // MARK: - NSFetchedResultsController related property
     var blockOperations: [NSBlockOperation] = []
@@ -174,7 +176,7 @@ class MotivationFeedViewController: UIViewController {
                 dispatch_async(dispatch_get_main_queue(), {
                     self.indicator.stopActivity()
                     self.indicator.removeFromSuperview()
-                    let errorAlert = UIAlertController(title: "Error", message: "Unable to load the motivation", preferredStyle: UIAlertControllerStyle.Alert)
+                    let errorAlert = UIAlertController(title: "Ops… Unable to load feed", message: error!.localizedDescription, preferredStyle: UIAlertControllerStyle.Alert)
                     errorAlert.addAction(UIAlertAction(title: "Dismiss", style: UIAlertActionStyle.Default, handler: nil))
                     self.presentViewController(errorAlert, animated: true, completion: nil)
                 })
