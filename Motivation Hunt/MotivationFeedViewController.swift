@@ -12,7 +12,6 @@ import YouTubePlayer
 
 // https://github.com/gilesvangruisen/Swift-YouTube-Player
 
-
 // We use this NSUserDefaults.standardUserDefaults() to keep track of page inside Youtube API Call
 let nextPageTokenConstant = "nextPageToken"
 
@@ -42,12 +41,6 @@ class MotivationFeedViewController: UIViewController {
         let button = UIBarButtonItem(barButtonSystemItem: UIBarButtonSystemItem.Refresh, target: self, action: "refreshData")
         navigationItem.rightBarButtonItem = button
 
-        do {
-            try fetchedResultsController.performFetch()
-        } catch let error as NSError {
-            print("Error: \(error.localizedDescription)")
-        }
-
         // Set background View
         view.backgroundColor = UIColor(patternImage: UIImage(named: "backgroundFeed.png")!)
         let blurEffect = UIBlurEffect(style: UIBlurEffectStyle.Dark)
@@ -55,6 +48,12 @@ class MotivationFeedViewController: UIViewController {
         blurEffectView.frame = view.bounds
         blurEffectView.autoresizingMask = [.FlexibleWidth, .FlexibleHeight]
         view.insertSubview(blurEffectView, belowSubview: collectionView)
+
+        do {
+            try fetchedResultsController.performFetch()
+        } catch let error as NSError {
+            print("Error: \(error.localizedDescription)")
+        }
     }
 
 
@@ -68,6 +67,23 @@ class MotivationFeedViewController: UIViewController {
     var sharedContext: NSManagedObjectContext {
         return CoreDataStackManager.sharedInstance.managedObjectContext
     }
+
+    lazy var fetchedResultsController: NSFetchedResultsController = {
+
+        let fetchRequest = NSFetchRequest(entityName: "MotivationFeedItem")
+        fetchRequest.sortDescriptors = [NSSortDescriptor(key: "addedDate", ascending: false)]
+
+        let fetchedResultsController = NSFetchedResultsController(fetchRequest: fetchRequest,
+            managedObjectContext: self.sharedContext,
+            sectionNameKeyPath: nil,
+            cacheName: nil)
+
+        return fetchedResultsController
+
+    }()
+
+    // MARK: - NSFetchedResultsController related property
+    var blockOperations: [NSBlockOperation] = []
 
     func savedItem(gestureRecognizer: UIGestureRecognizer) {
 
@@ -135,23 +151,6 @@ class MotivationFeedViewController: UIViewController {
         cell.favoriteButton.hidden = true
         cell.blurEffectView.hidden = true
     }
-
-    lazy var fetchedResultsController: NSFetchedResultsController = {
-
-        let fetchRequest = NSFetchRequest(entityName: "MotivationFeedItem")
-        fetchRequest.sortDescriptors = [NSSortDescriptor(key: "addedDate", ascending: false)]
-
-        let fetchedResultsController = NSFetchedResultsController(fetchRequest: fetchRequest,
-            managedObjectContext: self.sharedContext,
-            sectionNameKeyPath: nil,
-            cacheName: nil)
-
-        return fetchedResultsController
-
-    }()
-
-    // MARK: - NSFetchedResultsController related property
-    var blockOperations: [NSBlockOperation] = []
 
     func refreshData() {
         indicator.startActivity()
@@ -289,6 +288,7 @@ extension MotivationFeedViewController: UICollectionViewDelegate {
         cell.favoriteButton.addTarget(self, action: "buttonAction:", forControlEvents:
             UIControlEvents.TouchUpInside)
         cell.blurEffectView.hidden = true
+        cell.videoPlayer.userInteractionEnabled = false
         cell.imageView.userInteractionEnabled = false
         cell.clipsToBounds = true
 

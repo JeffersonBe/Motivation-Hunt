@@ -27,7 +27,6 @@
 		B42E42861C81DE720095B9BF /* SavedMotivationItemViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B42E42851C81DE720095B9BF /* SavedMotivationItemViewController.swift */; };
 		B439763D1C8DDE5300864949 /* Reachability.swift in Sources */ = {isa = PBXBuildFile; fileRef = B439763C1C8DDE5300864949 /* Reachability.swift */; };
 		B44ACBC81C89ECEC00C5FF96 /* ImageCache.swift in Sources */ = {isa = PBXBuildFile; fileRef = B44ACBC71C89ECEC00C5FF96 /* ImageCache.swift */; };
-		B472D6931C8B155C0000CCE0 /* savedItemTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = B472D6921C8B155C0000CCE0 /* savedItemTableViewCell.swift */; };
 		B4DC95521C88CD620041AB31 /* MHClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4DC95511C88CD620041AB31 /* MHClient.swift */; };
 		B4DC95541C88CE8E0041AB31 /* MHConstant.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4DC95531C88CE8E0041AB31 /* MHConstant.swift */; };
 /* End PBXBuildFile section */
@@ -67,7 +66,6 @@
 		B42E42851C81DE720095B9BF /* SavedMotivationItemViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SavedMotivationItemViewController.swift; sourceTree = "<group>"; };
 		B439763C1C8DDE5300864949 /* Reachability.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Reachability.swift; sourceTree = "<group>"; };
 		B44ACBC71C89ECEC00C5FF96 /* ImageCache.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ImageCache.swift; sourceTree = "<group>"; };
-		B472D6921C8B155C0000CCE0 /* savedItemTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = savedItemTableViewCell.swift; sourceTree = "<group>"; };
 		B4DC95511C88CD620041AB31 /* MHClient.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MHClient.swift; sourceTree = "<group>"; };
 		B4DC95531C88CE8E0041AB31 /* MHConstant.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MHConstant.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -147,7 +145,6 @@
 				B41BF3431C7D0D7200E27074 /* LaunchScreen.storyboard */,
 				B41BF33B1C7D0D7200E27074 /* Main.storyboard */,
 				B42E42831C81D1350095B9BF /* youtubeCollectionViewCell.swift */,
-				B472D6921C8B155C0000CCE0 /* savedItemTableViewCell.swift */,
 				B41CE7E91C8B5B54002FCBC2 /* challengeTableViewCell.swift */,
 				B41CE7EB1C8B6F68002FCBC2 /* CustomUIActivityIndicatorView.swift */,
 			);
@@ -234,7 +231,6 @@
 				B41BF3561C7D153300E27074 /* Challenge.swift in Sources */,
 				B4DC95541C88CE8E0041AB31 /* MHConstant.swift in Sources */,
 				B44ACBC81C89ECEC00C5FF96 /* ImageCache.swift in Sources */,
-				B472D6931C8B155C0000CCE0 /* savedItemTableViewCell.swift in Sources */,
 				B41CE7EC1C8B6F68002FCBC2 /* CustomUIActivityIndicatorView.swift in Sources */,
 				B42E42811C81CB6C0095B9BF /* MotivationFeedItem.swift in Sources */,
 				B41BF3381C7D0D7200E27074 /* AppDelegate.swift in Sources */,

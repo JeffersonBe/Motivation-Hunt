@@ -12,27 +12,38 @@ import YouTubePlayer
 
 class SavedMotivationItemViewController: UIViewController {
 
-    @IBOutlet weak var tableView: UITableView!
-    let videoPlayer = YouTubePlayerView()
+    @IBOutlet weak var collectionView: UICollectionView!
+    var indicator = CustomUIActivityIndicatorView()
+    var currentFavoriteindexPath: NSIndexPath!
 
     override func viewDidLoad() {
         super.viewDidLoad()
+
         // Initialize delegate
+        collectionView.delegate = self
         fetchedResultsController.delegate = self
+
+        // Configure CollectionView
+        collectionView!.registerClass(youtubeCollectionViewCell.self,forCellWithReuseIdentifier: "Cell")
+        collectionView.backgroundColor = UIColor.clearColor()
+        collectionView.allowsMultipleSelection = false
+
+        let longTap: UILongPressGestureRecognizer = UILongPressGestureRecognizer(target: self, action: "savedItem:")
+        longTap.minimumPressDuration = 0.5
+        collectionView.addGestureRecognizer(longTap)
+
+        view.backgroundColor = UIColor(patternImage: UIImage(named: "backgroundFeed.png")!)
+        let blurEffect = UIBlurEffect(style: UIBlurEffectStyle.Dark)
+        let blurEffectView = UIVisualEffectView(effect: blurEffect)
+        blurEffectView.frame = view.bounds
+        blurEffectView.autoresizingMask = [.FlexibleWidth, .FlexibleHeight]
+        view.insertSubview(blurEffectView, belowSubview: collectionView)
 
         do {
             try fetchedResultsController.performFetch()
         } catch let error as NSError {
             print("Error: \(error.localizedDescription)")
         }
-        view.backgroundColor = UIColor(patternImage: UIImage(named: "backgroundFeed.png")!)
-        let blurEffect = UIBlurEffect(style: UIBlurEffectStyle.Dark)
-        let blurEffectView = UIVisualEffectView(effect: blurEffect)
-        blurEffectView.frame = view.bounds
-        blurEffectView.autoresizingMask = [.FlexibleWidth, .FlexibleHeight]
-        view.insertSubview(blurEffectView, belowSubview: tableView)
-        tableView.backgroundColor = UIColor.clearColor()
-        tableView.tableFooterView = UIView(frame: CGRect.zero)
     }
 
     override func didReceiveMemoryWarning() {
@@ -59,46 +70,95 @@ class SavedMotivationItemViewController: UIViewController {
             cacheName: nil)
 
         return fetchedResultsController
-
     }()
-}
 
-extension SavedMotivationItemViewController: UITableViewDataSource, UITableViewDelegate {
+    // MARK: - NSFetchedResultsController related property
+    var blockOperations: [NSBlockOperation] = []
 
-    // MARK: TableView Data Source
-    func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        let sectionInfo = self.fetchedResultsController.sections![section]
-        return sectionInfo.numberOfObjects
-    }
+    func savedItem(gestureRecognizer: UIGestureRecognizer) {
 
-    func tableView(tableView: UITableView,
-        cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
-            let cell = tableView.dequeueReusableCellWithIdentifier("Cell", forIndexPath: indexPath) as! savedItemTableViewCell
-            configureCell(cell, atIndexPath: indexPath)
-            return cell
-    }
+        guard gestureRecognizer.state != .Ended else {
+            return
+        }
 
-    func tableView(tableView: UITableView, editActionsForRowAtIndexPath indexPath: NSIndexPath) -> [UITableViewRowAction]? {
-        let delete = UITableViewRowAction(style: .Normal, title: "Delete") { action, index in
-            CoreDataStackManager.sharedInstance.managedObjectContext.performBlock() {
-                let objet = self.fetchedResultsController.objectAtIndexPath(indexPath) as! MotivationFeedItem
-                objet.saved = false
-                CoreDataStackManager.sharedInstance.saveContext()
+        // Check if collectionViewCell are already open, then close it
+        let visibleCell = collectionView.visibleCells()
+        for cell in visibleCell {
+            let selectedNSIndexPath = collectionView.indexPathForCell(cell)
+            if selectedNSIndexPath == currentFavoriteindexPath {
+                hideFavoritesMenu()
             }
         }
 
-        return [delete]
+        // Reinitialise currentFavoriteindexPath to new collectionViewCell touched
+        let tapPoint: CGPoint = gestureRecognizer.locationInView(collectionView)
+        let indexPath = collectionView.indexPathForItemAtPoint(tapPoint)
+        currentFavoriteindexPath = indexPath
+
+        let cell = collectionView.cellForItemAtIndexPath(currentFavoriteindexPath) as! youtubeCollectionViewCell
+        let tapRecognizer: UITapGestureRecognizer = UITapGestureRecognizer(target: self, action: "hideFavoritesMenu")
+        tapRecognizer.numberOfTapsRequired = 1
+        cell.blurEffectView.addGestureRecognizer(tapRecognizer)
+
+        guard indexPath != nil else {
+            return
+        }
+        showFavoritesMenu()
     }
 
-    func configureCell(cell: savedItemTableViewCell, atIndexPath indexPath: NSIndexPath) {
-        let object = self.fetchedResultsController.objectAtIndexPath(indexPath) as! MotivationFeedItem
-        cell.savedItemTextLabel.text = object.itemTitle
-        cell.savedItemImageView.image = object.image!
-        cell.videoPlayer.loadVideoID(object.itemID)
+    func buttonAction(sender:UIButton!) {
+        // http://stackoverflow.com/questions/27429652/detecting-uibutton-pressed-in-tableview-swift-best-practices
+        let objet = fetchedResultsController.objectAtIndexPath(currentFavoriteindexPath!) as! MotivationFeedItem
+        if objet.saved {
+            CoreDataStackManager.sharedInstance.managedObjectContext.performBlock() {
+                objet.saved = false
+                CoreDataStackManager.sharedInstance.saveContext()
+            }
+            hideFavoritesMenu()
+        } else {
+            CoreDataStackManager.sharedInstance.managedObjectContext.performBlock() {
+                objet.saved = true
+                CoreDataStackManager.sharedInstance.saveContext()
+            }
+            hideFavoritesMenu()
+        }
     }
 
-    func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
-        let cell = tableView.dequeueReusableCellWithIdentifier("Cell", forIndexPath: indexPath) as! savedItemTableViewCell
+    func showFavoritesMenu(){
+        let cell = collectionView.cellForItemAtIndexPath(currentFavoriteindexPath) as! youtubeCollectionViewCell
+        let objet = fetchedResultsController.objectAtIndexPath(currentFavoriteindexPath!) as! MotivationFeedItem
+
+        if objet.saved {
+            cell.favoriteButton.imageView?.tintColor = UIColor.whiteColor()
+        }
+
+        cell.favoriteButton.hidden = false
+        cell.blurEffectView.hidden = false
+    }
+
+    func hideFavoritesMenu() {
+        let cell = collectionView.cellForItemAtIndexPath(currentFavoriteindexPath) as! youtubeCollectionViewCell
+        cell.favoriteButton.hidden = true
+        cell.blurEffectView.hidden = true
+    }
+}
+
+extension SavedMotivationItemViewController: UICollectionViewDelegate {
+
+    func collectionView(collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+        let sectionInfo = fetchedResultsController.sections![section] as NSFetchedResultsSectionInfo
+        return sectionInfo.numberOfObjects
+    }
+
+    func collectionView(collectionView: UICollectionView, cellForItemAtIndexPath indexPath: NSIndexPath) -> UICollectionViewCell {
+        let motivationItem = fetchedResultsController.objectAtIndexPath(indexPath) as! MotivationFeedItem
+        let cell = collectionView.dequeueReusableCellWithReuseIdentifier("Cell", forIndexPath: indexPath) as! youtubeCollectionViewCell
+        configureCell(cell, withItem: motivationItem)
+        return cell
+    }
+
+    func collectionView(collectionView: UICollectionView, didSelectItemAtIndexPath indexPath: NSIndexPath) {
+        let cell = collectionView.dequeueReusableCellWithReuseIdentifier("Cell", forIndexPath: indexPath) as! youtubeCollectionViewCell
         if Reachability.connectedToNetwork() {
             cell.videoPlayer.play()
         } else {
@@ -107,53 +167,155 @@ extension SavedMotivationItemViewController: UITableViewDataSource, UITableViewD
             presentViewController(errorAlert, animated: true, completion: nil)
         }
     }
+
+
+    func collectionView(collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAtIndexPath indexPath: NSIndexPath) -> CGSize {
+        let dimension = view.frame.size.width / 2.0
+        return CGSizeMake(dimension, dimension)
+    }
+
+    func collectionView(collectionView: UICollectionView,
+        layout collectionViewLayout: UICollectionViewLayout,
+        insetForSectionAtIndex section: Int) -> UIEdgeInsets {
+            return UIEdgeInsetsZero
+    }
+
+    func configureCell(cell: youtubeCollectionViewCell, withItem item: MotivationFeedItem) {
+        cell.videoPlayer.delegate = self
+        cell.textLabel.text = item.itemTitle
+        cell.videoPlayer.loadVideoID(item.itemID)
+        cell.favoriteButton.hidden = true
+        cell.favoriteButton.addTarget(self, action: "buttonAction:", forControlEvents:
+            UIControlEvents.TouchUpInside)
+        cell.blurEffectView.hidden = true
+        cell.videoPlayer.userInteractionEnabled = false
+        cell.imageView.userInteractionEnabled = false
+        cell.clipsToBounds = true
+
+        if item.image != nil {
+            dispatch_async(dispatch_get_main_queue()) {
+                cell.imageView.image = item.image
+                UIView.animateWithDuration(0.5, delay: 0.0, options: UIViewAnimationOptions.CurveEaseOut, animations: {
+                    cell.alpha = 1.0
+                    }, completion: nil)
+            }
+        } else {
+            MHClient.sharedInstance.taskForImage(item.itemThumbnailsUrl) { imageData, error in
+                if let image = imageData {
+                    dispatch_async(dispatch_get_main_queue()) {
+                        item.image = UIImage(data: image)
+                        cell.imageView.image = item.image
+                        UIView.animateWithDuration(0.5, delay: 0.0, options: UIViewAnimationOptions.CurveEaseOut, animations: {
+                            cell.alpha = 1.0
+                            }, completion: nil)
+                    }
+                }
+            }
+        }
+    }
 }
+
+extension SavedMotivationItemViewController: YouTubePlayerDelegate {
+    func playerStateChanged(videoPlayer: YouTubePlayerView, playerState: YouTubePlayerState) {
+        if playerState == .Buffering {
+            indicator.startActivity()
+            view.addSubview(indicator)
+        }
+
+        if playerState == .Playing {
+            indicator.stopActivity()
+            indicator.removeFromSuperview()
+        }
+    }
+
+    func playerQualityChanged(videoPlayer: YouTubePlayerView, playbackQuality: YouTubePlaybackQuality) {}
+    func playerReady(videoPlayer: YouTubePlayerView) {}
+}
+
 
 extension SavedMotivationItemViewController: NSFetchedResultsControllerDelegate {
     // MARK: NSFetchedResultsController delegate
-
-    func controller(controller: NSFetchedResultsController, didChangeSection sectionInfo: NSFetchedResultsSectionInfo, atIndex sectionIndex: Int, forChangeType type: NSFetchedResultsChangeType) {
-        switch(type) {
-        case .Insert:
-            tableView.insertSections(NSIndexSet(index: sectionIndex), withRowAnimation: UITableViewRowAnimation.Fade)
-        case .Delete:
-            tableView.deleteSections(NSIndexSet(index: sectionIndex), withRowAnimation: UITableViewRowAnimation.Fade)
-        default:
-            break
-        }
-    }
+    // Used GIST: https://gist.github.com/AppsTitude/ce072627c61ea3999b8d#file-uicollection-and-nsfetchedresultscontrollerdelegate-integration-swift-L78
 
     func controller(controller: NSFetchedResultsController, didChangeObject anObject: AnyObject, atIndexPath indexPath: NSIndexPath?, forChangeType type: NSFetchedResultsChangeType, newIndexPath: NSIndexPath?) {
-        switch(type) {
-        case .Insert:
-            if let newIndexPath = newIndexPath {
-                tableView.insertRowsAtIndexPaths([newIndexPath], withRowAnimation:UITableViewRowAnimation.Fade)
-            }
-        case .Delete:
-            if let indexPath = indexPath {
-                tableView.deleteRowsAtIndexPaths([indexPath], withRowAnimation: UITableViewRowAnimation.Fade)
-            }
-        case .Update:
-            if let indexPath = indexPath {
-                if let cell = tableView.cellForRowAtIndexPath(indexPath) {
-                    configureCell(cell as! savedItemTableViewCell, atIndexPath: indexPath)
-                }
-            }
-        case .Move:
-            if let indexPath = indexPath {
-                if let newIndexPath = newIndexPath {
-                    tableView.deleteRowsAtIndexPaths([indexPath], withRowAnimation: UITableViewRowAnimation.Fade)
-                    tableView.insertRowsAtIndexPaths([newIndexPath], withRowAnimation: UITableViewRowAnimation.Fade)
-                }
-            }
+
+        if type == NSFetchedResultsChangeType.Insert {
+            blockOperations.append(
+                NSBlockOperation(block: { [weak self] in
+                    if let this = self {
+                        this.collectionView!.insertItemsAtIndexPaths([newIndexPath!])
+                    }
+                    })
+            )
+        }
+        else if type == NSFetchedResultsChangeType.Update {
+            blockOperations.append(
+                NSBlockOperation(block: { [weak self] in
+                    if let this = self {
+                        this.collectionView!.reloadItemsAtIndexPaths([indexPath!])
+                    }
+                    })
+            )
+        }
+        else if type == NSFetchedResultsChangeType.Move {
+            blockOperations.append(
+                NSBlockOperation(block: { [weak self] in
+                    if let this = self {
+                        this.collectionView!.moveItemAtIndexPath(indexPath!, toIndexPath: newIndexPath!)
+                    }
+                    })
+            )
+        }
+        else if type == NSFetchedResultsChangeType.Delete {
+            blockOperations.append(
+                NSBlockOperation(block: { [weak self] in
+                    if let this = self {
+                        this.collectionView!.deleteItemsAtIndexPaths([indexPath!])
+                    }
+                    })
+            )
         }
     }
 
-    func controllerWillChangeContent(controller: NSFetchedResultsController) {
-        tableView.beginUpdates()
+    func controller(controller: NSFetchedResultsController, didChangeSection sectionInfo: NSFetchedResultsSectionInfo, atIndex sectionIndex: Int, forChangeType type: NSFetchedResultsChangeType) {
+
+        if type == NSFetchedResultsChangeType.Insert {
+
+            blockOperations.append(
+                NSBlockOperation(block: { [weak self] in
+                    if let this = self {
+                        this.collectionView!.insertSections(NSIndexSet(index: sectionIndex))
+                    }
+                    })
+            )
+        }
+        else if type == NSFetchedResultsChangeType.Update {
+            blockOperations.append(
+                NSBlockOperation(block: { [weak self] in
+                    if let this = self {
+                        this.collectionView!.reloadSections(NSIndexSet(index: sectionIndex))
+                    }
+                    })
+            )
+        }
+        else if type == NSFetchedResultsChangeType.Delete {
+            blockOperations.append(
+                NSBlockOperation(block: { [weak self] in
+                    if let this = self {
+                        this.collectionView!.deleteSections(NSIndexSet(index: sectionIndex))
+                    }
+                    })
+            )
+        }
     }
 
     func controllerDidChangeContent(controller: NSFetchedResultsController) {
-        tableView.endUpdates()
+        collectionView!.performBatchUpdates({ () -> Void in
+            for operation: NSBlockOperation in self.blockOperations {
+                operation.start()
+            }
+            }, completion: { (finished) -> Void in
+                self.blockOperations.removeAll(keepCapacity: false)
+        })
     }
 }
