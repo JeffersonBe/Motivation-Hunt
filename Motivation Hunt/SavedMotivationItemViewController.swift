@@ -134,10 +134,17 @@ class SavedMotivationItemViewController: UIViewController {
 
         cell.favoriteButton.hidden = false
         cell.blurEffectView.hidden = false
+        UIView.animateWithDuration(0.5, delay: 0.0, options: UIViewAnimationOptions.CurveEaseOut, animations: {
+            cell.favoriteButton.alpha = 1.0
+            }, completion: nil)
     }
 
     func hideFavoritesMenu() {
         let cell = collectionView.cellForItemAtIndexPath(currentFavoriteindexPath) as! youtubeCollectionViewCell
+
+        UIView.animateWithDuration(0.5, delay: 0.0, options: UIViewAnimationOptions.CurveEaseOut, animations: {
+            cell.favoriteButton.alpha = 0
+            }, completion: nil)
         cell.favoriteButton.hidden = true
         cell.blurEffectView.hidden = true
     }

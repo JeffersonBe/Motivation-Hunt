@@ -144,10 +144,17 @@ class MotivationFeedViewController: UIViewController {
 
         cell.favoriteButton.hidden = false
         cell.blurEffectView.hidden = false
+        UIView.animateWithDuration(0.5, delay: 0.0, options: UIViewAnimationOptions.CurveEaseOut, animations: {
+            cell.favoriteButton.alpha = 1.0
+            }, completion: nil)
     }
 
     func hideFavoritesMenu() {
         let cell = collectionView.cellForItemAtIndexPath(currentFavoriteindexPath) as! youtubeCollectionViewCell
+
+        UIView.animateWithDuration(0.5, delay: 0.0, options: UIViewAnimationOptions.CurveEaseOut, animations: {
+            cell.favoriteButton.alpha = 0
+            }, completion: nil)
         cell.favoriteButton.hidden = true
         cell.blurEffectView.hidden = true
     }
@@ -287,6 +294,7 @@ extension MotivationFeedViewController: UICollectionViewDelegate {
         cell.favoriteButton.hidden = true
         cell.favoriteButton.addTarget(self, action: "buttonAction:", forControlEvents:
             UIControlEvents.TouchUpInside)
+        cell.favoriteButton.alpha = 0
         cell.blurEffectView.hidden = true
         cell.videoPlayer.userInteractionEnabled = false
         cell.imageView.userInteractionEnabled = false
