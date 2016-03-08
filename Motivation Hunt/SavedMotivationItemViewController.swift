@@ -129,7 +129,7 @@ class SavedMotivationItemViewController: UIViewController {
         let objet = fetchedResultsController.objectAtIndexPath(currentFavoriteindexPath!) as! MotivationFeedItem
 
         if objet.saved {
-            cell.favoriteButton.imageView?.tintColor = UIColor.whiteColor()
+            cell.favoriteButton.setImage(UIImage(named: "iconSelectedFeatured") as UIImage?, forState: .Normal)
         }
 
         cell.favoriteButton.hidden = false

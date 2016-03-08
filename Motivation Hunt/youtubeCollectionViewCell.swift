@@ -32,7 +32,7 @@ class youtubeCollectionViewCell: UICollectionViewCell {
         textLabel.textAlignment = .Center
         contentView.addSubview(textLabel)
 
-        let image = UIImage(named: "iconFeatured") as UIImage?
+        let image = UIImage(named: "iconUnselectedFeatured") as UIImage?
         favoriteButton = UIButton(type: UIButtonType.System) as UIButton
         favoriteButton.frame = CGRectMake(0, 0, frame.size.width/2, frame.size.width/2)
         favoriteButton.imageView?.clipsToBounds = true
