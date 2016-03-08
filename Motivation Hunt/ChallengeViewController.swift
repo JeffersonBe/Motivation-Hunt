@@ -11,10 +11,10 @@ import CoreData
 
 class ChallengeViewController: UIViewController {
 
+    @IBOutlet weak var tableView: UITableView!
     @IBOutlet weak var challengeTextField: UITextField!
     @IBOutlet weak var challengeDatePicker: UIDatePicker!
     @IBOutlet weak var addChallengeButton: UIButton!
-    @IBOutlet weak var tableView: UITableView!
     @IBOutlet weak var addChallengeView: UIView!
 
     var editMode: Bool = false
@@ -33,6 +33,8 @@ class ChallengeViewController: UIViewController {
         } catch let error as NSError {
             print("Error: \(error.localizedDescription)")
         }
+
+        tableView.allowsMultipleSelection = false
 
         addChallengeView.hidden = true
         let button = UIBarButtonItem(barButtonSystemItem: UIBarButtonSystemItem.Add, target: self, action: "showAddChallenge")
@@ -100,9 +102,10 @@ class ChallengeViewController: UIViewController {
     }
 
     func showAddChallengeView() {
-        self.challengeTextField.text = ""
+        challengeTextField.text = ""
+        challengeTextField.attributedPlaceholder = NSAttributedString(string: MHClient.AppCopy.enterYourChallenge, attributes: [NSForegroundColorAttributeName: UIColor.grayColor()])
         let button = UIBarButtonItem(barButtonSystemItem: UIBarButtonSystemItem.Cancel, target: self, action: "showAddChallenge")
-        self.addChallengeView.hidden = false
+        addChallengeView.hidden = false
         self.view.insertSubview(self.dimView, belowSubview: (self.navigationController?.navigationBar)!)
         self.view.insertSubview(self.addChallengeView, belowSubview: (self.navigationController?.navigationBar)!)
         UIView.animateWithDuration(0.3, animations: {
@@ -162,9 +165,9 @@ extension ChallengeViewController: UITableViewDataSource, UITableViewDelegate {
                 dispatch_async(dispatch_get_main_queue()) {
                     challenge.completed = false
                     CoreDataStackManager.sharedInstance.saveContext()
-                    cell.backgroundColor = UIColor.whiteColor()
-                    tableView.setEditing(false, animated: true)
                 }
+                cell.backgroundColor = UIColor.whiteColor()
+                tableView.setEditing(false, animated: true)
             }
             unComplete.backgroundColor = UIColor.grayColor()
 
@@ -172,12 +175,13 @@ extension ChallengeViewController: UITableViewDataSource, UITableViewDelegate {
             return [delete, unComplete]
         } else {
             let complete = UITableViewRowAction(style: .Normal, title: MHClient.AppCopy.complete) { action, index in
+
                 dispatch_async(dispatch_get_main_queue()) {
                     challenge.completed = true
                     CoreDataStackManager.sharedInstance.saveContext()
-                    cell.backgroundColor = UIColor(red:0.52, green:0.86, blue:0.09, alpha:1.0)
-                    tableView.setEditing(false, animated: true)
                 }
+                cell.backgroundColor = UIColor(red:0.52, green:0.86, blue:0.09, alpha:1.0)
+                tableView.setEditing(false, animated: true)
             }
             complete.backgroundColor = UIColor(red:0.52, green:0.86, blue:0.09, alpha:1.0)
 

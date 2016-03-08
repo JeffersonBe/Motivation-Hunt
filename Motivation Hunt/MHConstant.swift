@@ -54,6 +54,7 @@ extension MHClient {
     }
 
     struct AppCopy {
+        static let enterYourChallenge = "Enter your challenge"
         static let unableToLoadVideo = "Oops… Unable to load the video"
         static let noInternetConnection = "You don't have any internet connection :-("
         static let dismiss = "Dismiss"
