@@ -8,5 +8,6 @@
 - **Set challenge to complete**: you choose what you want to be challenge and when you are going to achieve it! When you accomplish your challenge, just swipe left and click select. Well done!
 
 ## How to get started
-1. Rename a KeyTemplate.plist to Key.plist  the root of your folder
+*For security purpose, I’ve taken out of version control the API key. To make one, follow the follow direction:*
+1. Rename KeyTemplate.plist to Key.plist the root of your folder
 2. Enter your Youtube API key in the row named API_KEY
