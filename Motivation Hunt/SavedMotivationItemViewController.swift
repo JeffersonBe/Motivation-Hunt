@@ -46,11 +46,6 @@ class SavedMotivationItemViewController: UIViewController {
         }
     }
 
-    override func didReceiveMemoryWarning() {
-        super.didReceiveMemoryWarning()
-        // Dispose of any resources that can be recreated.
-    }
-
     // Initialize CoreData and NSFetchedResultsController
 
     var sharedContext: NSManagedObjectContext {
