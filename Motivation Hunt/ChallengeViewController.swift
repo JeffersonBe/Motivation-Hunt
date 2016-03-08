@@ -97,16 +97,14 @@ class ChallengeViewController: UIViewController {
             challengeTextField.attributedPlaceholder = NSAttributedString(string: "Please add a challenge", attributes: [NSForegroundColorAttributeName: UIColor.redColor()])
             return
         }
-
-        CoreDataStackManager.sharedInstance.managedObjectContext.performBlock() {
-            let _ = Challenge(challengeDescription: self.challengeTextField.text!, completed: false, endDate: self.challengeDatePicker.date, context: self.sharedContext)
-            CoreDataStackManager.sharedInstance.saveContext()
+        dispatch_async(dispatch_get_main_queue()) {
+        let _ = Challenge(challengeDescription: self.challengeTextField.text!, completed: false, endDate: self.challengeDatePicker.date, context: self.sharedContext)
+        CoreDataStackManager.sharedInstance.saveContext()
         }
-        HideAddChallengeView()
+        showAddChallenge()
     }
 
     func showAddChallengeView() {
-        dispatch_async(dispatch_get_main_queue()) {
             self.challengeTextField.text = ""
             let button = UIBarButtonItem(barButtonSystemItem: UIBarButtonSystemItem.Cancel, target: self, action: "showAddChallenge")
             self.addChallengeView.hidden = false
@@ -116,11 +114,9 @@ class ChallengeViewController: UIViewController {
                 self.dimView.alpha = 0.3
             })
             self.navigationItem.rightBarButtonItem = button
-        }
     }
 
     func HideAddChallengeView() {
-        dispatch_async(dispatch_get_main_queue()) {
             self.addChallengeView.hidden = true
             UIView.animateWithDuration(0.3, animations: {
                 self.dimView.alpha = 0
@@ -130,7 +126,6 @@ class ChallengeViewController: UIViewController {
             let button = UIBarButtonItem(barButtonSystemItem: UIBarButtonSystemItem.Add, target: self, action: "showAddChallenge")
             self.navigationItem.rightBarButtonItem = button
             self.challengeTextField.resignFirstResponder()
-        }
     }
 }
 
@@ -157,31 +152,48 @@ extension ChallengeViewController: UITableViewDataSource, UITableViewDelegate {
 
     func tableView(tableView: UITableView, editActionsForRowAtIndexPath indexPath: NSIndexPath) -> [UITableViewRowAction]? {
         let challenge = self.fetchedResultsController.objectAtIndexPath(indexPath) as! Challenge
+        let cell = tableView.dequeueReusableCellWithIdentifier("Cell", forIndexPath: indexPath) as! challengeTableViewCell
 
         if challenge.completed {
             let delete = UITableViewRowAction(style: .Normal, title: "Delete") { action, index in
-                let challenge = self.fetchedResultsController.objectAtIndexPath(indexPath) as! Challenge
+                dispatch_async(dispatch_get_main_queue()) {
                 self.sharedContext.deleteObject(challenge)
                 CoreDataStackManager.sharedInstance.saveContext()
+                }
             }
             delete.backgroundColor = UIColor.redColor()
 
-            return [delete]
+            let unComplete = UITableViewRowAction(style: .Normal, title: "Uncompleted") { action, index in
+                dispatch_async(dispatch_get_main_queue()) {
+                challenge.completed = false
+                CoreDataStackManager.sharedInstance.saveContext()
+                cell.backgroundColor = UIColor.whiteColor()
+                tableView.setEditing(false, animated: true)
+                }
+            }
+            unComplete.backgroundColor = UIColor.grayColor()
+
+
+            return [delete, unComplete]
         } else {
             let complete = UITableViewRowAction(style: .Normal, title: "Completed") { action, index in
-                let challenge = self.fetchedResultsController.objectAtIndexPath(indexPath) as! Challenge
+                dispatch_async(dispatch_get_main_queue()) {
                 challenge.completed = true
                 CoreDataStackManager.sharedInstance.saveContext()
+                cell.backgroundColor = UIColor(red:0.52, green:0.86, blue:0.09, alpha:1.0)
                 tableView.setEditing(false, animated: true)
+                }
             }
-            complete.backgroundColor = UIColor.greenColor()
+            complete.backgroundColor = UIColor(red:0.52, green:0.86, blue:0.09, alpha:1.0)
 
             let delete = UITableViewRowAction(style: .Normal, title: "Delete") { action, index in
-                let challenge = self.fetchedResultsController.objectAtIndexPath(indexPath) as! Challenge
+                dispatch_async(dispatch_get_main_queue()) {
                 self.sharedContext.deleteObject(challenge)
                 CoreDataStackManager.sharedInstance.saveContext()
+                }
             }
             delete.backgroundColor = UIColor.redColor()
+
             return [complete, delete]
         }
     }
@@ -189,8 +201,8 @@ extension ChallengeViewController: UITableViewDataSource, UITableViewDelegate {
     func configureCell(cell: challengeTableViewCell, atIndexPath indexPath: NSIndexPath) {
         let challenge = fetchedResultsController.objectAtIndexPath(indexPath) as! Challenge
 
-        if challenge.completed {
-            cell.backgroundColor = UIColor(red:0.52, green:0.86, blue:0.09, alpha:1.0)
+        if !challenge.completed {
+            cell.backgroundColor = UIColor.whiteColor()
         }
 
         // http://www.codingexplorer.com/swiftly-getting-human-readable-date-nsdateformatter/
