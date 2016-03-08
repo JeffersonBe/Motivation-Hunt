@@ -1,6 +1,6 @@
 //
 //  ImageCache.swift
-//  VirtualTourist
+//  Motivation Hunt
 //
 //  Created by Jefferson Bonnaire on 15/02/2016.
 //  Copyright © 2016 Jefferson Bonnaire. All rights reserved.

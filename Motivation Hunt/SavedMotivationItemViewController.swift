@@ -110,13 +110,13 @@ class SavedMotivationItemViewController: UIViewController {
         // http://stackoverflow.com/questions/27429652/detecting-uibutton-pressed-in-tableview-swift-best-practices
         let objet = fetchedResultsController.objectAtIndexPath(currentFavoriteindexPath!) as! MotivationFeedItem
         if objet.saved {
-            CoreDataStackManager.sharedInstance.managedObjectContext.performBlock() {
+            dispatch_async(dispatch_get_main_queue()) {
                 objet.saved = false
                 CoreDataStackManager.sharedInstance.saveContext()
             }
             hideFavoritesMenu()
         } else {
-            CoreDataStackManager.sharedInstance.managedObjectContext.performBlock() {
+            dispatch_async(dispatch_get_main_queue()) {
                 objet.saved = true
                 CoreDataStackManager.sharedInstance.saveContext()
             }
@@ -169,7 +169,7 @@ extension SavedMotivationItemViewController: UICollectionViewDelegate {
         if Reachability.connectedToNetwork() {
             cell.videoPlayer.play()
         } else {
-            let errorAlert = UIAlertController(title: "Ops… Unable to load the video", message: "You don't have an internet connection :-(", preferredStyle: UIAlertControllerStyle.Alert)
+            let errorAlert = UIAlertController(title: "Oops… Unable to load the video", message: "You don't have an internet connection :-(", preferredStyle: UIAlertControllerStyle.Alert)
             errorAlert.addAction(UIAlertAction(title: "Dismiss", style: UIAlertActionStyle.Default, handler: nil))
             presentViewController(errorAlert, animated: true, completion: nil)
         }

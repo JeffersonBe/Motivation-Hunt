@@ -74,7 +74,7 @@ class MHClient: NSObject {
 
     // MARK: - Helpers
 
-    // Try to make a better error, based on the status_message from Flickr. If we cant then return the previous error
+    // Try to make a better error, based on the status_message from Youtube. If we cant then return the previous error
 
     class func errorForData(data: NSData?, response: NSURLResponse?, error: NSError) -> NSError {
 
@@ -87,7 +87,7 @@ class MHClient: NSObject {
 
             if let parsedResult = parsedResult as? [String : AnyObject], errorMessage = parsedResult[MHClient.Keys.ErrorStatusMessage] as? String {
                 let userInfo = [NSLocalizedDescriptionKey : errorMessage]
-                return NSError(domain: "Flickr Error", code: 1, userInfo: userInfo)
+                return NSError(domain: "Youtube Error", code: 1, userInfo: userInfo)
             }
 
         } catch _ {}

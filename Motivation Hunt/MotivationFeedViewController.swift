@@ -56,12 +56,6 @@ class MotivationFeedViewController: UIViewController {
         }
     }
 
-
-    override func didReceiveMemoryWarning() {
-        super.didReceiveMemoryWarning()
-        // Dispose of any resources that can be recreated.
-    }
-
     // Initialize CoreData and NSFetchedResultsController
 
     var sharedContext: NSManagedObjectContext {
@@ -120,13 +114,13 @@ class MotivationFeedViewController: UIViewController {
         // http://stackoverflow.com/questions/27429652/detecting-uibutton-pressed-in-tableview-swift-best-practices
         let objet = fetchedResultsController.objectAtIndexPath(currentFavoriteindexPath!) as! MotivationFeedItem
         if objet.saved {
-            CoreDataStackManager.sharedInstance.managedObjectContext.performBlock() {
+            dispatch_async(dispatch_get_main_queue()) {
                 objet.saved = false
                 CoreDataStackManager.sharedInstance.saveContext()
             }
             hideFavoritesMenu()
         } else {
-            CoreDataStackManager.sharedInstance.managedObjectContext.performBlock() {
+            dispatch_async(dispatch_get_main_queue()) {
                 objet.saved = true
                 CoreDataStackManager.sharedInstance.saveContext()
             }
@@ -187,7 +181,7 @@ class MotivationFeedViewController: UIViewController {
                 dispatch_async(dispatch_get_main_queue(), {
                     self.indicator.stopActivity()
                     self.indicator.removeFromSuperview()
-                    let errorAlert = UIAlertController(title: "Ops… Unable to load feed", message: error!.localizedDescription, preferredStyle: UIAlertControllerStyle.Alert)
+                    let errorAlert = UIAlertController(title: "Oops… Unable to load feed", message: error!.localizedDescription, preferredStyle: UIAlertControllerStyle.Alert)
                     errorAlert.addAction(UIAlertAction(title: "Dismiss", style: UIAlertActionStyle.Default, handler: nil))
                     self.presentViewController(errorAlert, animated: true, completion: nil)
                 })
@@ -269,7 +263,7 @@ extension MotivationFeedViewController: UICollectionViewDelegate {
         if Reachability.connectedToNetwork() {
             cell.videoPlayer.play()
         } else {
-            let errorAlert = UIAlertController(title: "Ops… Unable to load the video", message: "You don't have an internet connection :-(", preferredStyle: UIAlertControllerStyle.Alert)
+            let errorAlert = UIAlertController(title: "Oops… Unable to load the video", message: "You don't have an internet connection :-(", preferredStyle: UIAlertControllerStyle.Alert)
             errorAlert.addAction(UIAlertAction(title: "Dismiss", style: UIAlertActionStyle.Default, handler: nil))
             presentViewController(errorAlert, animated: true, completion: nil)
         }
