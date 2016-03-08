@@ -28,18 +28,43 @@ extension MHClient {
     }
 
     struct JSONKeys {
-        static let Id = "id"
-        static let Title = "title"
-        static let imageUrl = "url_m"
+        static let part = "part"
+        static let snippet = "snippet"
+        static let order = "order"
+        static let viewCount = "viewCount"
+        static let query = "q"
+        static let type = "type"
+        static let videoType = "video"
+        static let videoDefinition = "videoDefinition"
+        static let qualityHigh = "high"
+        static let maxResults = "maxResults"
+        static let key = "key"
+    }
+
+    struct JSONResponseKeys {
+        static let items = "items"
+        static let ID = "id"
+        static let snippet = "snippet"
+        static let title = "title"
+        static let description = "description"
+        static let videoId = "videoId"
+        static let thumbnails = "thumbnails"
+        static let quality = "high"
+        static let url = "url"
     }
 
     struct AppCopy {
-        static let deleteSelectedPictures = "Delete Selected Pictures"
-        static let newCollection = "New Collection"
-        static let noPhotosFoundInCollection = "No photos found for this location"
+        static let unableToLoadVideo = "Oops… Unable to load the video"
+        static let noInternetConnection = "You don't have any internet connection :-("
+        static let dismiss = "Dismiss"
+        static let completeBy = "Complete by:"
+        static let delete = "Delete"
+        static let unComplete = "Uncompleted"
+        static let complete = "Complete"
+        static let pleaseAddAChallenge = "Please add a challenge"
     }
 
     struct CellIdentifier {
-        static let CollectionViewCellWithReuseIdentifier = "CollectionViewCell"
+        static let cellWithReuseIdentifier = "Cell"
     }
 }

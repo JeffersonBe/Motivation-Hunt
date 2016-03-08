@@ -24,7 +24,7 @@ class SavedMotivationItemViewController: UIViewController {
         fetchedResultsController.delegate = self
 
         // Configure CollectionView
-        collectionView!.registerClass(youtubeCollectionViewCell.self,forCellWithReuseIdentifier: "Cell")
+        collectionView!.registerClass(youtubeCollectionViewCell.self,forCellWithReuseIdentifier: MHClient.CellIdentifier.cellWithReuseIdentifier)
         collectionView.backgroundColor = UIColor.clearColor()
         collectionView.allowsMultipleSelection = false
 
@@ -154,18 +154,18 @@ extension SavedMotivationItemViewController: UICollectionViewDelegate {
 
     func collectionView(collectionView: UICollectionView, cellForItemAtIndexPath indexPath: NSIndexPath) -> UICollectionViewCell {
         let motivationItem = fetchedResultsController.objectAtIndexPath(indexPath) as! MotivationFeedItem
-        let cell = collectionView.dequeueReusableCellWithReuseIdentifier("Cell", forIndexPath: indexPath) as! youtubeCollectionViewCell
+        let cell = collectionView.dequeueReusableCellWithReuseIdentifier(MHClient.CellIdentifier.cellWithReuseIdentifier, forIndexPath: indexPath) as! youtubeCollectionViewCell
         configureCell(cell, withItem: motivationItem)
         return cell
     }
 
     func collectionView(collectionView: UICollectionView, didSelectItemAtIndexPath indexPath: NSIndexPath) {
-        let cell = collectionView.dequeueReusableCellWithReuseIdentifier("Cell", forIndexPath: indexPath) as! youtubeCollectionViewCell
+        let cell = collectionView.dequeueReusableCellWithReuseIdentifier(MHClient.CellIdentifier.cellWithReuseIdentifier, forIndexPath: indexPath) as! youtubeCollectionViewCell
         if Reachability.connectedToNetwork() {
             cell.videoPlayer.play()
         } else {
-            let errorAlert = UIAlertController(title: "Oops… Unable to load the video", message: "You don't have an internet connection :-(", preferredStyle: UIAlertControllerStyle.Alert)
-            errorAlert.addAction(UIAlertAction(title: "Dismiss", style: UIAlertActionStyle.Default, handler: nil))
+            let errorAlert = UIAlertController(title: MHClient.AppCopy.unableToLoadVideo, message: MHClient.AppCopy.noInternetConnection, preferredStyle: UIAlertControllerStyle.Alert)
+            errorAlert.addAction(UIAlertAction(title: MHClient.AppCopy.dismiss, style: UIAlertActionStyle.Default, handler: nil))
             presentViewController(errorAlert, animated: true, completion: nil)
         }
     }

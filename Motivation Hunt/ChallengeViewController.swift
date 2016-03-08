@@ -89,38 +89,38 @@ class ChallengeViewController: UIViewController {
 
     @IBAction func addChallenge(sender: AnyObject) {
         guard challengeTextField.text != "" else {
-            challengeTextField.attributedPlaceholder = NSAttributedString(string: "Please add a challenge", attributes: [NSForegroundColorAttributeName: UIColor.redColor()])
+            challengeTextField.attributedPlaceholder = NSAttributedString(string: MHClient.AppCopy.pleaseAddAChallenge, attributes: [NSForegroundColorAttributeName: UIColor.redColor()])
             return
         }
         dispatch_async(dispatch_get_main_queue()) {
-        let _ = Challenge(challengeDescription: self.challengeTextField.text!, completed: false, endDate: self.challengeDatePicker.date, context: self.sharedContext)
-        CoreDataStackManager.sharedInstance.saveContext()
+            let _ = Challenge(challengeDescription: self.challengeTextField.text!, completed: false, endDate: self.challengeDatePicker.date, context: self.sharedContext)
+            CoreDataStackManager.sharedInstance.saveContext()
         }
         showAddChallenge()
     }
 
     func showAddChallengeView() {
-            self.challengeTextField.text = ""
-            let button = UIBarButtonItem(barButtonSystemItem: UIBarButtonSystemItem.Cancel, target: self, action: "showAddChallenge")
-            self.addChallengeView.hidden = false
-            self.view.insertSubview(self.dimView, belowSubview: (self.navigationController?.navigationBar)!)
-            self.view.insertSubview(self.addChallengeView, belowSubview: (self.navigationController?.navigationBar)!)
-            UIView.animateWithDuration(0.3, animations: {
-                self.dimView.alpha = 0.3
-            })
-            self.navigationItem.rightBarButtonItem = button
+        self.challengeTextField.text = ""
+        let button = UIBarButtonItem(barButtonSystemItem: UIBarButtonSystemItem.Cancel, target: self, action: "showAddChallenge")
+        self.addChallengeView.hidden = false
+        self.view.insertSubview(self.dimView, belowSubview: (self.navigationController?.navigationBar)!)
+        self.view.insertSubview(self.addChallengeView, belowSubview: (self.navigationController?.navigationBar)!)
+        UIView.animateWithDuration(0.3, animations: {
+            self.dimView.alpha = 0.3
+        })
+        self.navigationItem.rightBarButtonItem = button
     }
 
     func HideAddChallengeView() {
-            self.addChallengeView.hidden = true
-            UIView.animateWithDuration(0.3, animations: {
-                self.dimView.alpha = 0
-                }, completion: { finished in
-                    self.dimView.removeFromSuperview()
-            })
-            let button = UIBarButtonItem(barButtonSystemItem: UIBarButtonSystemItem.Add, target: self, action: "showAddChallenge")
-            self.navigationItem.rightBarButtonItem = button
-            self.challengeTextField.resignFirstResponder()
+        self.addChallengeView.hidden = true
+        UIView.animateWithDuration(0.3, animations: {
+            self.dimView.alpha = 0
+            }, completion: { finished in
+                self.dimView.removeFromSuperview()
+        })
+        let button = UIBarButtonItem(barButtonSystemItem: UIBarButtonSystemItem.Add, target: self, action: "showAddChallenge")
+        self.navigationItem.rightBarButtonItem = button
+        self.challengeTextField.resignFirstResponder()
     }
 }
 
@@ -140,30 +140,30 @@ extension ChallengeViewController: UITableViewDataSource, UITableViewDelegate {
 
     func tableView(tableView: UITableView,
         cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
-            let cell = tableView.dequeueReusableCellWithIdentifier("Cell", forIndexPath: indexPath) as! challengeTableViewCell
+            let cell = tableView.dequeueReusableCellWithIdentifier(MHClient.CellIdentifier.cellWithReuseIdentifier, forIndexPath: indexPath) as! challengeTableViewCell
             configureCell(cell, atIndexPath: indexPath)
             return cell
     }
 
     func tableView(tableView: UITableView, editActionsForRowAtIndexPath indexPath: NSIndexPath) -> [UITableViewRowAction]? {
         let challenge = self.fetchedResultsController.objectAtIndexPath(indexPath) as! Challenge
-        let cell = tableView.dequeueReusableCellWithIdentifier("Cell", forIndexPath: indexPath) as! challengeTableViewCell
+        let cell = tableView.dequeueReusableCellWithIdentifier(MHClient.CellIdentifier.cellWithReuseIdentifier, forIndexPath: indexPath) as! challengeTableViewCell
 
         if challenge.completed {
-            let delete = UITableViewRowAction(style: .Normal, title: "Delete") { action, index in
+            let delete = UITableViewRowAction(style: .Normal, title: MHClient.AppCopy.delete) { action, index in
                 dispatch_async(dispatch_get_main_queue()) {
-                self.sharedContext.deleteObject(challenge)
-                CoreDataStackManager.sharedInstance.saveContext()
+                    self.sharedContext.deleteObject(challenge)
+                    CoreDataStackManager.sharedInstance.saveContext()
                 }
             }
             delete.backgroundColor = UIColor.redColor()
 
-            let unComplete = UITableViewRowAction(style: .Normal, title: "Uncompleted") { action, index in
+            let unComplete = UITableViewRowAction(style: .Normal, title: MHClient.AppCopy.unComplete) { action, index in
                 dispatch_async(dispatch_get_main_queue()) {
-                challenge.completed = false
-                CoreDataStackManager.sharedInstance.saveContext()
-                cell.backgroundColor = UIColor.whiteColor()
-                tableView.setEditing(false, animated: true)
+                    challenge.completed = false
+                    CoreDataStackManager.sharedInstance.saveContext()
+                    cell.backgroundColor = UIColor.whiteColor()
+                    tableView.setEditing(false, animated: true)
                 }
             }
             unComplete.backgroundColor = UIColor.grayColor()
@@ -171,20 +171,20 @@ extension ChallengeViewController: UITableViewDataSource, UITableViewDelegate {
 
             return [delete, unComplete]
         } else {
-            let complete = UITableViewRowAction(style: .Normal, title: "Completed") { action, index in
+            let complete = UITableViewRowAction(style: .Normal, title: MHClient.AppCopy.complete) { action, index in
                 dispatch_async(dispatch_get_main_queue()) {
-                challenge.completed = true
-                CoreDataStackManager.sharedInstance.saveContext()
-                cell.backgroundColor = UIColor(red:0.52, green:0.86, blue:0.09, alpha:1.0)
-                tableView.setEditing(false, animated: true)
+                    challenge.completed = true
+                    CoreDataStackManager.sharedInstance.saveContext()
+                    cell.backgroundColor = UIColor(red:0.52, green:0.86, blue:0.09, alpha:1.0)
+                    tableView.setEditing(false, animated: true)
                 }
             }
             complete.backgroundColor = UIColor(red:0.52, green:0.86, blue:0.09, alpha:1.0)
 
-            let delete = UITableViewRowAction(style: .Normal, title: "Delete") { action, index in
+            let delete = UITableViewRowAction(style: .Normal, title: MHClient.AppCopy.delete) { action, index in
                 dispatch_async(dispatch_get_main_queue()) {
-                self.sharedContext.deleteObject(challenge)
-                CoreDataStackManager.sharedInstance.saveContext()
+                    self.sharedContext.deleteObject(challenge)
+                    CoreDataStackManager.sharedInstance.saveContext()
                 }
             }
             delete.backgroundColor = UIColor.redColor()
@@ -206,7 +206,7 @@ extension ChallengeViewController: UITableViewDataSource, UITableViewDelegate {
             formatter.dateStyle = NSDateFormatterStyle.LongStyle
             formatter.timeStyle = .ShortStyle
             let dateString = formatter.stringFromDate(challenge.endDate)
-            detailTextLabel.text = "Complete by: \(dateString)"
+            detailTextLabel.text = "\(MHClient.AppCopy.completeBy)\(dateString)"
             if challenge.completed {
                 cell.challengeDateTextLabel.textColor = UIColor.whiteColor()
             } else {

@@ -30,7 +30,7 @@ class MotivationFeedViewController: UIViewController {
         fetchedResultsController.delegate = self
 
         // Configure CollectionView
-        collectionView!.registerClass(youtubeCollectionViewCell.self,forCellWithReuseIdentifier: "Cell")
+        collectionView!.registerClass(youtubeCollectionViewCell.self,forCellWithReuseIdentifier: MHClient.CellIdentifier.cellWithReuseIdentifier)
         collectionView.backgroundColor = UIColor.clearColor()
         collectionView.allowsMultipleSelection = false
 
@@ -159,13 +159,13 @@ class MotivationFeedViewController: UIViewController {
         var mutableParameters: [String : AnyObject]
 
         let parameters: [String : AnyObject] = [
-            "part":"snippet",
-            "order":"viewCount",
-            "q": "motivation+success",
-            "type":"video",
-            "videoDefinition":"high",
-            "maxResults": 10,
-            "key":"\(MHClient.Constants.ApiKey!)"
+            MHClient.JSONKeys.part:MHClient.JSONKeys.snippet,
+            MHClient.JSONKeys.order:MHClient.JSONKeys.viewCount,
+            MHClient.JSONKeys.query: "motivation+success",
+            MHClient.JSONKeys.type:MHClient.JSONKeys.videoType,
+            MHClient.JSONKeys.videoDefinition:MHClient.JSONKeys.qualityHigh,
+            MHClient.JSONKeys.maxResults: 10,
+            MHClient.JSONKeys.key:MHClient.Constants.ApiKey!
         ]
 
         mutableParameters = parameters
@@ -197,30 +197,30 @@ class MotivationFeedViewController: UIViewController {
             let defaults = NSUserDefaults.standardUserDefaults()
             defaults.setObject(result.objectForKey("nextPageToken") as! String, forKey:nextPageTokenConstant)
 
-            guard let results = result["items"] as? [[String:AnyObject]] else {
+            guard let results = result[MHClient.JSONResponseKeys.items] as? [[String:AnyObject]] else {
                 return
             }
 
             CoreDataStackManager.sharedInstance.managedObjectContext.performBlock() {
 
                 for item in results {
-                    guard let videoSnippet = item["snippet"] as? [String:AnyObject] else {
+                    guard let snippet = item[MHClient.JSONResponseKeys.snippet] as? [String:AnyObject] else {
                         return
                     }
 
-                    guard let title = videoSnippet["title"] as? String else {
+                    guard let title = snippet[MHClient.JSONResponseKeys.title] as? String else {
                         return
                     }
 
-                    guard let description = videoSnippet["description"] as? String else {
+                    guard let description = snippet[MHClient.JSONResponseKeys.description] as? String else {
                         return
                     }
 
-                    guard let id = item["id"]!["videoId"] as? String else {
+                    guard let id = item[MHClient.JSONResponseKeys.ID]![MHClient.JSONResponseKeys.videoId] as? String else {
                         return
                     }
 
-                    guard let thumbnailsUrl = videoSnippet["thumbnails"]!["high"]!!["url"] as? String else {
+                    guard let thumbnailsUrl = snippet[MHClient.JSONResponseKeys.thumbnails]![MHClient.JSONResponseKeys.quality]!![MHClient.JSONResponseKeys.url] as? String else {
                         return
                     }
 
@@ -253,18 +253,18 @@ extension MotivationFeedViewController: UICollectionViewDelegate {
 
     func collectionView(collectionView: UICollectionView, cellForItemAtIndexPath indexPath: NSIndexPath) -> UICollectionViewCell {
         let motivationItem = fetchedResultsController.objectAtIndexPath(indexPath) as! MotivationFeedItem
-        let cell = collectionView.dequeueReusableCellWithReuseIdentifier("Cell", forIndexPath: indexPath) as! youtubeCollectionViewCell
+        let cell = collectionView.dequeueReusableCellWithReuseIdentifier(MHClient.CellIdentifier.cellWithReuseIdentifier, forIndexPath: indexPath) as! youtubeCollectionViewCell
         configureCell(cell, withItem: motivationItem)
         return cell
     }
 
     func collectionView(collectionView: UICollectionView, didSelectItemAtIndexPath indexPath: NSIndexPath) {
-        let cell = collectionView.dequeueReusableCellWithReuseIdentifier("Cell", forIndexPath: indexPath) as! youtubeCollectionViewCell
+        let cell = collectionView.dequeueReusableCellWithReuseIdentifier(MHClient.CellIdentifier.cellWithReuseIdentifier, forIndexPath: indexPath) as! youtubeCollectionViewCell
         if Reachability.connectedToNetwork() {
             cell.videoPlayer.play()
         } else {
-            let errorAlert = UIAlertController(title: "Oops… Unable to load the video", message: "You don't have an internet connection :-(", preferredStyle: UIAlertControllerStyle.Alert)
-            errorAlert.addAction(UIAlertAction(title: "Dismiss", style: UIAlertActionStyle.Default, handler: nil))
+            let errorAlert = UIAlertController(title: MHClient.AppCopy.unableToLoadVideo, message: MHClient.AppCopy.noInternetConnection, preferredStyle: UIAlertControllerStyle.Alert)
+            errorAlert.addAction(UIAlertAction(title: MHClient.AppCopy.dismiss, style: UIAlertActionStyle.Default, handler: nil))
             presentViewController(errorAlert, animated: true, completion: nil)
         }
     }
