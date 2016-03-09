@@ -100,27 +100,27 @@ class ChallengeViewController: UIViewController {
     }
 
     func showAddChallengeView() {
-        self.challengeTextField.text = ""
+        challengeTextField.text = ""
         let button = UIBarButtonItem(barButtonSystemItem: UIBarButtonSystemItem.Cancel, target: self, action: "showAddChallenge")
-        self.addChallengeView.hidden = false
-        self.view.insertSubview(self.dimView, belowSubview: (self.navigationController?.navigationBar)!)
-        self.view.insertSubview(self.addChallengeView, belowSubview: (self.navigationController?.navigationBar)!)
+        addChallengeView.hidden = false
+        view.insertSubview(self.dimView, belowSubview: (self.navigationController?.navigationBar)!)
+        view.insertSubview(self.addChallengeView, belowSubview: (self.navigationController?.navigationBar)!)
         UIView.animateWithDuration(0.3, animations: {
             self.dimView.alpha = 0.3
         })
-        self.navigationItem.rightBarButtonItem = button
+        navigationItem.rightBarButtonItem = button
     }
 
     func HideAddChallengeView() {
-        self.addChallengeView.hidden = true
+        addChallengeView.hidden = true
         UIView.animateWithDuration(0.3, animations: {
             self.dimView.alpha = 0
             }, completion: { finished in
                 self.dimView.removeFromSuperview()
         })
         let button = UIBarButtonItem(barButtonSystemItem: UIBarButtonSystemItem.Add, target: self, action: "showAddChallenge")
-        self.navigationItem.rightBarButtonItem = button
-        self.challengeTextField.resignFirstResponder()
+        navigationItem.rightBarButtonItem = button
+        challengeTextField.resignFirstResponder()
     }
 }
 
@@ -140,81 +140,71 @@ extension ChallengeViewController: UITableViewDataSource, UITableViewDelegate {
 
     func tableView(tableView: UITableView,
         cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
-            let cell = tableView.dequeueReusableCellWithIdentifier(MHClient.CellIdentifier.cellWithReuseIdentifier, forIndexPath: indexPath) as! challengeTableViewCell
+            let cell = tableView.dequeueReusableCellWithIdentifier(MHClient.CellIdentifier.cellWithReuseIdentifier, forIndexPath: indexPath)
             configureCell(cell, atIndexPath: indexPath)
             return cell
     }
 
     func tableView(tableView: UITableView, editActionsForRowAtIndexPath indexPath: NSIndexPath) -> [UITableViewRowAction]? {
         let challenge = self.fetchedResultsController.objectAtIndexPath(indexPath) as! Challenge
-        let cell = tableView.dequeueReusableCellWithIdentifier(MHClient.CellIdentifier.cellWithReuseIdentifier, forIndexPath: indexPath) as! challengeTableViewCell
+        let cell = tableView.dequeueReusableCellWithIdentifier(MHClient.CellIdentifier.cellWithReuseIdentifier, forIndexPath: indexPath)
 
         if challenge.completed {
             let delete = UITableViewRowAction(style: .Normal, title: MHClient.AppCopy.delete) { action, index in
-                dispatch_async(dispatch_get_main_queue()) {
-                    self.sharedContext.deleteObject(challenge)
-                    CoreDataStackManager.sharedInstance.saveContext()
-                }
+                self.sharedContext.deleteObject(challenge)
+                CoreDataStackManager.sharedInstance.saveContext()
             }
             delete.backgroundColor = UIColor.redColor()
 
             let unComplete = UITableViewRowAction(style: .Normal, title: MHClient.AppCopy.unComplete) { action, index in
                 cell.backgroundColor = UIColor.whiteColor()
+
                 tableView.setEditing(false, animated: true)
-                dispatch_async(dispatch_get_main_queue()) {
                     challenge.completed = false
                     CoreDataStackManager.sharedInstance.saveContext()
-                }
             }
             unComplete.backgroundColor = UIColor.grayColor()
-
-
             return [delete, unComplete]
         } else {
             let complete = UITableViewRowAction(style: .Normal, title: MHClient.AppCopy.complete) { action, index in
                 cell.backgroundColor = UIColor(red:0.52, green:0.86, blue:0.09, alpha:1.0)
                 tableView.setEditing(false, animated: true)
-                dispatch_async(dispatch_get_main_queue()) {
-                    challenge.completed = true
-                    CoreDataStackManager.sharedInstance.saveContext()
-                }
+                challenge.completed = true
+                CoreDataStackManager.sharedInstance.saveContext()
             }
             complete.backgroundColor = UIColor(red:0.52, green:0.86, blue:0.09, alpha:1.0)
 
             let delete = UITableViewRowAction(style: .Normal, title: MHClient.AppCopy.delete) { action, index in
-                dispatch_async(dispatch_get_main_queue()) {
                     self.sharedContext.deleteObject(challenge)
                     CoreDataStackManager.sharedInstance.saveContext()
-                }
             }
             delete.backgroundColor = UIColor.redColor()
-
             return [complete, delete]
         }
     }
 
-    func configureCell(cell: challengeTableViewCell, atIndexPath indexPath: NSIndexPath) {
+    func configureCell(cell: UITableViewCell, atIndexPath indexPath: NSIndexPath) {
         let challenge = fetchedResultsController.objectAtIndexPath(indexPath) as! Challenge
+        cell.selectionStyle = UITableViewCellSelectionStyle.Blue
+
+        if challenge.completed {
+            cell.backgroundColor = UIColor(red:0.52, green:0.86, blue:0.09, alpha:1.0)
+        }
 
         if !challenge.completed {
             cell.backgroundColor = UIColor.whiteColor()
         }
 
         // http://www.codingexplorer.com/swiftly-getting-human-readable-date-nsdateformatter/
-        if let detailTextLabel = cell.challengeDateTextLabel {
+        if let detailTextLabel = cell.detailTextLabel {
             let formatter = NSDateFormatter()
             formatter.dateStyle = NSDateFormatterStyle.LongStyle
             formatter.timeStyle = .ShortStyle
             let dateString = formatter.stringFromDate(challenge.endDate)
-            detailTextLabel.text = "\(MHClient.AppCopy.completeBy)\(dateString)"
-            if challenge.completed {
-                cell.challengeDateTextLabel.textColor = UIColor.whiteColor()
-            } else {
-                detailTextLabel.textColor = UIColor.grayColor()
-            }
+            detailTextLabel.text = "\(MHClient.AppCopy.completeBy) \(dateString)"
         }
 
-        if let textLabel = cell.challengeDescriptionTextLabel {
+        if let textLabel = cell.textLabel {
             textLabel.text = challenge.challengeDescription
         }
     }
@@ -248,7 +238,7 @@ extension ChallengeViewController: NSFetchedResultsControllerDelegate {
         case .Update:
             if let indexPath = indexPath {
                 if let cell = tableView.cellForRowAtIndexPath(indexPath) {
-                    configureCell(cell as! challengeTableViewCell, atIndexPath: indexPath)
+                    configureCell(cell, atIndexPath: indexPath)
                 }
             }
         case .Move:
