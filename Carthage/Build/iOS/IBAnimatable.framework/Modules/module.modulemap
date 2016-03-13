@@ -1,0 +1,3 @@
+framework module IBAnimatable {
+    header "IBAnimatable-Swift.h"
+}

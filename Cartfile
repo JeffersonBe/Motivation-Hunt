@@ -1,1 +1,2 @@
 github "gilesvangruisen/Swift-YouTube-Player"
+github "JakeLin/IBAnimatable" ~> 1.2
