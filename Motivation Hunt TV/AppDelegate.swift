@@ -1,18 +1,18 @@
- //
-//  AppDelegate.swift
-//  Motivation Hunt
 //
-//  Created by Jefferson Bonnaire on 23/02/2016.
+//  AppDelegate.swift
+//  Motivation Hunt TV
+//
+//  Created by Jefferson Bonnaire on 11/03/2016.
 //  Copyright © 2016 Jefferson Bonnaire. All rights reserved.
 //
 
 import UIKit
-import CoreData
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
 
     var window: UIWindow?
+
 
     func application(application: UIApplication, didFinishLaunchingWithOptions launchOptions: [NSObject: AnyObject]?) -> Bool {
         // Override point for customization after application launch.
@@ -39,8 +39,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     func applicationWillTerminate(application: UIApplication) {
         // Called when the application is about to terminate. Save data if appropriate. See also applicationDidEnterBackground:.
-        // Saves changes in the application's managed object context before the application terminates.
-        CoreDataStackManager.sharedInstance.saveContext()
     }
+
+
 }
 

@@ -9,6 +9,7 @@
 import UIKit
 import CoreData
 import YouTubePlayer
+import CloudKit
 
 // https://github.com/gilesvangruisen/Swift-YouTube-Player
 
@@ -53,7 +54,7 @@ class MotivationFeedViewController: UIViewController {
             try fetchedResultsController.performFetch()
         } catch let error as NSError {
             print("Error: \(error.localizedDescription)")
-        }
+        }        
     }
 
     // Initialize CoreData and NSFetchedResultsController
@@ -195,7 +196,7 @@ class MotivationFeedViewController: UIViewController {
             })
 
             let defaults = NSUserDefaults.standardUserDefaults()
-            defaults.setObject(result.objectForKey("nextPageToken") as! String, forKey:nextPageTokenConstant)
+            defaults.setObject(result["nextPageToken"] as! String, forKey:nextPageTokenConstant)
 
             guard let results = result[MHClient.JSONResponseKeys.items] as? [[String:AnyObject]] else {
                 return
@@ -269,16 +270,23 @@ extension MotivationFeedViewController: UICollectionViewDelegate {
         }
     }
 
+    func collectionView(collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAtIndexPath indexPath: NSIndexPath) -> CGSize
+    {
+        let device = UIDevice.currentDevice().model
+        let dimension = (collectionView.frame.size.width - 20)
+        print(dimension)
+        var cellSize: CGSize = CGSizeMake(dimension, dimension)
 
-    func collectionView(collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAtIndexPath indexPath: NSIndexPath) -> CGSize {
-        let dimension = view.frame.size.width / 2.0
-        return CGSizeMake(dimension, dimension)
+        if (device == "iPad" || device == "iPad Simulator") {
+            cellSize = CGSizeMake(240, 220)
+        }
+        return cellSize
     }
 
     func collectionView(collectionView: UICollectionView,
         layout collectionViewLayout: UICollectionViewLayout,
         insetForSectionAtIndex section: Int) -> UIEdgeInsets {
-            return UIEdgeInsetsZero
+            return UIEdgeInsetsMake(0, 20, 0, 20)
     }
 
     func configureCell(cell: youtubeCollectionViewCell, withItem item: MotivationFeedItem) {

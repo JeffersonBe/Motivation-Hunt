@@ -92,8 +92,23 @@ class ChallengeViewController: UIViewController {
             challengeTextField.attributedPlaceholder = NSAttributedString(string: MHClient.AppCopy.pleaseAddAChallenge, attributes: [NSForegroundColorAttributeName: UIColor.redColor()])
             return
         }
+
+        let challenge: [String : AnyObject] = [
+            "challengeDescription": self.challengeTextField.text!,
+            "completed": 0,
+            "endDate": self.challengeDatePicker.date
+        ]
+
+        if Reachability.connectedToNetwork() {
+            CloudKitHelper.sharedInstance.saveChallenge(challenge)
+        }
+
         dispatch_async(dispatch_get_main_queue()) {
-            let _ = Challenge(challengeDescription: self.challengeTextField.text!, completed: false, endDate: self.challengeDatePicker.date, context: self.sharedContext)
+            let _ = Challenge(
+                challengeDescription: challenge["challengeDescription"] as! String,
+                completed: challenge["completed"] as! Bool,
+                endDate: challenge["endDate"] as! NSDate,
+                context: self.sharedContext)
             CoreDataStackManager.sharedInstance.saveContext()
         }
         showAddChallenge()
@@ -158,6 +173,7 @@ extension ChallengeViewController: UITableViewDataSource, UITableViewDelegate {
 
             let unComplete = UITableViewRowAction(style: .Normal, title: MHClient.AppCopy.unComplete) { action, index in
                 cell.backgroundColor = UIColor.whiteColor()
+                print(challenge.objectID)
 
                 tableView.setEditing(false, animated: true)
                     challenge.completed = false
@@ -169,6 +185,7 @@ extension ChallengeViewController: UITableViewDataSource, UITableViewDelegate {
             let complete = UITableViewRowAction(style: .Normal, title: MHClient.AppCopy.complete) { action, index in
                 cell.backgroundColor = UIColor(red:0.52, green:0.86, blue:0.09, alpha:1.0)
                 tableView.setEditing(false, animated: true)
+                print(challenge.objectID.description)
                 challenge.completed = true
                 CoreDataStackManager.sharedInstance.saveContext()
             }
