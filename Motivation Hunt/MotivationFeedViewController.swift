@@ -35,11 +35,11 @@ class MotivationFeedViewController: UIViewController {
         collectionView.backgroundColor = UIColor.clearColor()
         collectionView.allowsMultipleSelection = false
 
-        let longTap: UILongPressGestureRecognizer = UILongPressGestureRecognizer(target: self, action: "savedItem:")
-        longTap.minimumPressDuration = 0.5
+        let longTap: UILongPressGestureRecognizer = UILongPressGestureRecognizer(target: self, action: #selector(savedItem))
+            longTap.minimumPressDuration = 0.5
         collectionView.addGestureRecognizer(longTap)
 
-        let button = UIBarButtonItem(barButtonSystemItem: UIBarButtonSystemItem.Refresh, target: self, action: "refreshData")
+        let button = UIBarButtonItem(barButtonSystemItem: UIBarButtonSystemItem.Refresh, target: self, action: #selector(refreshData))
         navigationItem.rightBarButtonItem = button
 
         // Set background View
@@ -101,7 +101,7 @@ class MotivationFeedViewController: UIViewController {
         currentFavoriteindexPath = indexPath
 
         let cell = collectionView.cellForItemAtIndexPath(currentFavoriteindexPath) as! youtubeCollectionViewCell
-        let tapRecognizer: UITapGestureRecognizer = UITapGestureRecognizer(target: self, action: "hideFavoritesMenu")
+        let tapRecognizer: UITapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(hideFavoritesMenu))
         tapRecognizer.numberOfTapsRequired = 1
         cell.blurEffectView.addGestureRecognizer(tapRecognizer)
 
@@ -111,7 +111,7 @@ class MotivationFeedViewController: UIViewController {
         showFavoritesMenu()
     }
 
-    func buttonAction(sender:UIButton!) {
+    func showOrHideFavoritesModal(sender:UIButton!) {
         // http://stackoverflow.com/questions/27429652/detecting-uibutton-pressed-in-tableview-swift-best-practices
         let objet = fetchedResultsController.objectAtIndexPath(currentFavoriteindexPath!) as! MotivationFeedItem
         if objet.saved {
@@ -274,7 +274,6 @@ extension MotivationFeedViewController: UICollectionViewDelegate {
     {
         let device = UIDevice.currentDevice().model
         let dimension = (collectionView.frame.size.width - 20)
-        print(dimension)
         var cellSize: CGSize = CGSizeMake(dimension, dimension)
 
         if (device == "iPad" || device == "iPad Simulator") {
@@ -294,7 +293,7 @@ extension MotivationFeedViewController: UICollectionViewDelegate {
         cell.textLabel.text = item.itemTitle
         cell.videoPlayer.loadVideoID(item.itemID)
         cell.favoriteButton.hidden = true
-        cell.favoriteButton.addTarget(self, action: "buttonAction:", forControlEvents:
+        cell.favoriteButton.addTarget(self, action: #selector(showOrHideFavoritesModal), forControlEvents:
             UIControlEvents.TouchUpInside)
         cell.favoriteButton.alpha = 0
         cell.blurEffectView.hidden = true

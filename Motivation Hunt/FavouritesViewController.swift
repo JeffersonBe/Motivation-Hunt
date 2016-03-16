@@ -1,5 +1,5 @@
 //
-//  SavedMotivationItemViewController.swift
+//  FavouritesViewController.swift
 //  Motivation Hunt
 //
 //  Created by Jefferson Bonnaire on 27/02/2016.
@@ -10,7 +10,7 @@ import UIKit
 import CoreData
 import YouTubePlayer
 
-class SavedMotivationItemViewController: UIViewController {
+class FavouritesViewController: UIViewController {
 
     @IBOutlet weak var collectionView: UICollectionView!
     var indicator = CustomUIActivityIndicatorView()
@@ -28,7 +28,7 @@ class SavedMotivationItemViewController: UIViewController {
         collectionView.backgroundColor = UIColor.clearColor()
         collectionView.allowsMultipleSelection = false
 
-        let longTap: UILongPressGestureRecognizer = UILongPressGestureRecognizer(target: self, action: "savedItem:")
+        let longTap: UILongPressGestureRecognizer = UILongPressGestureRecognizer(target: self, action: #selector(savedItem(_:)))
         longTap.minimumPressDuration = 0.5
         collectionView.addGestureRecognizer(longTap)
 
@@ -91,7 +91,7 @@ class SavedMotivationItemViewController: UIViewController {
         currentFavoriteindexPath = indexPath
 
         let cell = collectionView.cellForItemAtIndexPath(currentFavoriteindexPath) as! youtubeCollectionViewCell
-        let tapRecognizer: UITapGestureRecognizer = UITapGestureRecognizer(target: self, action: "hideFavoritesMenu")
+        let tapRecognizer: UITapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(hideFavoritesMenu))
         tapRecognizer.numberOfTapsRequired = 1
         cell.blurEffectView.addGestureRecognizer(tapRecognizer)
 
@@ -145,7 +145,7 @@ class SavedMotivationItemViewController: UIViewController {
     }
 }
 
-extension SavedMotivationItemViewController: UICollectionViewDelegate {
+extension FavouritesViewController: UICollectionViewDelegate {
 
     func collectionView(collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         let sectionInfo = fetchedResultsController.sections![section] as NSFetchedResultsSectionInfo
@@ -187,7 +187,7 @@ extension SavedMotivationItemViewController: UICollectionViewDelegate {
         cell.textLabel.text = item.itemTitle
         cell.videoPlayer.loadVideoID(item.itemID)
         cell.favoriteButton.hidden = true
-        cell.favoriteButton.addTarget(self, action: "buttonAction:", forControlEvents:
+        cell.favoriteButton.addTarget(self, action: #selector(buttonAction(_:)), forControlEvents:
             UIControlEvents.TouchUpInside)
         cell.blurEffectView.hidden = true
         cell.videoPlayer.userInteractionEnabled = false
@@ -217,7 +217,7 @@ extension SavedMotivationItemViewController: UICollectionViewDelegate {
     }
 }
 
-extension SavedMotivationItemViewController: YouTubePlayerDelegate {
+extension FavouritesViewController: YouTubePlayerDelegate {
     func playerStateChanged(videoPlayer: YouTubePlayerView, playerState: YouTubePlayerState) {
         if playerState == .Buffering {
             indicator.startActivity()
@@ -235,7 +235,7 @@ extension SavedMotivationItemViewController: YouTubePlayerDelegate {
 }
 
 
-extension SavedMotivationItemViewController: NSFetchedResultsControllerDelegate {
+extension FavouritesViewController: NSFetchedResultsControllerDelegate {
     // MARK: NSFetchedResultsController delegate
     // Used GIST: https://gist.github.com/AppsTitude/ce072627c61ea3999b8d#file-uicollection-and-nsfetchedresultscontrollerdelegate-integration-swift-L78
 

@@ -19,11 +19,13 @@
 		B41BF3561C7D153300E27074 /* Challenge.swift in Sources */ = {isa = PBXBuildFile; fileRef = B41BF3551C7D153300E27074 /* Challenge.swift */; };
 		B41CE7EA1C8B5B54002FCBC2 /* challengeTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = B41CE7E91C8B5B54002FCBC2 /* challengeTableViewCell.swift */; };
 		B41CE7EC1C8B6F68002FCBC2 /* CustomUIActivityIndicatorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B41CE7EB1C8B6F68002FCBC2 /* CustomUIActivityIndicatorView.swift */; };
-		B42E427E1C81C9B60095B9BF /* YouTubePlayer.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = B42E427B1C81C7930095B9BF /* YouTubePlayer.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		B42E42811C81CB6C0095B9BF /* MotivationFeedItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = B42E42801C81CB6C0095B9BF /* MotivationFeedItem.swift */; };
 		B42E42841C81D1350095B9BF /* youtubeCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = B42E42831C81D1350095B9BF /* youtubeCollectionViewCell.swift */; };
-		B42E42861C81DE720095B9BF /* SavedMotivationItemViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B42E42851C81DE720095B9BF /* SavedMotivationItemViewController.swift */; };
+		B42E42861C81DE720095B9BF /* FavouritesViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B42E42851C81DE720095B9BF /* FavouritesViewController.swift */; };
 		B439763D1C8DDE5300864949 /* Reachability.swift in Sources */ = {isa = PBXBuildFile; fileRef = B439763C1C8DDE5300864949 /* Reachability.swift */; };
+		B43C4A6F1C96FBFD0055F850 /* YouTubePlayer.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B43C4A6E1C96FBFD0055F850 /* YouTubePlayer.framework */; };
+		B43C4A701C96FBFD0055F850 /* YouTubePlayer.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B43C4A6E1C96FBFD0055F850 /* YouTubePlayer.framework */; };
+		B43C4A721C96FCE60055F850 /* YouTubePlayer.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = B43C4A6E1C96FBFD0055F850 /* YouTubePlayer.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		B44ACBC81C89ECEC00C5FF96 /* ImageCache.swift in Sources */ = {isa = PBXBuildFile; fileRef = B44ACBC71C89ECEC00C5FF96 /* ImageCache.swift */; };
 		B458E1671C938A78009DC699 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = B458E1661C938A78009DC699 /* AppDelegate.swift */; };
 		B458E1691C938A78009DC699 /* FirstViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B458E1681C938A78009DC699 /* FirstViewController.swift */; };
@@ -35,7 +37,6 @@
 		B4F721041C96142700D07A4D /* CloudKitHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4F721031C96142700D07A4D /* CloudKitHelper.swift */; };
 		B4F721051C96142700D07A4D /* CloudKitHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4F721031C96142700D07A4D /* CloudKitHelper.swift */; };
 		B4F721081C96266C00D07A4D /* CloudKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B4F721011C96112F00D07A4D /* CloudKit.framework */; };
-		B4F721091C96268200D07A4D /* YouTubePlayer.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B42E427B1C81C7930095B9BF /* YouTubePlayer.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -45,7 +46,7 @@
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
-				B42E427E1C81C9B60095B9BF /* YouTubePlayer.framework in Embed Frameworks */,
+				B43C4A721C96FCE60055F850 /* YouTubePlayer.framework in Embed Frameworks */,
 			);
 			name = "Embed Frameworks";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -68,11 +69,11 @@
 		B41CE7E91C8B5B54002FCBC2 /* challengeTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = challengeTableViewCell.swift; sourceTree = "<group>"; };
 		B41CE7EB1C8B6F68002FCBC2 /* CustomUIActivityIndicatorView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CustomUIActivityIndicatorView.swift; sourceTree = "<group>"; };
 		B423BDD61C96110700CD7224 /* Motivation Hunt.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = "Motivation Hunt.entitlements"; sourceTree = "<group>"; };
-		B42E427B1C81C7930095B9BF /* YouTubePlayer.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = YouTubePlayer.framework; path = Carthage/Build/iOS/YouTubePlayer.framework; sourceTree = "<group>"; };
 		B42E42801C81CB6C0095B9BF /* MotivationFeedItem.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MotivationFeedItem.swift; sourceTree = "<group>"; };
 		B42E42831C81D1350095B9BF /* youtubeCollectionViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = youtubeCollectionViewCell.swift; sourceTree = "<group>"; };
-		B42E42851C81DE720095B9BF /* SavedMotivationItemViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SavedMotivationItemViewController.swift; sourceTree = "<group>"; };
-		B439763C1C8DDE5300864949 /* Reachability.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Reachability.swift; sourceTree = "<group>"; };
+		B42E42851C81DE720095B9BF /* FavouritesViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FavouritesViewController.swift; sourceTree = "<group>"; };
+		B439763C1C8DDE5300864949 /* Reachability.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Reachability.swift; path = "Motivation Hunt/Reachability.swift"; sourceTree = "<group>"; };
+		B43C4A6E1C96FBFD0055F850 /* YouTubePlayer.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = YouTubePlayer.framework; path = Carthage/Build/iOS/YouTubePlayer.framework; sourceTree = "<group>"; };
 		B44ACBC71C89ECEC00C5FF96 /* ImageCache.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ImageCache.swift; sourceTree = "<group>"; };
 		B458E1641C938A78009DC699 /* Motivation Hunt TV.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Motivation Hunt TV.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		B458E1661C938A78009DC699 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -92,8 +93,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				B4F721091C96268200D07A4D /* YouTubePlayer.framework in Frameworks */,
 				B4F721081C96266C00D07A4D /* CloudKit.framework in Frameworks */,
+				B43C4A6F1C96FBFD0055F850 /* YouTubePlayer.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -101,6 +102,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				B43C4A701C96FBFD0055F850 /* YouTubePlayer.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -111,8 +113,9 @@
 			isa = PBXGroup;
 			children = (
 				B4F721031C96142700D07A4D /* CloudKitHelper.swift */,
+				B439763C1C8DDE5300864949 /* Reachability.swift */,
+				B43C4A6E1C96FBFD0055F850 /* YouTubePlayer.framework */,
 				B4F721011C96112F00D07A4D /* CloudKit.framework */,
-				B42E427B1C81C7930095B9BF /* YouTubePlayer.framework */,
 				B41BF3361C7D0D7200E27074 /* Motivation Hunt */,
 				B458E1651C938A78009DC699 /* Motivation Hunt TV */,
 				B41BF3351C7D0D7200E27074 /* Products */,
@@ -142,7 +145,6 @@
 				B42E42821C81D1080095B9BF /* View */,
 				B41BF3411C7D0D7200E27074 /* Assets.xcassets */,
 				B41BF3461C7D0D7200E27074 /* Info.plist */,
-				B439763C1C8DDE5300864949 /* Reachability.swift */,
 			);
 			path = "Motivation Hunt";
 			sourceTree = "<group>";
@@ -151,7 +153,7 @@
 			isa = PBXGroup;
 			children = (
 				B41BF3391C7D0D7200E27074 /* MotivationFeedViewController.swift */,
-				B42E42851C81DE720095B9BF /* SavedMotivationItemViewController.swift */,
+				B42E42851C81DE720095B9BF /* FavouritesViewController.swift */,
 				B41BF34D1C7D124600E27074 /* ChallengeViewController.swift */,
 			);
 			name = Controllers;
@@ -238,13 +240,16 @@
 			isa = PBXProject;
 			attributes = {
 				LastSwiftUpdateCheck = 0720;
-				LastUpgradeCheck = 0720;
+				LastUpgradeCheck = 0730;
 				ORGANIZATIONNAME = "Jefferson Bonnaire";
 				TargetAttributes = {
 					B41BF3331C7D0D7200E27074 = {
 						CreatedOnToolsVersion = 7.2.1;
 						DevelopmentTeam = DXXE2BH2EU;
 						SystemCapabilities = {
+							com.apple.Push = {
+								enabled = 1;
+							};
 							com.apple.iCloud = {
 								enabled = 1;
 							};
@@ -305,7 +310,7 @@
 			files = (
 				B41A9E271C7DAADB001635C2 /* MotivationFeedViewController.swift in Sources */,
 				B41BF3521C7D12C800E27074 /* MotivationHuntModel.xcdatamodeld in Sources */,
-				B42E42861C81DE720095B9BF /* SavedMotivationItemViewController.swift in Sources */,
+				B42E42861C81DE720095B9BF /* FavouritesViewController.swift in Sources */,
 				B41BF34E1C7D124600E27074 /* ChallengeViewController.swift in Sources */,
 				B41BF3561C7D153300E27074 /* Challenge.swift in Sources */,
 				B4DC95541C88CE8E0041AB31 /* MHConstant.swift in Sources */,
@@ -495,6 +500,10 @@
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=appletvos*]" = "iPhone Developer";
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/Carthage/Build/iOS",
+				);
 				INFOPLIST_FILE = "Motivation Hunt TV/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = "com.jeffersonbonnaire.Motivation-Hunt-TV";
@@ -513,6 +522,10 @@
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=appletvos*]" = "iPhone Developer";
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/Carthage/Build/iOS",
+				);
 				INFOPLIST_FILE = "Motivation Hunt TV/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = "com.jeffersonbonnaire.Motivation-Hunt-TV";

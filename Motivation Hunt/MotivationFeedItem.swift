@@ -11,9 +11,9 @@ import CoreData
 
 class MotivationFeedItem: NSManagedObject {
 
+    @NSManaged var itemID: String
     @NSManaged var itemTitle: String
     @NSManaged var itemDescription: String
-    @NSManaged var itemID: String
     @NSManaged var itemThumbnailsUrl: String
     @NSManaged var saved: Bool
     @NSManaged var addedDate: NSDate

@@ -8,6 +8,7 @@
 
 import UIKit
 import CoreData
+import CloudKit
 
 class ChallengeViewController: UIViewController {
 
@@ -35,7 +36,7 @@ class ChallengeViewController: UIViewController {
         }
 
         addChallengeView.hidden = true
-        let button = UIBarButtonItem(barButtonSystemItem: UIBarButtonSystemItem.Add, target: self, action: "showAddChallenge")
+        let button = UIBarButtonItem(barButtonSystemItem: UIBarButtonSystemItem.Add, target: self, action: #selector(ChallengeViewController.showAddChallenge))
         navigationItem.rightBarButtonItem = button
         dimView = UIView(frame: view.frame)
         dimView.backgroundColor = UIColor.blackColor()
@@ -69,9 +70,9 @@ class ChallengeViewController: UIViewController {
         fetchRequest.sortDescriptors = [NSSortDescriptor(key: "completed", ascending: true)]
 
         let fetchedResultsController = NSFetchedResultsController(fetchRequest: fetchRequest,
-            managedObjectContext: self.sharedContext,
-            sectionNameKeyPath: nil,
-            cacheName: nil)
+                                                                  managedObjectContext: self.sharedContext,
+                                                                  sectionNameKeyPath: nil,
+                                                                  cacheName: nil)
 
         return fetchedResultsController
     }()
@@ -93,30 +94,38 @@ class ChallengeViewController: UIViewController {
             return
         }
 
-        let challenge: [String : AnyObject] = [
+        let challengeDictionary: [String : AnyObject] = [
             "challengeDescription": self.challengeTextField.text!,
             "completed": 0,
             "endDate": self.challengeDatePicker.date
         ]
 
         if Reachability.connectedToNetwork() {
-            CloudKitHelper.sharedInstance.saveChallenge(challenge)
+            CloudKitHelper.sharedInstance.saveChallenge(challengeDictionary, completionHandler: { (result, record, error) in
+                if result {
+                    self.addChallengeToCD(challengeDictionary, challengeRecordID: record.recordID.recordName)
+                } else {
+                    self.addChallengeToCD(challengeDictionary, challengeRecordID: "")
+                }
+            })
         }
-
+        showAddChallenge()
+    }
+    func addChallengeToCD(challengeDictionary: [String:AnyObject], challengeRecordID: String) {
         dispatch_async(dispatch_get_main_queue()) {
             let _ = Challenge(
-                challengeDescription: challenge["challengeDescription"] as! String,
-                completed: challenge["completed"] as! Bool,
-                endDate: challenge["endDate"] as! NSDate,
+                challengeDescription: challengeDictionary["challengeDescription"] as! String,
+                completed: challengeDictionary["completed"] as! Bool,
+                endDate: challengeDictionary["endDate"] as! NSDate,
+                challengeRecordID: challengeRecordID,
                 context: self.sharedContext)
             CoreDataStackManager.sharedInstance.saveContext()
         }
-        showAddChallenge()
     }
 
     func showAddChallengeView() {
         challengeTextField.text = ""
-        let button = UIBarButtonItem(barButtonSystemItem: UIBarButtonSystemItem.Cancel, target: self, action: "showAddChallenge")
+        let button = UIBarButtonItem(barButtonSystemItem: UIBarButtonSystemItem.Cancel, target: self, action: #selector(ChallengeViewController.showAddChallenge))
         addChallengeView.hidden = false
         view.insertSubview(self.dimView, belowSubview: (self.navigationController?.navigationBar)!)
         view.insertSubview(self.addChallengeView, belowSubview: (self.navigationController?.navigationBar)!)
@@ -133,7 +142,7 @@ class ChallengeViewController: UIViewController {
             }, completion: { finished in
                 self.dimView.removeFromSuperview()
         })
-        let button = UIBarButtonItem(barButtonSystemItem: UIBarButtonSystemItem.Add, target: self, action: "showAddChallenge")
+        let button = UIBarButtonItem(barButtonSystemItem: UIBarButtonSystemItem.Add, target: self, action: #selector(ChallengeViewController.showAddChallenge))
         navigationItem.rightBarButtonItem = button
         challengeTextField.resignFirstResponder()
     }
@@ -154,30 +163,45 @@ extension ChallengeViewController: UITableViewDataSource, UITableViewDelegate {
     }
 
     func tableView(tableView: UITableView,
-        cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
-            let cell = tableView.dequeueReusableCellWithIdentifier(MHClient.CellIdentifier.cellWithReuseIdentifier, forIndexPath: indexPath)
-            configureCell(cell, atIndexPath: indexPath)
-            return cell
+                   cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
+        let cell = tableView.dequeueReusableCellWithIdentifier(MHClient.CellIdentifier.cellWithReuseIdentifier, forIndexPath: indexPath)
+        configureCell(cell, atIndexPath: indexPath)
+        return cell
     }
 
     func tableView(tableView: UITableView, editActionsForRowAtIndexPath indexPath: NSIndexPath) -> [UITableViewRowAction]? {
         let challenge = self.fetchedResultsController.objectAtIndexPath(indexPath) as! Challenge
         let cell = tableView.dequeueReusableCellWithIdentifier(MHClient.CellIdentifier.cellWithReuseIdentifier, forIndexPath: indexPath)
+        print(challenge)
 
         if challenge.completed {
             let delete = UITableViewRowAction(style: .Normal, title: MHClient.AppCopy.delete) { action, index in
-                self.sharedContext.deleteObject(challenge)
-                CoreDataStackManager.sharedInstance.saveContext()
+                dispatch_async(dispatch_get_main_queue()) {
+                    self.sharedContext.deleteObject(challenge)
+                    CoreDataStackManager.sharedInstance.saveContext()
+                }
             }
             delete.backgroundColor = UIColor.redColor()
 
             let unComplete = UITableViewRowAction(style: .Normal, title: MHClient.AppCopy.unComplete) { action, index in
                 cell.backgroundColor = UIColor.whiteColor()
-                print(challenge.objectID)
 
                 tableView.setEditing(false, animated: true)
-                    challenge.completed = false
-                    CoreDataStackManager.sharedInstance.saveContext()
+                if Reachability.connectedToNetwork() && challenge.challengeRecordID != "" {
+                    CloudKitHelper.sharedInstance.updateCompletedStatusChallenge(CKRecordID(recordName: challenge.challengeRecordID), completionHandler: { (result, record, error) in
+                        if result {
+                            dispatch_async(dispatch_get_main_queue()) {
+                                challenge.completed = false
+                                CoreDataStackManager.sharedInstance.saveContext()
+                            }
+                        } else {
+                            dispatch_async(dispatch_get_main_queue()) {
+                                challenge.completed = false
+                                CoreDataStackManager.sharedInstance.saveContext()
+                            }
+                        }
+                    })
+                }
             }
             unComplete.backgroundColor = UIColor.grayColor()
             return [delete, unComplete]
@@ -185,15 +209,40 @@ extension ChallengeViewController: UITableViewDataSource, UITableViewDelegate {
             let complete = UITableViewRowAction(style: .Normal, title: MHClient.AppCopy.complete) { action, index in
                 cell.backgroundColor = UIColor(red:0.52, green:0.86, blue:0.09, alpha:1.0)
                 tableView.setEditing(false, animated: true)
-                print(challenge.objectID.description)
-                challenge.completed = true
-                CoreDataStackManager.sharedInstance.saveContext()
+                if Reachability.connectedToNetwork() && challenge.challengeRecordID != "" {
+                    CloudKitHelper.sharedInstance.updateCompletedStatusChallenge(CKRecordID(recordName: challenge.challengeRecordID), completionHandler: { (result, record, error) in
+                        if result {
+                            dispatch_async(dispatch_get_main_queue()) {
+                                challenge.completed = true
+                                CoreDataStackManager.sharedInstance.saveContext()
+                            }
+                        } else {
+                            dispatch_async(dispatch_get_main_queue()) {
+                                challenge.completed = true
+                                CoreDataStackManager.sharedInstance.saveContext()
+                            }
+                        }
+                    })
+                }
             }
             complete.backgroundColor = UIColor(red:0.52, green:0.86, blue:0.09, alpha:1.0)
 
             let delete = UITableViewRowAction(style: .Normal, title: MHClient.AppCopy.delete) { action, index in
-                    self.sharedContext.deleteObject(challenge)
-                    CoreDataStackManager.sharedInstance.saveContext()
+                if Reachability.connectedToNetwork() && challenge.challengeRecordID != "" {
+                    CloudKitHelper.sharedInstance.deleteChallenge(CKRecordID(recordName: challenge.challengeRecordID), completionHandler: { (result, error) in
+                        if result {
+                            dispatch_async(dispatch_get_main_queue()) {
+                                self.sharedContext.deleteObject(challenge)
+                                CoreDataStackManager.sharedInstance.saveContext()
+                            }
+                        } else {
+                            dispatch_async(dispatch_get_main_queue()) {
+                                self.sharedContext.deleteObject(challenge)
+                                CoreDataStackManager.sharedInstance.saveContext()
+                            }
+                        }
+                    })
+                }
             }
             delete.backgroundColor = UIColor.redColor()
             return [complete, delete]
@@ -267,7 +316,7 @@ extension ChallengeViewController: NSFetchedResultsControllerDelegate {
             }
         }
     }
-
+    
     func controllerWillChangeContent(controller: NSFetchedResultsController) {
         tableView.beginUpdates()
     }

@@ -1,15 +1,15 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="9532" systemVersion="15D21" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="akH-JK-9Wm">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="10115" systemVersion="15D21" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="akH-JK-9Wm">
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="9530"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="10084"/>
         <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
     </dependencies>
     <scenes>
-        <!--Favorites-->
+        <!--Favourites-->
         <scene sceneID="ql3-Pq-EFj">
             <objects>
-                <viewController storyboardIdentifier="SavedMotivationItemViewController" automaticallyAdjustsScrollViewInsets="NO" id="V2b-31-Vzd" customClass="SavedMotivationItemViewController" customModule="Motivation_Hunt" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="SavedMotivationItemViewController" automaticallyAdjustsScrollViewInsets="NO" id="V2b-31-Vzd" customClass="FavouritesViewController" customModule="Motivation_Hunt" customModuleProvider="target" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="d4p-la-ssG"/>
                         <viewControllerLayoutGuide type="bottom" id="rXR-aF-u8R"/>
@@ -52,7 +52,7 @@
                         </constraints>
                     </view>
                     <tabBarItem key="tabBarItem" title="Favorites" image="iconFeatured" id="XMr-37-6fv"/>
-                    <navigationItem key="navigationItem" title="Favorites" id="K1X-2u-j8y"/>
+                    <navigationItem key="navigationItem" title="Favourites" id="K1X-2u-j8y"/>
                     <connections>
                         <outlet property="collectionView" destination="BkP-LQ-iZN" id="y9Y-Pt-caR"/>
                     </connections>
