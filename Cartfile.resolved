@@ -1,2 +1,3 @@
 github "storehouse/Advance" "c520547f88a94ef9ff4453f1fcf520fd52f65850"
+github "delba/Log" "v0.2.1"
 github "gilesvangruisen/Swift-YouTube-Player" "v0.3.0"
