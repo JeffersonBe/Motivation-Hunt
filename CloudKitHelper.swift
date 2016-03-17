@@ -17,7 +17,7 @@ class CloudKitHelper {
     // MARK: - Shared Instance
     static var sharedInstance = CloudKitHelper()
 
-    typealias CompletionHander = (result: Bool, record: CKRecord!, error: NSError?) -> Void
+    typealias CompletionHander = (success: Bool, record: CKRecord!, error: NSError?) -> Void
 
     init() {
         container = CKContainer.defaultContainer()
@@ -25,21 +25,55 @@ class CloudKitHelper {
         privateDB = container.privateCloudDatabase
     }
 
-    func fetchUserRecord(recordID: CKRecordID) {
-        // Fetch Default Container
-        let defaultContainer = CKContainer.defaultContainer()
+    // MARK: User
 
-        // Fetch Private Database
-        let privateDatabase = defaultContainer.privateCloudDatabase
-
-        // Fetch User Record
-        privateDatabase.fetchRecordWithID(recordID) { (record, error) -> Void in
-            if let responseError = error {
-                print(responseError)
-
-            } else if let userRecord = record {
-                print(userRecord)
+    func requestPermission(completionHandler: (granted: Bool) -> ()) {
+        container.requestApplicationPermission(CKApplicationPermissions.UserDiscoverability, completionHandler: { applicationPermissionStatus, error in
+            guard applicationPermissionStatus == CKApplicationPermissionStatus.Granted else {
+                completionHandler(granted: false)
+                return
             }
+            completionHandler(granted: true)
+        })
+    }
+
+    func getUser(completionHandler: (success: Bool, userRecordID: String) -> ()) {
+        container.fetchUserRecordIDWithCompletionHandler { (recordID, error) in
+            guard error != nil else {
+                completionHandler(success: false, userRecordID: "")
+                return
+            }
+
+            self.privateDB.fetchRecordWithID(recordID!, completionHandler: { (CKRecord, NSError) in
+                guard error != nil else {
+                    completionHandler(success: false, userRecordID: "")
+                    return
+                }
+                completionHandler(success: true, userRecordID: recordID!.recordName)
+            })
+        }
+    }
+
+    func getUserInfo(userRecordID: String, completionHandler: (success: Bool, firstName: String) -> ()) {
+        container.discoverUserInfoWithUserRecordID(CKRecordID(recordName: userRecordID)) { (CKDiscoveredUserInfo, error) in
+            guard error != nil else {
+                completionHandler(success: false, firstName: "")
+                return
+            }
+                var userContact: CNContact
+                userContact = CKDiscoveredUserInfo!.displayContact!
+                completionHandler(success: true, firstName: userContact.givenName)
+        }
+    }
+
+    // MARK: - General call
+    func fetchUserRecord(recordID: CKRecordID, completionHandler: CompletionHander) {
+        privateDB.fetchRecordWithID(recordID) { (record, error) -> Void in
+            guard record == record && error != nil else {
+                completionHandler(success: false, record: nil, error: error)
+                return
+            }
+            completionHandler(success: true, record: record, error: nil)
         }
     }
 
@@ -55,15 +89,15 @@ class CloudKitHelper {
         motivationItem.setValue(motivationDictionary["addedDate"] as! NSDate, forKey: "addedDate")
 
         privateDB.saveRecord(motivationItem) { (record, error) in
-            if (record != nil) {
-                completionHandler(result: true, record: record, error: nil)
-            } else {
-                completionHandler(result: false, record: nil, error: error)
+            guard record == record && error != nil else {
+                completionHandler(success: false, record: nil, error: error)
+                return
             }
+            completionHandler(success: true, record: record, error: nil)
         }
     }
 
-    func updateFavorites(favoritesID: CKRecordID) {
+    func updateFavorites(favoritesID: CKRecordID, completionHandler: CompletionHander) {
         var favorites: CKRecord!
         privateDB.fetchRecordWithID(favoritesID) { (record, error) in
             if (record == nil) {
@@ -97,11 +131,11 @@ class CloudKitHelper {
         challenge.setValue(challengeDictionary["endDate"] as! NSDate, forKey: "endDate")
 
         privateDB.saveRecord(challenge) { (record, error) in
-            if (record != nil) {
-                completionHandler(result: true, record: record, error: nil)
-            } else {
-                completionHandler(result: false, record: nil, error: error)
+            guard record == record && error != nil else {
+                completionHandler(success: false, record: nil, error: error)
+                return
             }
+            completionHandler(success: true, record: record, error: nil)
         }
     }
 
@@ -117,23 +151,22 @@ class CloudKitHelper {
                 }
 
             self.privateDB.saveRecord(record!) { (record, error) in
-                if (record != nil) {
-                    completionHandler(result: true, record: record, error: nil)
-                } else {
-                    completionHandler(result: false, record: nil, error: error)
+                guard record == record && error != nil else {
+                    completionHandler(success: false, record: nil, error: error)
+                    return
                 }
+                completionHandler(success: true, record: record, error: nil)
             }
         }
     }
 
-    func deleteChallenge(challengeID: CKRecordID, completionHandler: (result: Bool, error: NSError?) -> Void) {
+    func deleteChallenge(challengeID: CKRecordID, completionHandler: (success: Bool, recordID: CKRecordID!, error: NSError?) -> Void) {
         privateDB.deleteRecordWithID(challengeID) { (recordID, error) in
-            print(recordID)
-            if (recordID != nil) {
-                completionHandler(result: true, error: nil)
-            } else {
-                completionHandler(result: false, error: error)
+            guard recordID == recordID && error != nil else {
+                completionHandler(success: false, recordID: nil, error: error)
+                return
             }
+            completionHandler(success: true, recordID: recordID, error: nil)
         }
     }
 }

@@ -32,6 +32,9 @@
 		B458E16B1C938A78009DC699 /* SecondViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B458E16A1C938A78009DC699 /* SecondViewController.swift */; };
 		B458E16E1C938A78009DC699 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = B458E16C1C938A78009DC699 /* Main.storyboard */; };
 		B458E1701C938A78009DC699 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = B458E16F1C938A78009DC699 /* Assets.xcassets */; };
+		B49E0E9C1C998666008C5B62 /* LoginViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B49E0E9B1C998666008C5B62 /* LoginViewController.swift */; };
+		B49E0E9E1C9A11A5008C5B62 /* Log.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B49E0E9D1C9A11A5008C5B62 /* Log.framework */; };
+		B49E0EA01C9A11C5008C5B62 /* Log.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = B49E0E9D1C9A11A5008C5B62 /* Log.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		B4DC95521C88CD620041AB31 /* MHClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4DC95511C88CD620041AB31 /* MHClient.swift */; };
 		B4DC95541C88CE8E0041AB31 /* MHConstant.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4DC95531C88CE8E0041AB31 /* MHConstant.swift */; };
 		B4F721041C96142700D07A4D /* CloudKitHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4F721031C96142700D07A4D /* CloudKitHelper.swift */; };
@@ -47,6 +50,7 @@
 			dstSubfolderSpec = 10;
 			files = (
 				B43C4A721C96FCE60055F850 /* YouTubePlayer.framework in Embed Frameworks */,
+				B49E0EA01C9A11C5008C5B62 /* Log.framework in Embed Frameworks */,
 			);
 			name = "Embed Frameworks";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -82,6 +86,8 @@
 		B458E16D1C938A78009DC699 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		B458E16F1C938A78009DC699 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		B458E1711C938A78009DC699 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		B49E0E9B1C998666008C5B62 /* LoginViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LoginViewController.swift; sourceTree = "<group>"; };
+		B49E0E9D1C9A11A5008C5B62 /* Log.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Log.framework; path = Carthage/Build/iOS/Log.framework; sourceTree = "<group>"; };
 		B4DC95511C88CD620041AB31 /* MHClient.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MHClient.swift; sourceTree = "<group>"; };
 		B4DC95531C88CE8E0041AB31 /* MHConstant.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MHConstant.swift; sourceTree = "<group>"; };
 		B4F721011C96112F00D07A4D /* CloudKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CloudKit.framework; path = System/Library/Frameworks/CloudKit.framework; sourceTree = SDKROOT; };
@@ -95,6 +101,7 @@
 			files = (
 				B4F721081C96266C00D07A4D /* CloudKit.framework in Frameworks */,
 				B43C4A6F1C96FBFD0055F850 /* YouTubePlayer.framework in Frameworks */,
+				B49E0E9E1C9A11A5008C5B62 /* Log.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -114,6 +121,7 @@
 			children = (
 				B4F721031C96142700D07A4D /* CloudKitHelper.swift */,
 				B439763C1C8DDE5300864949 /* Reachability.swift */,
+				B49E0E9D1C9A11A5008C5B62 /* Log.framework */,
 				B43C4A6E1C96FBFD0055F850 /* YouTubePlayer.framework */,
 				B4F721011C96112F00D07A4D /* CloudKit.framework */,
 				B41BF3361C7D0D7200E27074 /* Motivation Hunt */,
@@ -152,6 +160,7 @@
 		B41BF34C1C7D122400E27074 /* Controllers */ = {
 			isa = PBXGroup;
 			children = (
+				B49E0E9B1C998666008C5B62 /* LoginViewController.swift */,
 				B41BF3391C7D0D7200E27074 /* MotivationFeedViewController.swift */,
 				B42E42851C81DE720095B9BF /* FavouritesViewController.swift */,
 				B41BF34D1C7D124600E27074 /* ChallengeViewController.swift */,
@@ -308,6 +317,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				B49E0E9C1C998666008C5B62 /* LoginViewController.swift in Sources */,
 				B41A9E271C7DAADB001635C2 /* MotivationFeedViewController.swift in Sources */,
 				B41BF3521C7D12C800E27074 /* MotivationHuntModel.xcdatamodeld in Sources */,
 				B42E42861C81DE720095B9BF /* FavouritesViewController.swift in Sources */,

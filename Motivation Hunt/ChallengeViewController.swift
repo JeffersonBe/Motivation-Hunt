@@ -229,17 +229,13 @@ extension ChallengeViewController: UITableViewDataSource, UITableViewDelegate {
 
             let delete = UITableViewRowAction(style: .Normal, title: MHClient.AppCopy.delete) { action, index in
                 if Reachability.connectedToNetwork() && challenge.challengeRecordID != "" {
-                    CloudKitHelper.sharedInstance.deleteChallenge(CKRecordID(recordName: challenge.challengeRecordID), completionHandler: { (result, error) in
-                        if result {
-                            dispatch_async(dispatch_get_main_queue()) {
-                                self.sharedContext.deleteObject(challenge)
-                                CoreDataStackManager.sharedInstance.saveContext()
-                            }
-                        } else {
-                            dispatch_async(dispatch_get_main_queue()) {
-                                self.sharedContext.deleteObject(challenge)
-                                CoreDataStackManager.sharedInstance.saveContext()
-                            }
+                    CloudKitHelper.sharedInstance.deleteChallenge(CKRecordID(recordName: challenge.challengeRecordID), completionHandler: { (success, recordID, error) in
+                        guard success else {
+                            return
+                        }
+                        dispatch_async(dispatch_get_main_queue()) {
+                            self.sharedContext.deleteObject(challenge)
+                            CoreDataStackManager.sharedInstance.saveContext()
                         }
                     })
                 }
