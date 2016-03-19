@@ -23,9 +23,6 @@
 		B42E42841C81D1350095B9BF /* youtubeCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = B42E42831C81D1350095B9BF /* youtubeCollectionViewCell.swift */; };
 		B42E42861C81DE720095B9BF /* FavouritesViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B42E42851C81DE720095B9BF /* FavouritesViewController.swift */; };
 		B439763D1C8DDE5300864949 /* Reachability.swift in Sources */ = {isa = PBXBuildFile; fileRef = B439763C1C8DDE5300864949 /* Reachability.swift */; };
-		B43C4A6F1C96FBFD0055F850 /* YouTubePlayer.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B43C4A6E1C96FBFD0055F850 /* YouTubePlayer.framework */; };
-		B43C4A701C96FBFD0055F850 /* YouTubePlayer.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B43C4A6E1C96FBFD0055F850 /* YouTubePlayer.framework */; };
-		B43C4A721C96FCE60055F850 /* YouTubePlayer.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = B43C4A6E1C96FBFD0055F850 /* YouTubePlayer.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		B44ACBC81C89ECEC00C5FF96 /* ImageCache.swift in Sources */ = {isa = PBXBuildFile; fileRef = B44ACBC71C89ECEC00C5FF96 /* ImageCache.swift */; };
 		B458E1671C938A78009DC699 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = B458E1661C938A78009DC699 /* AppDelegate.swift */; };
 		B458E1691C938A78009DC699 /* FirstViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B458E1681C938A78009DC699 /* FirstViewController.swift */; };
@@ -33,8 +30,18 @@
 		B458E16E1C938A78009DC699 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = B458E16C1C938A78009DC699 /* Main.storyboard */; };
 		B458E1701C938A78009DC699 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = B458E16F1C938A78009DC699 /* Assets.xcassets */; };
 		B49E0E9C1C998666008C5B62 /* LoginViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B49E0E9B1C998666008C5B62 /* LoginViewController.swift */; };
-		B49E0E9E1C9A11A5008C5B62 /* Log.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B49E0E9D1C9A11A5008C5B62 /* Log.framework */; };
-		B49E0EA01C9A11C5008C5B62 /* Log.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = B49E0E9D1C9A11A5008C5B62 /* Log.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		B49E0EA81C9B72CB008C5B62 /* Advance.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B49E0EA41C9B72CB008C5B62 /* Advance.framework */; };
+		B49E0EA91C9B72CB008C5B62 /* Advance.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B49E0EA41C9B72CB008C5B62 /* Advance.framework */; };
+		B49E0EAA1C9B72CB008C5B62 /* Async.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B49E0EA51C9B72CB008C5B62 /* Async.framework */; };
+		B49E0EAB1C9B72CB008C5B62 /* Async.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B49E0EA51C9B72CB008C5B62 /* Async.framework */; };
+		B49E0EAD1C9B72CB008C5B62 /* Log.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B49E0EA61C9B72CB008C5B62 /* Log.framework */; };
+		B49E0EAE1C9B72CB008C5B62 /* YouTubePlayer.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B49E0EA71C9B72CB008C5B62 /* YouTubePlayer.framework */; };
+		B49E0EAF1C9B72CB008C5B62 /* YouTubePlayer.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B49E0EA71C9B72CB008C5B62 /* YouTubePlayer.framework */; };
+		B49E0EB41C9B72E7008C5B62 /* Log.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B49E0EA61C9B72CB008C5B62 /* Log.framework */; };
+		B49E0EBA1C9B7411008C5B62 /* Advance.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = B49E0EA41C9B72CB008C5B62 /* Advance.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		B49E0EBC1C9B7411008C5B62 /* Async.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = B49E0EA51C9B72CB008C5B62 /* Async.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		B49E0EBE1C9B7411008C5B62 /* Log.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = B49E0EA61C9B72CB008C5B62 /* Log.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		B49E0EC01C9B7411008C5B62 /* YouTubePlayer.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = B49E0EA71C9B72CB008C5B62 /* YouTubePlayer.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		B4DC95521C88CD620041AB31 /* MHClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4DC95511C88CD620041AB31 /* MHClient.swift */; };
 		B4DC95541C88CE8E0041AB31 /* MHConstant.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4DC95531C88CE8E0041AB31 /* MHConstant.swift */; };
 		B4F721041C96142700D07A4D /* CloudKitHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4F721031C96142700D07A4D /* CloudKitHelper.swift */; };
@@ -43,14 +50,16 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
-		B42E427F1C81C9B60095B9BF /* Embed Frameworks */ = {
+		B49E0EC11C9B7411008C5B62 /* Embed Frameworks */ = {
 			isa = PBXCopyFilesBuildPhase;
 			buildActionMask = 2147483647;
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
-				B43C4A721C96FCE60055F850 /* YouTubePlayer.framework in Embed Frameworks */,
-				B49E0EA01C9A11C5008C5B62 /* Log.framework in Embed Frameworks */,
+				B49E0EBA1C9B7411008C5B62 /* Advance.framework in Embed Frameworks */,
+				B49E0EC01C9B7411008C5B62 /* YouTubePlayer.framework in Embed Frameworks */,
+				B49E0EBC1C9B7411008C5B62 /* Async.framework in Embed Frameworks */,
+				B49E0EBE1C9B7411008C5B62 /* Log.framework in Embed Frameworks */,
 			);
 			name = "Embed Frameworks";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -77,7 +86,6 @@
 		B42E42831C81D1350095B9BF /* youtubeCollectionViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = youtubeCollectionViewCell.swift; sourceTree = "<group>"; };
 		B42E42851C81DE720095B9BF /* FavouritesViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FavouritesViewController.swift; sourceTree = "<group>"; };
 		B439763C1C8DDE5300864949 /* Reachability.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Reachability.swift; path = "Motivation Hunt/Reachability.swift"; sourceTree = "<group>"; };
-		B43C4A6E1C96FBFD0055F850 /* YouTubePlayer.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = YouTubePlayer.framework; path = Carthage/Build/iOS/YouTubePlayer.framework; sourceTree = "<group>"; };
 		B44ACBC71C89ECEC00C5FF96 /* ImageCache.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ImageCache.swift; sourceTree = "<group>"; };
 		B458E1641C938A78009DC699 /* Motivation Hunt TV.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Motivation Hunt TV.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		B458E1661C938A78009DC699 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -87,7 +95,10 @@
 		B458E16F1C938A78009DC699 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		B458E1711C938A78009DC699 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		B49E0E9B1C998666008C5B62 /* LoginViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LoginViewController.swift; sourceTree = "<group>"; };
-		B49E0E9D1C9A11A5008C5B62 /* Log.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Log.framework; path = Carthage/Build/iOS/Log.framework; sourceTree = "<group>"; };
+		B49E0EA41C9B72CB008C5B62 /* Advance.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Advance.framework; path = Carthage/Build/iOS/Advance.framework; sourceTree = "<group>"; };
+		B49E0EA51C9B72CB008C5B62 /* Async.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Async.framework; path = Carthage/Build/iOS/Async.framework; sourceTree = "<group>"; };
+		B49E0EA61C9B72CB008C5B62 /* Log.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Log.framework; path = Carthage/Build/iOS/Log.framework; sourceTree = "<group>"; };
+		B49E0EA71C9B72CB008C5B62 /* YouTubePlayer.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = YouTubePlayer.framework; path = Carthage/Build/iOS/YouTubePlayer.framework; sourceTree = "<group>"; };
 		B4DC95511C88CD620041AB31 /* MHClient.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MHClient.swift; sourceTree = "<group>"; };
 		B4DC95531C88CE8E0041AB31 /* MHConstant.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MHConstant.swift; sourceTree = "<group>"; };
 		B4F721011C96112F00D07A4D /* CloudKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CloudKit.framework; path = System/Library/Frameworks/CloudKit.framework; sourceTree = SDKROOT; };
@@ -99,9 +110,11 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				B49E0EA81C9B72CB008C5B62 /* Advance.framework in Frameworks */,
+				B49E0EAA1C9B72CB008C5B62 /* Async.framework in Frameworks */,
 				B4F721081C96266C00D07A4D /* CloudKit.framework in Frameworks */,
-				B43C4A6F1C96FBFD0055F850 /* YouTubePlayer.framework in Frameworks */,
-				B49E0E9E1C9A11A5008C5B62 /* Log.framework in Frameworks */,
+				B49E0EB41C9B72E7008C5B62 /* Log.framework in Frameworks */,
+				B49E0EAE1C9B72CB008C5B62 /* YouTubePlayer.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -109,7 +122,10 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				B43C4A701C96FBFD0055F850 /* YouTubePlayer.framework in Frameworks */,
+				B49E0EA91C9B72CB008C5B62 /* Advance.framework in Frameworks */,
+				B49E0EAF1C9B72CB008C5B62 /* YouTubePlayer.framework in Frameworks */,
+				B49E0EAB1C9B72CB008C5B62 /* Async.framework in Frameworks */,
+				B49E0EAD1C9B72CB008C5B62 /* Log.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -121,8 +137,10 @@
 			children = (
 				B4F721031C96142700D07A4D /* CloudKitHelper.swift */,
 				B439763C1C8DDE5300864949 /* Reachability.swift */,
-				B49E0E9D1C9A11A5008C5B62 /* Log.framework */,
-				B43C4A6E1C96FBFD0055F850 /* YouTubePlayer.framework */,
+				B49E0EA41C9B72CB008C5B62 /* Advance.framework */,
+				B49E0EA51C9B72CB008C5B62 /* Async.framework */,
+				B49E0EA61C9B72CB008C5B62 /* Log.framework */,
+				B49E0EA71C9B72CB008C5B62 /* YouTubePlayer.framework */,
 				B4F721011C96112F00D07A4D /* CloudKit.framework */,
 				B41BF3361C7D0D7200E27074 /* Motivation Hunt */,
 				B458E1651C938A78009DC699 /* Motivation Hunt TV */,
@@ -214,7 +232,7 @@
 				B41BF3301C7D0D7200E27074 /* Sources */,
 				B41BF3311C7D0D7200E27074 /* Frameworks */,
 				B41BF3321C7D0D7200E27074 /* Resources */,
-				B42E427F1C81C9B60095B9BF /* Embed Frameworks */,
+				B49E0EC11C9B7411008C5B62 /* Embed Frameworks */,
 			);
 			buildRules = (
 			);
@@ -516,7 +534,7 @@
 				);
 				INFOPLIST_FILE = "Motivation Hunt TV/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = "com.jeffersonbonnaire.Motivation-Hunt-TV";
+				PRODUCT_BUNDLE_IDENTIFIER = com.jeffersonbonnaire.motivationhunttv;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "";
 				SDKROOT = appletvos;
@@ -538,7 +556,7 @@
 				);
 				INFOPLIST_FILE = "Motivation Hunt TV/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = "com.jeffersonbonnaire.Motivation-Hunt-TV";
+				PRODUCT_BUNDLE_IDENTIFIER = com.jeffersonbonnaire.motivationhunttv;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "";
 				SDKROOT = appletvos;

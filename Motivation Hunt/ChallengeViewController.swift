@@ -172,7 +172,6 @@ extension ChallengeViewController: UITableViewDataSource, UITableViewDelegate {
     func tableView(tableView: UITableView, editActionsForRowAtIndexPath indexPath: NSIndexPath) -> [UITableViewRowAction]? {
         let challenge = self.fetchedResultsController.objectAtIndexPath(indexPath) as! Challenge
         let cell = tableView.dequeueReusableCellWithIdentifier(MHClient.CellIdentifier.cellWithReuseIdentifier, forIndexPath: indexPath)
-        print(challenge)
 
         if challenge.completed {
             let delete = UITableViewRowAction(style: .Normal, title: MHClient.AppCopy.delete) { action, index in

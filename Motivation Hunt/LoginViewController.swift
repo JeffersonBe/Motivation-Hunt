@@ -8,14 +8,21 @@
 
 import Foundation
 import UIKit
-import CoreData
+import CloudKit
 import Log
+import Async
 
 class LoginViewController: UIViewController {
+
+    var currentUserRecordID: String!
+    var currentUserFirstName: String!
 
     override func viewDidLoad() {
         super.viewDidLoad()
         UIApplication.sharedApplication().networkActivityIndicatorVisible = true
+        if (NSUserDefaults.standardUserDefaults().objectForKey("currentUserRecordID") != nil) {
+            currentUserRecordID = NSUserDefaults.standardUserDefaults().objectForKey("currentUserRecordID") as! String
+        }
 
         // Check if connected to network, if not we show the app because we cannot check if the iCloud has changed
         guard Reachability.connectedToNetwork() else {
@@ -23,123 +30,92 @@ class LoginViewController: UIViewController {
             return
         }
 
-        // Check User account is already logged
-        guard let currentUserRecordID = NSUserDefaults.standardUserDefaults().objectForKey("currentUserRecordID") else {
-            iCloudLoginAction()
-            return
+        let group = AsyncGroup()
+
+        // We check if the user Granted permission to the app
+        group.userInteractive() {
+            CloudKitHelper.sharedInstance.requestPermission({ (granted, error) in
+                guard granted else {
+                    let alertViewIcloudNotGranted = UIAlertController(title: error?.localizedDescription, message: error?.localizedFailureReason, preferredStyle: .Alert)
+                    let returnUserToIcloudSettings = UIAlertAction(title: "Redirect me to icloud settings", style: .Default, handler: { UIAlertAction in
+                        Async.userInteractive {
+                            UIApplication.sharedApplication().openURL(NSURL(string:"prefs:root=CASTLE")!)
+                        }
+                    })
+                    alertViewIcloudNotGranted.addAction(returnUserToIcloudSettings)
+                    Async.main {
+                        self.presentViewController(alertViewIcloudNotGranted, animated: true, completion: nil)
+                    }
+                    return
+                }
+            })
         }
 
-        // Check currentUserRecordID is the same as the current iCloud User Account
-        CloudKitHelper.sharedInstance.getUser({ (success, userRecordID) in
-            guard success && currentUserRecordID as! String == userRecordID else {
-                self.throwUserChoiceOfKeepingCurrentOrNewIcloudRecord()
-                return
-            }
-            self.showApp()
-        })
-    }
+        // We get the user information to track change of user ID
+        group.background {
+            CloudKitHelper.sharedInstance.getUser({ (success, userRecordID, error) in
+                guard success && userRecordID == userRecordID else {
+                        let alertViewIcloudNotGranted = UIAlertController(title: error?.localizedDescription, message: error?.localizedFailureReason, preferredStyle: .Alert)
+                        let returnUserToIcloudSettings = UIAlertAction(title: "Fix icloud", style: .Default, handler: { UIAlertAction in
+                            Async.userInteractive {
+                                UIApplication.sharedApplication().openURL(NSURL(string:"prefs:root=CASTLE")!)
+                            }
+                        })
+                        alertViewIcloudNotGranted.addAction(returnUserToIcloudSettings)
+                    Async.main {
+                        self.presentViewController(alertViewIcloudNotGranted, animated: true, completion: nil)
+                    }
+                    return
+                }
 
-    func iCloudLoginAction() {
-        iCloudLogin({ (success) -> () in
-            guard success else {
-                self.throwIcloudAccountAuthenficationError()
-                return
-            }
-                self.showApp()
-        })
-    }
+                guard self.currentUserRecordID != nil && self.currentUserRecordID == userRecordID else
+                {
+                    let alertViewIcloudNotSame = UIAlertController(title: "You've changed your account", message: "To keep using your favourites and challenge, please use \(self.currentUserFirstName)'s account", preferredStyle: .Alert)
+                    let returnUserToIcloudSettings = UIAlertAction(title: "Ok got it", style: .Default, handler: { UIAlertAction in
+                            UIApplication.sharedApplication().openURL(NSURL(string:"prefs:root=CASTLE")!)
+                        })
+                    let useNewAccount = UIAlertAction(title: "Ok got it", style: .Default, handler: { UIAlertAction in
+                        // TODO: Delete everything in database and redirect user to app
+                    })
+                    alertViewIcloudNotSame.addAction(returnUserToIcloudSettings)
+                    alertViewIcloudNotSame.addAction(useNewAccount)
+                    Async.main {
+                        self.presentViewController(alertViewIcloudNotSame, animated: true, completion: nil)
+                    }
+                    return
+                }
 
-    // Nested CloudKit requests for permission; for getting user permission and user information.
-    func iCloudLogin(completionHandler: (success: Bool) -> ()) {
-        CloudKitHelper.sharedInstance.getUser({ (success, userRecordID) in
-            guard success else {
-                self.throwIcloudAccountAuthenficationError()
-                return
-            }
-                CloudKitHelper.sharedInstance.getUserInfo(userRecordID, completionHandler: { (success, firstName) in
-                    NSUserDefaults.standardUserDefaults().setObject(userRecordID as String, forKey: "currentUserRecordID")
-                    NSUserDefaults.standardUserDefaults().setObject(firstName as String, forKey: "currentUserFirstName")
-                    completionHandler(success: true)
-                })
-        })
+                Async.background {
+                    NSUserDefaults.standardUserDefaults().setObject(userRecordID! as String, forKey: "currentUserRecordID")
+                    self.currentUserRecordID = NSUserDefaults.standardUserDefaults().objectForKey("currentUserRecordID") as! String
+                    }.background {
+                        CloudKitHelper.sharedInstance.getUserInfo(self.currentUserRecordID, completionHandler: { (success, error, firstName) in
+                            guard error == nil else {
+                                let alertViewUnableToGetUserInfo = UIAlertController(title: error?.localizedDescription, message: error?.localizedFailureReason, preferredStyle: .Alert)
+                                let returnUserToIcloudSettings = UIAlertAction(title: "Ok, call me BOSS now!", style: .Default, handler: { UIAlertAction in
+                                    Async.userInteractive {
+                                        self.showApp()
+                                        NSUserDefaults.standardUserDefaults().setObject("BOSS" as String, forKey: "currentUserFirstName")
+                                    }
+                                })
+                                alertViewUnableToGetUserInfo.addAction(returnUserToIcloudSettings)
+                                Async.main {
+                                    self.presentViewController(alertViewUnableToGetUserInfo, animated: true, completion: nil)
+                                }
+                                return
+                            }
+                            NSUserDefaults.standardUserDefaults().setObject(firstName as String, forKey: "currentUserFirstName")
+                        })
+                    }.main {
+                        self.showApp()
+                }
+            })
+        }
     }
 
     func showApp() {
-        dispatch_async(dispatch_get_main_queue()) {
             let viewController = self.storyboard!.instantiateViewControllerWithIdentifier("tabBarController")
             self.presentViewController(viewController, animated: true, completion: nil)
             UIApplication.sharedApplication().networkActivityIndicatorVisible = false
-        }
-    }
-
-    func throwIcloudAccountAuthenficationError() {
-        let iCloudAlert = UIAlertController(title: "Authentification Error", message: "We could't log you in. Please check your iCloud account.", preferredStyle: UIAlertControllerStyle.Alert)
-        let okAction = UIAlertAction(title: "OK I'm going to fix that", style: UIAlertActionStyle.Default, handler: nil)
-
-        iCloudAlert.addAction(okAction)
-        self.presentViewController(iCloudAlert, animated: true, completion: nil)
-        UIApplication.sharedApplication().networkActivityIndicatorVisible = false
-    }
-
-    func throwUserChoiceOfKeepingCurrentOrNewIcloudRecord() {
-        let currentUserFirstName = NSUserDefaults.standardUserDefaults().objectForKey("currentUserFirstName")
-
-        let alertController = UIAlertController(title: "Authentification Error", message: "Your iCloud account isn't \(currentUserFirstName)'s account. Please choose one of them", preferredStyle: .Alert)
-
-        let keepCurrentAppAccount = UIAlertAction(title: "OK", style: UIAlertActionStyle.Default) {
-            UIAlertAction in
-            self.throwInformationAboutKeepingCurrentAppAccount()
-        }
-
-        let keepCurrentIcloudAccount = UIAlertAction(title: "Cancel", style: UIAlertActionStyle.Cancel) {
-            UIAlertAction in
-            self.throwInformationAboutKeepingCurrentIcloudAccount()
-        }
-
-        alertController.addAction(keepCurrentAppAccount)
-        alertController.addAction(keepCurrentIcloudAccount)
-        self.presentViewController(alertController, animated: true, completion: nil)
-    }
-
-    func throwInformationAboutKeepingCurrentAppAccount() {
-        let currentUserFirstName = NSUserDefaults.standardUserDefaults().objectForKey("currentUserFirstName")
-
-        // TODO: Change text when user choose to keep App iCloud Account instead of current Icloud Account
-        let alertController = UIAlertController(title: "Authentification Error", message: "Your iCloud account isn't \(currentUserFirstName)'s account. Please choose one of them", preferredStyle: .Alert)
-
-        let OkAction = UIAlertAction(title: "OK", style: UIAlertActionStyle.Default) {
-            UIAlertAction in
-            // TODO: Implement when user choose to keep App iCloud Account instead of current Icloud Account
-        }
-
-        let CancelAction = UIAlertAction(title: "Cancel", style: UIAlertActionStyle.Cancel) {
-            UIAlertAction in
-            self.throwUserChoiceOfKeepingCurrentOrNewIcloudRecord()
-        }
-
-        alertController.addAction(OkAction)
-        alertController.addAction(CancelAction)
-        self.presentViewController(alertController, animated: true, completion: nil)
-    }
-
-    func throwInformationAboutKeepingCurrentIcloudAccount() {
-        let currentUserFirstName = NSUserDefaults.standardUserDefaults().objectForKey("currentUserFirstName")
-
-        // TODO: Change text when user choose to keep current Icloud Account instead of App iCloud Account
-        let alertController = UIAlertController(title: "Authentification Error", message: "Your iCloud account isn't \(currentUserFirstName)'s account. Please choose one of them", preferredStyle: .Alert)
-
-        let OkAction = UIAlertAction(title: "OK", style: UIAlertActionStyle.Default) {
-            UIAlertAction in
-            // TODO: Implement when user choose to keep current Icloud Account instead of App iCloud Account
-        }
-
-        let CancelAction = UIAlertAction(title: "Cancel", style: UIAlertActionStyle.Cancel) {
-            UIAlertAction in
-            self.throwUserChoiceOfKeepingCurrentOrNewIcloudRecord()
-        }
-
-        alertController.addAction(OkAction)
-        alertController.addAction(CancelAction)
-        self.presentViewController(alertController, animated: true, completion: nil)
     }
 }
