@@ -23,7 +23,6 @@ class LoginViewController: UIViewController {
         if (NSUserDefaults.standardUserDefaults().objectForKey("currentUserRecordID") != nil) {
             currentUserRecordID = NSUserDefaults.standardUserDefaults().objectForKey("currentUserRecordID") as! String
         }
-
         // Check if connected to network, if not we show the app because we cannot check if the iCloud has changed
         guard Reachability.connectedToNetwork() else {
             showApp()
@@ -68,7 +67,8 @@ class LoginViewController: UIViewController {
                     return
                 }
 
-                guard self.currentUserRecordID != nil && self.currentUserRecordID == userRecordID else
+                if (NSUserDefaults.standardUserDefaults().objectForKey("currentUserRecordID") != nil) {
+                guard self.currentUserRecordID == userRecordID else
                 {
                     let alertViewIcloudNotSame = UIAlertController(title: "You've changed your account", message: "To keep using your favourites and challenge, please use \(self.currentUserFirstName)'s account", preferredStyle: .Alert)
                     let returnUserToIcloudSettings = UIAlertAction(title: "Ok got it", style: .Default, handler: { UIAlertAction in
@@ -83,6 +83,7 @@ class LoginViewController: UIViewController {
                         self.presentViewController(alertViewIcloudNotSame, animated: true, completion: nil)
                     }
                     return
+                    }
                 }
 
                 Async.background {
