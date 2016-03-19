@@ -67,7 +67,7 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
-		B40741F61C89A3AA00AFC870 /* Key.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Key.plist; sourceTree = "<group>"; };
+		B40741F61C89A3AA00AFC870 /* Key.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = Key.plist; path = "Motivation Hunt/Key.plist"; sourceTree = "<group>"; };
 		B41BF3341C7D0D7200E27074 /* Motivation Hunt.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Motivation Hunt.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		B41BF3371C7D0D7200E27074 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		B41BF3391C7D0D7200E27074 /* MotivationFeedViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MotivationFeedViewController.swift; sourceTree = "<group>"; };
@@ -86,7 +86,7 @@
 		B42E42831C81D1350095B9BF /* youtubeCollectionViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = youtubeCollectionViewCell.swift; sourceTree = "<group>"; };
 		B42E42851C81DE720095B9BF /* FavouritesViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FavouritesViewController.swift; sourceTree = "<group>"; };
 		B439763C1C8DDE5300864949 /* Reachability.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Reachability.swift; path = "Motivation Hunt/Reachability.swift"; sourceTree = "<group>"; };
-		B44ACBC71C89ECEC00C5FF96 /* ImageCache.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ImageCache.swift; sourceTree = "<group>"; };
+		B44ACBC71C89ECEC00C5FF96 /* ImageCache.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ImageCache.swift; path = "Motivation Hunt/ImageCache.swift"; sourceTree = "<group>"; };
 		B458E1641C938A78009DC699 /* Motivation Hunt TV.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Motivation Hunt TV.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		B458E1661C938A78009DC699 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		B458E1681C938A78009DC699 /* FirstViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FirstViewController.swift; sourceTree = "<group>"; };
@@ -99,8 +99,8 @@
 		B49E0EA51C9B72CB008C5B62 /* Async.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Async.framework; path = Carthage/Build/iOS/Async.framework; sourceTree = "<group>"; };
 		B49E0EA61C9B72CB008C5B62 /* Log.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Log.framework; path = Carthage/Build/iOS/Log.framework; sourceTree = "<group>"; };
 		B49E0EA71C9B72CB008C5B62 /* YouTubePlayer.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = YouTubePlayer.framework; path = Carthage/Build/iOS/YouTubePlayer.framework; sourceTree = "<group>"; };
-		B4DC95511C88CD620041AB31 /* MHClient.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MHClient.swift; sourceTree = "<group>"; };
-		B4DC95531C88CE8E0041AB31 /* MHConstant.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MHConstant.swift; sourceTree = "<group>"; };
+		B4DC95511C88CD620041AB31 /* MHClient.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = MHClient.swift; path = "Motivation Hunt/MHClient.swift"; sourceTree = "<group>"; };
+		B4DC95531C88CE8E0041AB31 /* MHConstant.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = MHConstant.swift; path = "Motivation Hunt/MHConstant.swift"; sourceTree = "<group>"; };
 		B4F721011C96112F00D07A4D /* CloudKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CloudKit.framework; path = System/Library/Frameworks/CloudKit.framework; sourceTree = SDKROOT; };
 		B4F721031C96142700D07A4D /* CloudKitHelper.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CloudKitHelper.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -135,13 +135,12 @@
 		B41BF32B1C7D0D7200E27074 = {
 			isa = PBXGroup;
 			children = (
-				B4F721031C96142700D07A4D /* CloudKitHelper.swift */,
-				B439763C1C8DDE5300864949 /* Reachability.swift */,
 				B49E0EA41C9B72CB008C5B62 /* Advance.framework */,
 				B49E0EA51C9B72CB008C5B62 /* Async.framework */,
 				B49E0EA61C9B72CB008C5B62 /* Log.framework */,
 				B49E0EA71C9B72CB008C5B62 /* YouTubePlayer.framework */,
 				B4F721011C96112F00D07A4D /* CloudKit.framework */,
+				B42280081C9D720D0017D5AB /* Shared */,
 				B41BF3361C7D0D7200E27074 /* Motivation Hunt */,
 				B458E1651C938A78009DC699 /* Motivation Hunt TV */,
 				B41BF3351C7D0D7200E27074 /* Products */,
@@ -161,11 +160,7 @@
 			isa = PBXGroup;
 			children = (
 				B423BDD61C96110700CD7224 /* Motivation Hunt.entitlements */,
-				B40741F61C89A3AA00AFC870 /* Key.plist */,
 				B41BF3371C7D0D7200E27074 /* AppDelegate.swift */,
-				B4DC95511C88CD620041AB31 /* MHClient.swift */,
-				B44ACBC71C89ECEC00C5FF96 /* ImageCache.swift */,
-				B4DC95531C88CE8E0041AB31 /* MHConstant.swift */,
 				B41BF34F1C7D12A600E27074 /* Models */,
 				B41BF34C1C7D122400E27074 /* Controllers */,
 				B42E42821C81D1080095B9BF /* View */,
@@ -195,6 +190,19 @@
 				B42E42801C81CB6C0095B9BF /* MotivationFeedItem.swift */,
 			);
 			name = Models;
+			sourceTree = "<group>";
+		};
+		B42280081C9D720D0017D5AB /* Shared */ = {
+			isa = PBXGroup;
+			children = (
+				B4F721031C96142700D07A4D /* CloudKitHelper.swift */,
+				B439763C1C8DDE5300864949 /* Reachability.swift */,
+				B4DC95511C88CD620041AB31 /* MHClient.swift */,
+				B44ACBC71C89ECEC00C5FF96 /* ImageCache.swift */,
+				B4DC95531C88CE8E0041AB31 /* MHConstant.swift */,
+				B40741F61C89A3AA00AFC870 /* Key.plist */,
+			);
+			name = Shared;
 			sourceTree = "<group>";
 		};
 		B42E42821C81D1080095B9BF /* View */ = {
