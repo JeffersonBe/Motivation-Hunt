@@ -10,6 +10,7 @@ import UIKit
 import CoreData
 import YouTubePlayer
 import CloudKit
+import Async
 
 // https://github.com/gilesvangruisen/Swift-YouTube-Player
 
@@ -34,10 +35,6 @@ class MotivationFeedViewController: UIViewController {
         collectionView!.registerClass(youtubeCollectionViewCell.self,forCellWithReuseIdentifier: MHClient.CellIdentifier.cellWithReuseIdentifier)
         collectionView.backgroundColor = UIColor.clearColor()
         collectionView.allowsMultipleSelection = false
-
-        let longTap: UILongPressGestureRecognizer = UILongPressGestureRecognizer(target: self, action: #selector(savedItem))
-            longTap.minimumPressDuration = 0.5
-        collectionView.addGestureRecognizer(longTap)
 
         let button = UIBarButtonItem(barButtonSystemItem: UIBarButtonSystemItem.Refresh, target: self, action: #selector(refreshData))
         navigationItem.rightBarButtonItem = button
@@ -81,77 +78,25 @@ class MotivationFeedViewController: UIViewController {
     var blockOperations: [NSBlockOperation] = []
 
     func savedItem(gestureRecognizer: UIGestureRecognizer) {
-
+        print("savedItem")
         guard gestureRecognizer.state != .Ended else {
             return
         }
-
-        // Check if collectionViewCell are already open, then close it
-        let visibleCell = collectionView.visibleCells()
-        for cell in visibleCell {
-            let selectedNSIndexPath = collectionView.indexPathForCell(cell)
-            if selectedNSIndexPath == currentFavoriteindexPath {
-                hideFavoritesMenu()
-            }
-        }
-
-        // Reinitialise currentFavoriteindexPath to new collectionViewCell touched
         let tapPoint: CGPoint = gestureRecognizer.locationInView(collectionView)
         let indexPath = collectionView.indexPathForItemAtPoint(tapPoint)
-        currentFavoriteindexPath = indexPath
+        let objet = fetchedResultsController.objectAtIndexPath(indexPath!) as! MotivationFeedItem
 
-        let cell = collectionView.cellForItemAtIndexPath(currentFavoriteindexPath) as! youtubeCollectionViewCell
-        let tapRecognizer: UITapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(hideFavoritesMenu))
-        tapRecognizer.numberOfTapsRequired = 1
-        cell.blurEffectView.addGestureRecognizer(tapRecognizer)
-
-        guard indexPath != nil else {
-            return
-        }
-        showFavoritesMenu()
-    }
-
-    func showOrHideFavoritesModal(sender:UIButton!) {
-        // http://stackoverflow.com/questions/27429652/detecting-uibutton-pressed-in-tableview-swift-best-practices
-        let objet = fetchedResultsController.objectAtIndexPath(currentFavoriteindexPath!) as! MotivationFeedItem
         if objet.saved {
-            dispatch_async(dispatch_get_main_queue()) {
+            Async.main {
                 objet.saved = false
                 CoreDataStackManager.sharedInstance.saveContext()
             }
-            hideFavoritesMenu()
         } else {
-            dispatch_async(dispatch_get_main_queue()) {
+            Async.main {
                 objet.saved = true
                 CoreDataStackManager.sharedInstance.saveContext()
             }
-            hideFavoritesMenu()
         }
-    }
-
-    func showFavoritesMenu(){
-        let cell = collectionView.cellForItemAtIndexPath(currentFavoriteindexPath) as! youtubeCollectionViewCell
-        let objet = fetchedResultsController.objectAtIndexPath(currentFavoriteindexPath!) as! MotivationFeedItem
-
-        if objet.saved {
-            cell.favoriteButton.setImage(UIImage(named: "iconSelectedFeatured") as UIImage?, forState: .Normal)
-        }
-
-        cell.favoriteButton.hidden = false
-        cell.blurEffectView.hidden = false
-        UIView.animateWithDuration(0.5, delay: 0.0, options: UIViewAnimationOptions.CurveEaseOut, animations: {
-            cell.favoriteButton.alpha = 1.0
-            }, completion: nil)
-    }
-
-    func hideFavoritesMenu() {
-        let cell = collectionView.cellForItemAtIndexPath(currentFavoriteindexPath) as! youtubeCollectionViewCell
-
-        UIView.animateWithDuration(0.5, delay: 0.0, options: UIViewAnimationOptions.CurveEaseOut, animations: {
-            cell.favoriteButton.alpha = 0
-            }, completion: nil)
-        cell.favoriteButton.hidden = true
-        cell.blurEffectView.hidden = true
     }
 
     func refreshData() {
@@ -261,79 +206,103 @@ extension MotivationFeedViewController: UICollectionViewDelegate {
 
     func collectionView(collectionView: UICollectionView, didSelectItemAtIndexPath indexPath: NSIndexPath) {
         let cell = collectionView.dequeueReusableCellWithReuseIdentifier(MHClient.CellIdentifier.cellWithReuseIdentifier, forIndexPath: indexPath) as! youtubeCollectionViewCell
-        if Reachability.connectedToNetwork() {
-            cell.videoPlayer.play()
-        } else {
+
+        guard Reachability.connectedToNetwork() else {
             let errorAlert = UIAlertController(title: MHClient.AppCopy.unableToLoadVideo, message: MHClient.AppCopy.noInternetConnection, preferredStyle: UIAlertControllerStyle.Alert)
             errorAlert.addAction(UIAlertAction(title: MHClient.AppCopy.dismiss, style: UIAlertActionStyle.Default, handler: nil))
             presentViewController(errorAlert, animated: true, completion: nil)
+            return
+        }
+
+        Async.main {
+            cell.videoPlayer.play()
         }
     }
 
-    func collectionView(collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAtIndexPath indexPath: NSIndexPath) -> CGSize
-    {
+    func configureCell(cell: youtubeCollectionViewCell, withItem item: MotivationFeedItem) {
+
+        cell.videoPlayer.playerVars = [
+            "controls": "1",
+            "autoplay": "1",
+            "showinfo": "0",
+            "autohide":"2",
+            "modestbranding":"0",
+            "rel":1
+        ]
+
+        // TODO: Attach UITapGestureRecognizer to imageView
+//        let doubleTapToSavedItem: UITapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(savedItem))
+//        doubleTapToSavedItem.numberOfTapsRequired = 2
+//        collectionView.addGestureRecognizer(doubleTapToSavedItem)
+
+        cell.videoPlayer.delegate = self
+        cell.textLabel.text = item.itemTitle
+        cell.videoPlayer.loadVideoID(item.itemID)
+
+        guard item.image != nil else {
+            Async.background {
+                MHClient.sharedInstance.taskForImage(item.itemThumbnailsUrl) { imageData, error in
+                    if let image = imageData {
+                        Async.main {
+                            item.image = UIImage(data: image)
+                            cell.imageView.image = item.image
+                            UIView.animateWithDuration(0.5, delay: 0.0, options: UIViewAnimationOptions.CurveEaseOut, animations: {
+                                cell.alpha = 1.0
+                                }, completion: nil)
+                        }
+                    }
+                }
+            }
+            return
+        }
+
+        Async.main {
+            cell.imageView.image = item.image
+            UIView.animateWithDuration(0.5, delay: 0.0, options: UIViewAnimationOptions.CurveEaseOut, animations: {
+                cell.alpha = 1.0
+            }, completion: nil)
+        }
+    }
+
+    func collectionView(collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAtIndexPath indexPath: NSIndexPath) -> CGSize {
         let device = UIDevice.currentDevice().model
-        let dimension = (collectionView.frame.size.width - 20)
-        var cellSize: CGSize = CGSizeMake(dimension, dimension)
+        var cellSize: CGSize = CGSizeMake(view.frame.width, view.frame.width * 1.2)
 
         if (device == "iPad" || device == "iPad Simulator") {
             cellSize = CGSizeMake(240, 220)
         }
         return cellSize
     }
-
-    func collectionView(collectionView: UICollectionView,
-        layout collectionViewLayout: UICollectionViewLayout,
-        insetForSectionAtIndex section: Int) -> UIEdgeInsets {
-            return UIEdgeInsetsMake(0, 20, 0, 20)
-    }
-
-    func configureCell(cell: youtubeCollectionViewCell, withItem item: MotivationFeedItem) {
-        cell.videoPlayer.delegate = self
-        cell.textLabel.text = item.itemTitle
-        cell.videoPlayer.loadVideoID(item.itemID)
-        cell.favoriteButton.hidden = true
-        cell.favoriteButton.addTarget(self, action: #selector(showOrHideFavoritesModal), forControlEvents:
-            UIControlEvents.TouchUpInside)
-        cell.favoriteButton.alpha = 0
-        cell.blurEffectView.hidden = true
-        cell.videoPlayer.userInteractionEnabled = false
-        cell.imageView.userInteractionEnabled = false
-        cell.clipsToBounds = true
-
-        if item.image != nil {
-            dispatch_async(dispatch_get_main_queue()) {
-                cell.imageView.image = item.image
-                UIView.animateWithDuration(0.5, delay: 0.0, options: UIViewAnimationOptions.CurveEaseOut, animations: {
-                    cell.alpha = 1.0
-                    }, completion: nil)
-            }
-        } else {
-            MHClient.sharedInstance.taskForImage(item.itemThumbnailsUrl) { imageData, error in
-                if let image = imageData {
-                    dispatch_async(dispatch_get_main_queue()) {
-                        item.image = UIImage(data: image)
-                        cell.imageView.image = item.image
-                        UIView.animateWithDuration(0.5, delay: 0.0, options: UIViewAnimationOptions.CurveEaseOut, animations: {
-                            cell.alpha = 1.0
-                            }, completion: nil)
-                    }
-                }
-            }
-        }
-    }
 }
 
 extension MotivationFeedViewController: YouTubePlayerDelegate {
     func playerStateChanged(videoPlayer: YouTubePlayerView, playerState: YouTubePlayerState) {
         if playerState == .Buffering {
-            indicator.startActivity()
-            view.addSubview(indicator)
+            Async.main {
+                self.indicator.startActivity()
+                self.view.addSubview(self.indicator)
+            }
         }
 
         if playerState == .Playing {
-            indicator.stopActivity()
-            indicator.removeFromSuperview()
+            Async.main {
+                self.indicator.stopActivity()
+                self.indicator.removeFromSuperview()
+            }
+        }
+
+        if playerState == .Paused {
+            Async.main {
+                self.indicator.stopActivity()
+                self.indicator.removeFromSuperview()
+            }
+        }
+
+        if playerState == .Unstarted {
+            Async.main {
+                self.indicator.stopActivity()
+                self.indicator.removeFromSuperview()
+            }
         }
     }
 
