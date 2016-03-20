@@ -28,10 +28,6 @@ class FavouritesViewController: UIViewController {
         collectionView.backgroundColor = UIColor.clearColor()
         collectionView.allowsMultipleSelection = false
 
-        let longTap: UILongPressGestureRecognizer = UILongPressGestureRecognizer(target: self, action: #selector(savedItem(_:)))
-        longTap.minimumPressDuration = 0.5
-        collectionView.addGestureRecognizer(longTap)
-
         view.backgroundColor = UIColor(patternImage: UIImage(named: "backgroundFeed.png")!)
         let blurEffect = UIBlurEffect(style: UIBlurEffectStyle.Dark)
         let blurEffectView = UIVisualEffectView(effect: blurEffect)
@@ -69,80 +65,6 @@ class FavouritesViewController: UIViewController {
 
     // MARK: - NSFetchedResultsController related property
     var blockOperations: [NSBlockOperation] = []
-
-    func savedItem(gestureRecognizer: UIGestureRecognizer) {
-
-        guard gestureRecognizer.state != .Ended else {
-            return
-        }
-
-        // Check if collectionViewCell are already open, then close it
-        let visibleCell = collectionView.visibleCells()
-        for cell in visibleCell {
-            let selectedNSIndexPath = collectionView.indexPathForCell(cell)
-            if selectedNSIndexPath == currentFavoriteindexPath {
-                hideFavoritesMenu()
-            }
-        }
-
-        // Reinitialise currentFavoriteindexPath to new collectionViewCell touched
-        let tapPoint: CGPoint = gestureRecognizer.locationInView(collectionView)
-        let indexPath = collectionView.indexPathForItemAtPoint(tapPoint)
-        currentFavoriteindexPath = indexPath
-
-        let cell = collectionView.cellForItemAtIndexPath(currentFavoriteindexPath) as! youtubeCollectionViewCell
-        let tapRecognizer: UITapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(hideFavoritesMenu))
-        tapRecognizer.numberOfTapsRequired = 1
-        cell.blurEffectView.addGestureRecognizer(tapRecognizer)
-
-        guard indexPath != nil else {
-            return
-        }
-        showFavoritesMenu()
-    }
-
-    func buttonAction(sender:UIButton!) {
-        // http://stackoverflow.com/questions/27429652/detecting-uibutton-pressed-in-tableview-swift-best-practices
-        let objet = fetchedResultsController.objectAtIndexPath(currentFavoriteindexPath!) as! MotivationFeedItem
-        if objet.saved {
-            dispatch_async(dispatch_get_main_queue()) {
-                objet.saved = false
-                CoreDataStackManager.sharedInstance.saveContext()
-            }
-            hideFavoritesMenu()
-        } else {
-            dispatch_async(dispatch_get_main_queue()) {
-                objet.saved = true
-                CoreDataStackManager.sharedInstance.saveContext()
-            }
-            hideFavoritesMenu()
-        }
-    }
-
-    func showFavoritesMenu(){
-        let cell = collectionView.cellForItemAtIndexPath(currentFavoriteindexPath) as! youtubeCollectionViewCell
-        let objet = fetchedResultsController.objectAtIndexPath(currentFavoriteindexPath!) as! MotivationFeedItem
-
-        if objet.saved {
-            cell.favoriteButton.setImage(UIImage(named: "iconSelectedFeatured") as UIImage?, forState: .Normal)
-        }
-
-        cell.favoriteButton.hidden = false
-        cell.blurEffectView.hidden = false
-        UIView.animateWithDuration(0.5, delay: 0.0, options: UIViewAnimationOptions.CurveEaseOut, animations: {
-            cell.favoriteButton.alpha = 1.0
-            }, completion: nil)
-    }
-
-    func hideFavoritesMenu() {
-        let cell = collectionView.cellForItemAtIndexPath(currentFavoriteindexPath) as! youtubeCollectionViewCell
-
-        UIView.animateWithDuration(0.5, delay: 0.0, options: UIViewAnimationOptions.CurveEaseOut, animations: {
-            cell.favoriteButton.alpha = 0
-            }, completion: nil)
-        cell.favoriteButton.hidden = true
-        cell.blurEffectView.hidden = true
-    }
 }
 
 extension FavouritesViewController: UICollectionViewDelegate {
@@ -172,8 +94,13 @@ extension FavouritesViewController: UICollectionViewDelegate {
 
 
     func collectionView(collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAtIndexPath indexPath: NSIndexPath) -> CGSize {
-        let dimension = view.frame.size.width / 2.0
-        return CGSizeMake(dimension, dimension)
+        let device = UIDevice.currentDevice().model
+        var cellSize: CGSize = CGSizeMake(view.frame.width, view.frame.width)
+
+        if (device == "iPad" || device == "iPad Simulator") {
+            cellSize = CGSizeMake(240, 220)
+        }
+        return cellSize
     }
 
     func collectionView(collectionView: UICollectionView,
@@ -186,13 +113,6 @@ extension FavouritesViewController: UICollectionViewDelegate {
         cell.videoPlayer.delegate = self
         cell.textLabel.text = item.itemTitle
         cell.videoPlayer.loadVideoID(item.itemID)
-        cell.favoriteButton.hidden = true
-        cell.favoriteButton.addTarget(self, action: #selector(buttonAction(_:)), forControlEvents:
-            UIControlEvents.TouchUpInside)
-        cell.blurEffectView.hidden = true
-        cell.videoPlayer.userInteractionEnabled = false
-        cell.imageView.userInteractionEnabled = false
-        cell.clipsToBounds = true
 
         if item.image != nil {
             dispatch_async(dispatch_get_main_queue()) {
