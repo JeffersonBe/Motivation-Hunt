@@ -122,6 +122,7 @@ class MotivationFeedViewController: UIViewController {
             mutableParameters["pageToken"] = "\(nextPageToken)"
         }
 
+        Async.background {
         MHClient.sharedInstance.taskForResource(mutableParameters) { (result, error) -> Void in
             guard (error == nil) else {
                 dispatch_async(dispatch_get_main_queue(), {
@@ -135,10 +136,10 @@ class MotivationFeedViewController: UIViewController {
                 return
             }
 
-            dispatch_async(dispatch_get_main_queue(), {
+            Async.main {
                 self.indicator.stopActivity()
                 self.indicator.removeFromSuperview()
-            })
+            }
 
             let defaults = NSUserDefaults.standardUserDefaults()
             defaults.setObject(result["nextPageToken"] as! String, forKey:nextPageTokenConstant)
@@ -146,9 +147,8 @@ class MotivationFeedViewController: UIViewController {
             guard let results = result[MHClient.JSONResponseKeys.items] as? [[String:AnyObject]] else {
                 return
             }
-
-            CoreDataStackManager.sharedInstance.managedObjectContext.performBlock() {
-
+            dispatch_async(dispatch_get_main_queue()) {
+            CoreDataStackManager.sharedInstance.managedObjectContext.performBlock({
                 for item in results {
                     guard let snippet = item[MHClient.JSONResponseKeys.snippet] as? [String:AnyObject] else {
                         return
@@ -169,10 +169,11 @@ class MotivationFeedViewController: UIViewController {
                     guard let thumbnailsUrl = snippet[MHClient.JSONResponseKeys.thumbnails]![MHClient.JSONResponseKeys.quality]!![MHClient.JSONResponseKeys.url] as? String else {
                         return
                     }
-
+                    
                     let _ = MotivationFeedItem(itemTitle: title, itemDescription: description, itemID: id, itemThumbnailsUrl: thumbnailsUrl, saved: false, addedDate: NSDate(), context: self.sharedContext)
-                    CoreDataStackManager.sharedInstance.saveContext()
-                }
+                            CoreDataStackManager.sharedInstance.saveContext()
+                    }
+            })}
             }
         }
     }
@@ -240,7 +241,6 @@ extension MotivationFeedViewController: UICollectionViewDelegate {
         cell.videoPlayer.loadVideoID(item.itemID)
 
         guard item.image != nil else {
-            Async.background {
                 MHClient.sharedInstance.taskForImage(item.itemThumbnailsUrl) { imageData, error in
                     if let image = imageData {
                         Async.main {
@@ -251,7 +251,6 @@ extension MotivationFeedViewController: UICollectionViewDelegate {
                                 }, completion: nil)
                         }
                     }
-                }
             }
             return
         }
@@ -266,12 +265,27 @@ extension MotivationFeedViewController: UICollectionViewDelegate {
 
     func collectionView(collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAtIndexPath indexPath: NSIndexPath) -> CGSize {
         let device = UIDevice.currentDevice().model
-        var cellSize: CGSize = CGSizeMake(view.frame.width, view.frame.width * 1.2)
+        let dimensioniPhone = view.frame.width
+        var cellSize: CGSize = CGSizeMake(dimensioniPhone, dimensioniPhone * 0.9)
+        let dimensioniPad = (view.frame.width / 2) - 15
 
         if (device == "iPad" || device == "iPad Simulator") {
-            cellSize = CGSizeMake(240, 220)
+            cellSize = CGSizeMake(dimensioniPad, dimensioniPad * 0.9)
         }
         return cellSize
+    }
+
+    func collectionView(collectionView: UICollectionView,
+                        layout collectionViewLayout: UICollectionViewLayout,
+                               insetForSectionAtIndex section: Int) -> UIEdgeInsets {
+        let device = UIDevice.currentDevice().model
+        var edgeInsets = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 0)
+
+        if (device == "iPad" || device == "iPad Simulator") {
+            edgeInsets = UIEdgeInsets(top: 0, left: 10, bottom: 0, right: 10)
+        }
+
+        return edgeInsets
     }
 }
 

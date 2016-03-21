@@ -92,23 +92,6 @@ extension FavouritesViewController: UICollectionViewDelegate {
         }
     }
 
-
-    func collectionView(collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAtIndexPath indexPath: NSIndexPath) -> CGSize {
-        let device = UIDevice.currentDevice().model
-        var cellSize: CGSize = CGSizeMake(view.frame.width, view.frame.width)
-
-        if (device == "iPad" || device == "iPad Simulator") {
-            cellSize = CGSizeMake(240, 220)
-        }
-        return cellSize
-    }
-
-    func collectionView(collectionView: UICollectionView,
-        layout collectionViewLayout: UICollectionViewLayout,
-        insetForSectionAtIndex section: Int) -> UIEdgeInsets {
-            return UIEdgeInsetsZero
-    }
-
     func configureCell(cell: youtubeCollectionViewCell, withItem item: MotivationFeedItem) {
         cell.videoPlayer.delegate = self
         cell.textLabel.text = item.itemTitle
@@ -134,6 +117,31 @@ extension FavouritesViewController: UICollectionViewDelegate {
                 }
             }
         }
+    }
+
+    func collectionView(collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAtIndexPath indexPath: NSIndexPath) -> CGSize {
+        let device = UIDevice.currentDevice().model
+        let dimensioniPhone = view.frame.width
+        var cellSize: CGSize = CGSizeMake(dimensioniPhone, dimensioniPhone * 0.9)
+        let dimensioniPad = (view.frame.width / 2) - 15
+
+        if (device == "iPad" || device == "iPad Simulator") {
+            cellSize = CGSizeMake(dimensioniPad, dimensioniPad * 0.9)
+        }
+        return cellSize
+    }
+
+    func collectionView(collectionView: UICollectionView,
+                        layout collectionViewLayout: UICollectionViewLayout,
+                               insetForSectionAtIndex section: Int) -> UIEdgeInsets {
+        let device = UIDevice.currentDevice().model
+        var edgeInsets = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 0)
+
+        if (device == "iPad" || device == "iPad Simulator") {
+            edgeInsets = UIEdgeInsets(top: 0, left: 10, bottom: 0, right: 10)
+        }
+
+        return edgeInsets
     }
 }
 
