@@ -36,6 +36,8 @@ class youtubeCollectionViewCell: UICollectionViewCell {
         barButtonColor = UIColor.grayColor()
         barButtonSize = 25.00
 
+        contentView.backgroundColor = UIColor.redColor()
+
         titleBarView = UIView()
         titleBarView.backgroundColor = UIColor.whiteColor()
         contentView.addSubview(titleBarView)
@@ -50,15 +52,15 @@ class youtubeCollectionViewCell: UICollectionViewCell {
         textLabel.textAlignment = .Center
         titleBarView.addSubview(textLabel)
         textLabel.snp_makeConstraints { (make) in
-            make.width.equalTo(titleBarView).dividedBy(0.9)
+            make.width.equalTo(titleBarView)
             make.centerY.equalTo(titleBarView)
         }
 
         imageView = UIImageView()
         imageView.contentMode = UIViewContentMode.ScaleAspectFit
-        contentView.addSubview(imageView)
+        contentView.insertSubview(imageView, belowSubview: titleBarView)
         imageView.snp_makeConstraints { (make) in
-            make.top.equalTo(titleBarView.snp_bottom)
+            make.top.equalTo(titleBarView.snp_bottom).inset(40)
             make.width.equalTo(contentView.frame.width)
             make.height.equalTo(contentView.frame.width / 1.3)
         }
@@ -67,16 +69,16 @@ class youtubeCollectionViewCell: UICollectionViewCell {
         videoPlayer.contentMode = UIViewContentMode.ScaleAspectFill
         contentView.insertSubview(videoPlayer, belowSubview: imageView)
         videoPlayer.snp_makeConstraints { (make) in
-            make.top.equalTo(titleBarView.snp_bottom)
+            make.top.equalTo(imageView.snp_top)
             make.width.equalTo(contentView.frame.width)
             make.height.equalTo(contentView.frame.width / 1.3)
         }
         
         barActionView = UIView()
         barActionView.backgroundColor = UIColor.whiteColor()
-        contentView.addSubview(barActionView)
+        contentView.insertSubview(barActionView, aboveSubview: imageView)
         barActionView.snp_makeConstraints { (make) in
-            make.top.equalTo(imageView.snp_bottom)
+            make.top.equalTo(imageView.snp_bottom).inset(40)
             make.width.equalTo(contentView)
             make.height.equalTo(66.0)
         }
@@ -114,7 +116,7 @@ class youtubeCollectionViewCell: UICollectionViewCell {
         playButton = UIButton()
         playButton.titleLabel?.font = UIFont.fontAwesomeOfSize(75)
         playButton.setTitle(String.fontAwesomeIconWithName(.PlayCircle), forState: .Normal)
-        playButton.alpha = 0.5
+        playButton.alpha = 0.7
         contentView.insertSubview(playButton, aboveSubview: imageView)
         playButton.snp_makeConstraints { (make) in
             make.center.equalTo(imageView)
