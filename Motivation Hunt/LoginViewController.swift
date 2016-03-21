@@ -35,14 +35,15 @@ class LoginViewController: UIViewController {
         group.userInteractive() {
             CloudKitHelper.sharedInstance.requestPermission({ (granted, error) in
                 guard granted else {
-                    let alertViewIcloudNotGranted = UIAlertController(title: error?.localizedDescription, message: error?.localizedFailureReason, preferredStyle: .Alert)
-                    let returnUserToIcloudSettings = UIAlertAction(title: "Redirect me to icloud settings", style: .Default, handler: { UIAlertAction in
-                        Async.userInteractive {
-                            UIApplication.sharedApplication().openURL(NSURL(string:"prefs:root=CASTLE")!)
-                        }
-                    })
-                    alertViewIcloudNotGranted.addAction(returnUserToIcloudSettings)
                     Async.main {
+                        let alertViewIcloudNotGranted = UIAlertController(title: error?.localizedDescription, message: error?.localizedFailureReason, preferredStyle: .Alert)
+                        let returnUserToIcloudSettings = UIAlertAction(title: "Redirect me to icloud settings", style: .Default, handler: { UIAlertAction in
+                            Async.userInteractive {
+                                UIApplication.sharedApplication()
+                                    .openURL(NSURL(string:"prefs:root=CASTLE")!)
+                            }
+                        })
+                        alertViewIcloudNotGranted.addAction(returnUserToIcloudSettings)
                         self.presentViewController(alertViewIcloudNotGranted, animated: true, completion: nil)
                     }
                     return
@@ -54,13 +55,13 @@ class LoginViewController: UIViewController {
         group.background {
             CloudKitHelper.sharedInstance.getUser({ (success, userRecordID, error) in
                 guard success && userRecordID == userRecordID else {
-                        let alertViewIcloudNotGranted = UIAlertController(title: error?.localizedDescription, message: error?.localizedFailureReason, preferredStyle: .Alert)
-                        let returnUserToIcloudSettings = UIAlertAction(title: "Fix icloud", style: .Default, handler: { UIAlertAction in
-                            Async.userInteractive {
-                                UIApplication.sharedApplication().openURL(NSURL(string:"prefs:root=CASTLE")!)
-                            }
-                        })
-                        alertViewIcloudNotGranted.addAction(returnUserToIcloudSettings)
+                    let alertViewIcloudNotGranted = UIAlertController(title: error?.localizedDescription, message: error?.localizedFailureReason, preferredStyle: .Alert)
+                    let returnUserToIcloudSettings = UIAlertAction(title: "Fix icloud", style: .Default, handler: { UIAlertAction in
+                        Async.userInteractive {
+                            UIApplication.sharedApplication().openURL(NSURL(string:"prefs:root=CASTLE")!)
+                        }
+                    })
+                    alertViewIcloudNotGranted.addAction(returnUserToIcloudSettings)
                     Async.main {
                         self.presentViewController(alertViewIcloudNotGranted, animated: true, completion: nil)
                     }
@@ -68,21 +69,21 @@ class LoginViewController: UIViewController {
                 }
 
                 if (NSUserDefaults.standardUserDefaults().objectForKey("currentUserRecordID") != nil) {
-                guard self.currentUserRecordID == userRecordID else
-                {
-                    let alertViewIcloudNotSame = UIAlertController(title: "You've changed your account", message: "To keep using your favourites and challenge, please use \(self.currentUserFirstName)'s account", preferredStyle: .Alert)
-                    let returnUserToIcloudSettings = UIAlertAction(title: "Ok got it", style: .Default, handler: { UIAlertAction in
+                    guard self.currentUserRecordID == userRecordID else
+                    {
+                        let alertViewIcloudNotSame = UIAlertController(title: "You've changed your account", message: "To keep using your favourites and challenge, please use \(self.currentUserFirstName)'s account", preferredStyle: .Alert)
+                        let returnUserToIcloudSettings = UIAlertAction(title: "Ok got it", style: .Default, handler: { UIAlertAction in
                             UIApplication.sharedApplication().openURL(NSURL(string:"prefs:root=CASTLE")!)
                         })
-                    let useNewAccount = UIAlertAction(title: "Ok got it", style: .Default, handler: { UIAlertAction in
-                        // TODO: Delete everything in database and redirect user to app
-                    })
-                    alertViewIcloudNotSame.addAction(returnUserToIcloudSettings)
-                    alertViewIcloudNotSame.addAction(useNewAccount)
-                    Async.main {
-                        self.presentViewController(alertViewIcloudNotSame, animated: true, completion: nil)
-                    }
-                    return
+                        let useNewAccount = UIAlertAction(title: "Ok got it", style: .Default, handler: { UIAlertAction in
+                            // TODO: Delete everything in database and redirect user to app
+                        })
+                        alertViewIcloudNotSame.addAction(returnUserToIcloudSettings)
+                        alertViewIcloudNotSame.addAction(useNewAccount)
+                        Async.main {
+                            self.presentViewController(alertViewIcloudNotSame, animated: true, completion: nil)
+                        }
+                        return
                     }
                 }
 
@@ -115,8 +116,8 @@ class LoginViewController: UIViewController {
     }
 
     func showApp() {
-            let viewController = self.storyboard!.instantiateViewControllerWithIdentifier("tabBarController")
-            self.presentViewController(viewController, animated: true, completion: nil)
-            UIApplication.sharedApplication().networkActivityIndicatorVisible = false
+        let viewController = self.storyboard!.instantiateViewControllerWithIdentifier("tabBarController")
+        self.presentViewController(viewController, animated: true, completion: nil)
+        UIApplication.sharedApplication().networkActivityIndicatorVisible = false
     }
 }
