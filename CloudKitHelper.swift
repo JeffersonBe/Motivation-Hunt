@@ -20,6 +20,8 @@ class CloudKitHelper {
 
     typealias CompletionHander = (success: Bool, record: CKRecord!, error: NSError?) -> Void
 
+    let Log = Logger()
+
     init() {
         container = CKContainer.defaultContainer()
         publicDB = container.publicCloudDatabase
@@ -31,7 +33,7 @@ class CloudKitHelper {
     func requestPermission(completionHandler: (granted: Bool, error: NSError?) -> ()) {
         container.requestApplicationPermission(CKApplicationPermissions.UserDiscoverability, completionHandler: { applicationPermissionStatus, error in
             guard applicationPermissionStatus == CKApplicationPermissionStatus.Granted else {
-                Log.warning(error, applicationPermissionStatus)
+                self.Log.warning(error, applicationPermissionStatus)
                 completionHandler(granted: false, error: error)
                 return
             }
@@ -42,7 +44,7 @@ class CloudKitHelper {
     func accountStatus(completionHandler: (accountStatus: CKAccountStatus, error: NSError?)-> ()) {
         container.accountStatusWithCompletionHandler { (CKAccountStatus, error) in
             guard error == nil else {
-                Log.warning(error, CKAccountStatus)
+                self.Log.warning(error, CKAccountStatus)
                 completionHandler(accountStatus: CKAccountStatus, error: error)
                 return
             }
@@ -53,7 +55,7 @@ class CloudKitHelper {
     func getUser(completionHandler: (success: Bool, userRecordID: String?, error: NSError?) -> ()) {
         container.fetchUserRecordIDWithCompletionHandler { (recordID, error) in
             guard error == nil else {
-                Log.warning(error)
+                self.Log.warning(error)
                 completionHandler(success: false, userRecordID: "", error: error)
                 return
             }
@@ -64,7 +66,7 @@ class CloudKitHelper {
     func getUserInfo(userRecordID: String, completionHandler: (success: Bool?, error: NSError?, firstName: String) -> ()) {
         container.discoverUserInfoWithUserRecordID(CKRecordID(recordName: userRecordID)) { (CKDiscoveredUserInfo, error) in
             guard error == nil else {
-                Log.warning(error)
+                self.Log.warning(error)
                 completionHandler(success: false, error: error, firstName: "")
                 return
             }
@@ -78,7 +80,7 @@ class CloudKitHelper {
     func fetchUserRecord(recordID: CKRecordID, completionHandler: CompletionHander) {
         privateDB.fetchRecordWithID(recordID) { (record, error) -> Void in
             guard record == record && error == nil else {
-                Log.warning(error)
+                self.Log.warning(error)
                 completionHandler(success: false, record: nil, error: error)
                 return
             }
@@ -99,7 +101,7 @@ class CloudKitHelper {
 
         privateDB.saveRecord(motivationItem) { (record, error) in
             guard record == record && error == nil else {
-                Log.warning(error)
+                self.Log.warning(error)
                 completionHandler(success: false, record: nil, error: error)
                 return
             }
@@ -111,7 +113,7 @@ class CloudKitHelper {
         var favorites: CKRecord!
         privateDB.fetchRecordWithID(favoritesID) { (record, error) in
             guard error == nil else {
-                Log.warning(error)
+                self.Log.warning(error)
                 return
             }
             favorites = record
@@ -125,10 +127,10 @@ class CloudKitHelper {
 
         privateDB.saveRecord(favorites) { (record, error) in
             guard error == nil else {
-                Log.warning(error)
+                self.Log.warning(error)
                 return
             }
-            Log.debug(record)
+            self.Log.debug(record)
         }
     }
 
@@ -142,7 +144,7 @@ class CloudKitHelper {
 
         privateDB.saveRecord(challenge) { (record, error) in
             guard record == record && error == nil else {
-                Log.warning(error)
+                self.Log.warning(error)
                 completionHandler(success: false, record: nil, error: error)
                 return
             }
@@ -153,7 +155,7 @@ class CloudKitHelper {
     func updateCompletedStatusChallenge(challengeID: CKRecordID, completionHandler: CompletionHander) {
         privateDB.fetchRecordWithID(challengeID) { (record, error) in
             guard error == nil && record == record else {
-                Log.warning(error)
+                self.Log.warning(error)
                 return
             }
             if record!.valueForKey("completed") as! Int == 0  {
@@ -164,7 +166,7 @@ class CloudKitHelper {
 
             self.privateDB.saveRecord(record!) { (record, error) in
                 guard record == record && error == nil else {
-                    Log.warning(error)
+                    self.Log.warning(error)
                     completionHandler(success: false, record: nil, error: error)
                     return
                 }
@@ -176,7 +178,7 @@ class CloudKitHelper {
     func deleteChallenge(challengeID: CKRecordID, completionHandler: (success: Bool, recordID: CKRecordID!, error: NSError?) -> Void) {
         privateDB.deleteRecordWithID(challengeID) { (recordID, error) in
             guard recordID == recordID && error == nil else {
-                Log.warning(error)
+                self.Log.warning(error)
                 completionHandler(success: false, recordID: nil, error: error)
                 return
             }
