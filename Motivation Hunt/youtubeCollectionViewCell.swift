@@ -36,10 +36,8 @@ class youtubeCollectionViewCell: UICollectionViewCell {
         barButtonColor = UIColor.grayColor()
         barButtonSize = 25.00
 
-        contentView.backgroundColor = UIColor.redColor()
-
         titleBarView = UIView()
-        titleBarView.backgroundColor = UIColor.whiteColor()
+        titleBarView.backgroundColor = UIColor.blackColor()
         contentView.addSubview(titleBarView)
         titleBarView.snp_makeConstraints { (make) in
             make.top.equalTo(contentView.snp_top)
@@ -48,7 +46,7 @@ class youtubeCollectionViewCell: UICollectionViewCell {
         }
 
         textLabel = UILabel()
-        textLabel.textColor = UIColor.blackColor()
+        textLabel.textColor = UIColor.whiteColor()
         textLabel.textAlignment = .Center
         titleBarView.addSubview(textLabel)
         textLabel.snp_makeConstraints { (make) in
@@ -75,7 +73,7 @@ class youtubeCollectionViewCell: UICollectionViewCell {
         }
         
         barActionView = UIView()
-        barActionView.backgroundColor = UIColor.whiteColor()
+        barActionView.backgroundColor = UIColor.blackColor()
         contentView.insertSubview(barActionView, aboveSubview: imageView)
         barActionView.snp_makeConstraints { (make) in
             make.top.equalTo(imageView.snp_bottom).inset(40)
