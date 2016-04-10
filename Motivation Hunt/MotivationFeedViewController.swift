@@ -101,22 +101,16 @@ class MotivationFeedViewController: UIViewController {
     var blockOperations: [NSBlockOperation] = []
 
     func savedItem(gestureRecognizer: UIGestureRecognizer) {
-        print("savedItem")
-        guard gestureRecognizer.state != .Ended else {
-            return
-        }
         let tapPoint: CGPoint = gestureRecognizer.locationInView(collectionView)
         let indexPath = collectionView.indexPathForItemAtPoint(tapPoint)
         let objet = fetchedResultsController.objectAtIndexPath(indexPath!) as! MotivationFeedItem
 
-        if objet.saved {
-            Async.main {
-                objet.saved = false
-                CoreDataStackManager.sharedInstance.saveContext()
+        CloudKitHelper.sharedInstance.updateFavorites(CKRecordID(recordName: objet.itemRecordID)) { (success, record, error) in
+            guard error == nil else {
+                return
             }
-        } else {
             Async.main {
-                objet.saved = true
+                objet.saved = objet.saved ? false : true
                 CoreDataStackManager.sharedInstance.saveContext()
             }
         }
@@ -256,6 +250,9 @@ extension MotivationFeedViewController: UICollectionViewDelegate {
         cell.videoPlayer.delegate = self
         cell.textLabel.text = item.itemTitle
         cell.videoPlayer.loadVideoID(item.itemID)
+        let tapToSavedItem: UITapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(MotivationFeedViewController.savedItem(_:)))
+        tapToSavedItem.numberOfTapsRequired = 1
+        cell.favoriteBarButton.addGestureRecognizer(tapToSavedItem)
 
         guard item.image != nil else {
             MHClient.sharedInstance.taskForImage(item.itemThumbnailsUrl) { imageData, error in
@@ -278,6 +275,10 @@ extension MotivationFeedViewController: UICollectionViewDelegate {
                 cell.alpha = 1.0
                 }, completion: nil)
         }
+    }
+
+    func favoriteItem(sender: UIButton) {
+        print()
     }
 
     func collectionView(collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAtIndexPath indexPath: NSIndexPath) -> CGSize {

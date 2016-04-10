@@ -9,6 +9,8 @@
 import UIKit
 import CoreData
 import YouTubePlayer
+import CloudKit
+import Async
 
 class FavouritesViewController: UIViewController {
 
@@ -24,7 +26,7 @@ class FavouritesViewController: UIViewController {
         fetchedResultsController.delegate = self
 
         // Configure CollectionView
-        collectionView!.registerClass(youtubeCollectionViewCell.self,forCellWithReuseIdentifier: MHClient.CellIdentifier.cellWithReuseIdentifier)
+        collectionView!.registerClass(youtubeCollectionViewCell.self, forCellWithReuseIdentifier: MHClient.CellIdentifier.cellWithReuseIdentifier)
         collectionView.backgroundColor = UIColor.clearColor()
         collectionView.allowsMultipleSelection = false
 
@@ -63,6 +65,22 @@ class FavouritesViewController: UIViewController {
         return fetchedResultsController
     }()
 
+    func savedItem(gestureRecognizer: UIGestureRecognizer) {
+        let tapPoint: CGPoint = gestureRecognizer.locationInView(collectionView)
+        let indexPath = collectionView.indexPathForItemAtPoint(tapPoint)
+        let objet = fetchedResultsController.objectAtIndexPath(indexPath!) as! MotivationFeedItem
+
+        CloudKitHelper.sharedInstance.updateFavorites(CKRecordID(recordName: objet.itemRecordID)) { (success, record, error) in
+            guard error == nil else {
+                return
+            }
+            Async.main {
+                objet.saved = objet.saved ? false : true
+                CoreDataStackManager.sharedInstance.saveContext()
+            }
+        }
+    }
+
     // MARK: - NSFetchedResultsController related property
     var blockOperations: [NSBlockOperation] = []
 }
@@ -96,6 +114,9 @@ extension FavouritesViewController: UICollectionViewDelegate {
         cell.videoPlayer.delegate = self
         cell.textLabel.text = item.itemTitle
         cell.videoPlayer.loadVideoID(item.itemID)
+        let tapToSavedItem: UITapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(MotivationFeedViewController.savedItem(_:)))
+        tapToSavedItem.numberOfTapsRequired = 1
+        cell.favoriteBarButton.addGestureRecognizer(tapToSavedItem)
 
         if item.image != nil {
             dispatch_async(dispatch_get_main_queue()) {
@@ -177,8 +198,7 @@ extension FavouritesViewController: NSFetchedResultsControllerDelegate {
                     }
                     })
             )
-        }
-        else if type == NSFetchedResultsChangeType.Update {
+        } else if type == NSFetchedResultsChangeType.Update {
             blockOperations.append(
                 NSBlockOperation(block: { [weak self] in
                     if let this = self {
@@ -186,8 +206,7 @@ extension FavouritesViewController: NSFetchedResultsControllerDelegate {
                     }
                     })
             )
-        }
-        else if type == NSFetchedResultsChangeType.Move {
+        } else if type == NSFetchedResultsChangeType.Move {
             blockOperations.append(
                 NSBlockOperation(block: { [weak self] in
                     if let this = self {
@@ -195,8 +214,7 @@ extension FavouritesViewController: NSFetchedResultsControllerDelegate {
                     }
                     })
             )
-        }
-        else if type == NSFetchedResultsChangeType.Delete {
+        } else if type == NSFetchedResultsChangeType.Delete {
             blockOperations.append(
                 NSBlockOperation(block: { [weak self] in
                     if let this = self {
@@ -218,8 +236,7 @@ extension FavouritesViewController: NSFetchedResultsControllerDelegate {
                     }
                     })
             )
-        }
-        else if type == NSFetchedResultsChangeType.Update {
+        } else if type == NSFetchedResultsChangeType.Update {
             blockOperations.append(
                 NSBlockOperation(block: { [weak self] in
                     if let this = self {
@@ -227,8 +244,7 @@ extension FavouritesViewController: NSFetchedResultsControllerDelegate {
                     }
                     })
             )
-        }
-        else if type == NSFetchedResultsChangeType.Delete {
+        } else if type == NSFetchedResultsChangeType.Delete {
             blockOperations.append(
                 NSBlockOperation(block: { [weak self] in
                     if let this = self {

@@ -124,28 +124,43 @@ extension CloudKitHelper {
         }
     }
 
+    func fetchFavorites(completionHandler: (success: Bool?, record: [CKRecord]?, error: NSError?) -> Void) {
+        let predicate = NSPredicate(format: "saved == 1")
+        let query = CKQuery(recordType: "MotivationFeedItem", predicate: predicate)
+        privateDB.performQuery(query, inZoneWithID: nil) { (record, error) in
+            guard error == nil else {
+                self.Log.warning(error)
+                completionHandler(success: false, record: nil, error: error)
+                return
+            }
+            completionHandler(success: true, record: record!, error: nil)
+        }
+    }
+
     func updateFavorites(favoritesID: CKRecordID, completionHandler: CompletionHander) {
-        var favorites: CKRecord!
         privateDB.fetchRecordWithID(favoritesID) { (record, error) in
             guard error == nil else {
                 self.Log.warning(error)
+                completionHandler(success: false, record: nil, error: error)
                 return
             }
-            favorites = record
-        }
 
-        if favorites.valueForKey("saved") as! Int == 0 {
-            favorites.setValue(1, forKey: "saved")
-        } else {
-            favorites.setValue(0, forKey: "saved")
-        }
+            let favorites = record
 
-        privateDB.saveRecord(favorites) { (record, error) in
-            guard error == nil else {
-                self.Log.warning(error)
-                return
+            if favorites!.valueForKey("saved") as! Int == 0 {
+                favorites!.setValue(1, forKey: "saved")
+            } else {
+                favorites!.setValue(0, forKey: "saved")
             }
-            self.Log.debug(record)
+
+            self.privateDB.saveRecord(favorites!) { (record, error) in
+                guard error == nil else {
+                    self.Log.warning(error)
+                    completionHandler(success: false, record: nil, error: error)
+                    return
+                }
+                completionHandler(success: true, record: record, error: error)
+            }
         }
     }
 }
