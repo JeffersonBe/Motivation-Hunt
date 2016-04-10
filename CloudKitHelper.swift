@@ -92,7 +92,7 @@ extension CloudKitHelper {
 
     func fetchMotivationFeedItem(completionHandler: (success: Bool?, record: [CKRecord]?, error: NSError?) -> Void) {
         let predicate = NSPredicate(value: true)
-        let query = CKQuery(recordType: "Challenge", predicate: predicate)
+        let query = CKQuery(recordType: "MotivationFeedItem", predicate: predicate)
         privateDB.performQuery(query, inZoneWithID: nil) { (record, error) in
             guard error == nil else {
                 self.Log.warning(error)
@@ -148,7 +148,6 @@ extension CloudKitHelper {
             self.Log.debug(record)
         }
     }
-
 }
 extension CloudKitHelper {
 

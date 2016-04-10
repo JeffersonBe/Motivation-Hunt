@@ -52,6 +52,29 @@ class MotivationFeedViewController: UIViewController {
         } catch let error as NSError {
             print("Error: \(error.localizedDescription)")
         }
+
+        if self.fetchedResultsController.fetchedObjects?.count == 0 {
+            CloudKitHelper.sharedInstance.fetchMotivationFeedItem { (success, record, error) in
+                guard error == nil else {
+                    return
+                }
+                Async.main() {
+                    CoreDataStackManager.sharedInstance.managedObjectContext.performBlock({
+                        for item in record! {
+                            let _ = MotivationFeedItem(itemTitle: item.valueForKey("itemTitle") as! String,
+                                itemDescription: item.valueForKey("itemDescription") as! String,
+                                itemID: item.valueForKey("itemID") as! String,
+                                itemThumbnailsUrl: item.valueForKey("itemThumbnailsUrl") as! String,
+                                saved: item.valueForKey("saved") as! Bool,
+                                addedDate: item.valueForKey("addedDate") as! NSDate,
+                                itemRecordID: item.recordID.recordName,
+                                context: self.sharedContext)
+                            CoreDataStackManager.sharedInstance.saveContext()
+                        }
+                    })
+                }
+            }
+        }
     }
 
     // Initialize CoreData and NSFetchedResultsController
