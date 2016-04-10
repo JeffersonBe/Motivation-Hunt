@@ -43,8 +43,6 @@ class ChallengeViewController: UIViewController {
         dimView.backgroundColor = UIColor.blackColor()
         dimView.alpha = 0
 
-        challengeDatePicker.minimumDate = NSDate()
-
         // Set padding on textfield: https://medium.com/@deepdeviant/how-to-set-padding-for-uitextfield-in-swift-2f830d131f40#.v25ja1v42
         let paddingView = UIView(frame: CGRectMake(0, 0, 15, challengeTextField.frame.height))
         challengeTextField.leftView = paddingView
@@ -147,6 +145,7 @@ class ChallengeViewController: UIViewController {
         addChallengeView.hidden = false
         view.insertSubview(self.dimView, belowSubview: (self.navigationController?.navigationBar)!)
         view.insertSubview(self.addChallengeView, belowSubview: (self.navigationController?.navigationBar)!)
+        challengeDatePicker.minimumDate = NSDate()
         UIView.animateWithDuration(0.3, animations: {
             self.dimView.alpha = 0.3
         })
