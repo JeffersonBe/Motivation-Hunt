@@ -90,19 +90,29 @@ class CloudKitHelper {
 }
 extension CloudKitHelper {
 
-    func fetchMotivationFeed(completionHandler: (success: Bool?, recordZone: CKRecordZone?, error: NSError?) -> Void) {
+    func fetchMotivationFeedItem(completionHandler: (success: Bool?, record: [CKRecord]?, error: NSError?) -> Void) {
+        let predicate = NSPredicate(value: true)
+        let query = CKQuery(recordType: "Challenge", predicate: predicate)
+        privateDB.performQuery(query, inZoneWithID: nil) { (record, error) in
+            guard error == nil else {
+                self.Log.warning(error)
+                completionHandler(success: false, record: nil, error: error)
+                return
+            }
+            completionHandler(success: true, record: record!, error: nil)
+        }
     }
 
     // MARK: - Favorites
-    func savedMotivationItem(motivationDictionary: [String:AnyObject], completionHandler: CompletionHander) {
+    func savedMotivationItem(itemTitle: String, itemDescription: String, itemID: String, itemThumbnailsUrl: String, saved: Bool, addedDate: NSDate, completionHandler: CompletionHander) {
         let motivationItem = CKRecord(recordType: "MotivationFeedItem")
 
-        motivationItem.setValue(motivationDictionary["itemID"] as! String, forKey: "itemID")
-        motivationItem.setValue(motivationDictionary["itemTitle"] as! String, forKey: "itemTitle")
-        motivationItem.setValue(motivationDictionary["itemDescription"] as! String, forKey: "itemDescription")
-        motivationItem.setValue(motivationDictionary["itemThumbnailsUrl"] as! String, forKey: "itemThumbnailsUrl")
-        motivationItem.setValue(motivationDictionary["saved"] as! Bool, forKey: "saved")
-        motivationItem.setValue(motivationDictionary["addedDate"] as! NSDate, forKey: "addedDate")
+        motivationItem.setValue(itemID, forKey: "itemID")
+        motivationItem.setValue(itemTitle, forKey: "itemTitle")
+        motivationItem.setValue(itemDescription, forKey: "itemDescription")
+        motivationItem.setValue(itemThumbnailsUrl, forKey: "itemThumbnailsUrl")
+        motivationItem.setValue(saved, forKey: "saved")
+        motivationItem.setValue(addedDate, forKey: "addedDate")
 
         privateDB.saveRecord(motivationItem) { (record, error) in
             guard record == record && error == nil else {

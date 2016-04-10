@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<model userDefinedModelVersionIdentifier="" type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="10169.1" systemVersion="15D21" minimumToolsVersion="Xcode 7.0">
+<model userDefinedModelVersionIdentifier="" type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="10171" systemVersion="15E65" minimumToolsVersion="Xcode 7.0">
     <entity name="Challenge" representedClassName=".Challenge" syncable="YES">
         <attribute name="challengeDescription" attributeType="String" syncable="YES"/>
         <attribute name="challengeRecordID" optional="YES" attributeType="String" syncable="YES"/>
@@ -10,12 +10,13 @@
         <attribute name="addedDate" optional="YES" attributeType="Date" syncable="YES"/>
         <attribute name="itemDescription" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="itemID" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="itemRecordID" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="itemThumbnailsUrl" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="itemTitle" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="saved" optional="YES" attributeType="Boolean" syncable="YES"/>
     </entity>
     <elements>
         <element name="Challenge" positionX="-63" positionY="-18" width="128" height="105"/>
-        <element name="MotivationFeedItem" positionX="-63" positionY="9" width="128" height="135"/>
+        <element name="MotivationFeedItem" positionX="-63" positionY="9" width="128" height="150"/>
     </elements>
 </model>

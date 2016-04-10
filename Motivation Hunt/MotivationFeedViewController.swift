@@ -32,7 +32,7 @@ class MotivationFeedViewController: UIViewController {
         fetchedResultsController.delegate = self
 
         // Configure CollectionView
-        collectionView!.registerClass(youtubeCollectionViewCell.self,forCellWithReuseIdentifier: MHClient.CellIdentifier.cellWithReuseIdentifier)
+        collectionView!.registerClass(youtubeCollectionViewCell.self, forCellWithReuseIdentifier: MHClient.CellIdentifier.cellWithReuseIdentifier)
         collectionView.backgroundColor = UIColor.clearColor()
         collectionView.allowsMultipleSelection = false
 
@@ -51,7 +51,7 @@ class MotivationFeedViewController: UIViewController {
             try fetchedResultsController.performFetch()
         } catch let error as NSError {
             print("Error: \(error.localizedDescription)")
-        }        
+        }
     }
 
     // Initialize CoreData and NSFetchedResultsController
@@ -66,9 +66,9 @@ class MotivationFeedViewController: UIViewController {
         fetchRequest.sortDescriptors = [NSSortDescriptor(key: "addedDate", ascending: false)]
 
         let fetchedResultsController = NSFetchedResultsController(fetchRequest: fetchRequest,
-            managedObjectContext: self.sharedContext,
-            sectionNameKeyPath: nil,
-            cacheName: nil)
+                                                                  managedObjectContext: self.sharedContext,
+                                                                  sectionNameKeyPath: nil,
+                                                                  cacheName: nil)
 
         return fetchedResultsController
 
@@ -117,63 +117,57 @@ class MotivationFeedViewController: UIViewController {
         mutableParameters = parameters
 
         let defaults = NSUserDefaults.standardUserDefaults()
-        if let nextPageToken = defaults.stringForKey(nextPageTokenConstant)
-        {
+        if let nextPageToken = defaults.stringForKey(nextPageTokenConstant) {
             mutableParameters["pageToken"] = "\(nextPageToken)"
         }
 
         Async.background {
-        MHClient.sharedInstance.taskForResource(mutableParameters) { (result, error) -> Void in
-            guard (error == nil) else {
-                dispatch_async(dispatch_get_main_queue(), {
+            MHClient.sharedInstance.taskForResource(mutableParameters) { (result, error) -> Void in
+                guard (error == nil) else {
+                    dispatch_async(dispatch_get_main_queue(), {
+                        self.indicator.stopActivity()
+                        self.indicator.removeFromSuperview()
+                        let errorAlert = UIAlertController(title: "Oops… Unable to load feed", message: error!.localizedDescription, preferredStyle: UIAlertControllerStyle.Alert)
+                        errorAlert.addAction(UIAlertAction(title: "Dismiss", style: UIAlertActionStyle.Default, handler: nil))
+                        self.presentViewController(errorAlert, animated: true, completion: nil)
+                    })
+                    print("There was an error with your request: \(error)")
+                    return
+                }
+
+                Async.main {
                     self.indicator.stopActivity()
                     self.indicator.removeFromSuperview()
-                    let errorAlert = UIAlertController(title: "Oops… Unable to load feed", message: error!.localizedDescription, preferredStyle: UIAlertControllerStyle.Alert)
-                    errorAlert.addAction(UIAlertAction(title: "Dismiss", style: UIAlertActionStyle.Default, handler: nil))
-                    self.presentViewController(errorAlert, animated: true, completion: nil)
-                })
-                print("There was an error with your request: \(error)")
-                return
-            }
+                }
 
-            Async.main {
-                self.indicator.stopActivity()
-                self.indicator.removeFromSuperview()
-            }
+                let defaults = NSUserDefaults.standardUserDefaults()
+                defaults.setObject(result["nextPageToken"] as! String, forKey:nextPageTokenConstant)
 
-            let defaults = NSUserDefaults.standardUserDefaults()
-            defaults.setObject(result["nextPageToken"] as! String, forKey:nextPageTokenConstant)
+                guard let results = result[MHClient.JSONResponseKeys.items] as? [[String:AnyObject]] else {
+                    return
+                }
 
-            guard let results = result[MHClient.JSONResponseKeys.items] as? [[String:AnyObject]] else {
-                return
-            }
-            dispatch_async(dispatch_get_main_queue()) {
-            CoreDataStackManager.sharedInstance.managedObjectContext.performBlock({
                 for item in results {
-                    guard let snippet = item[MHClient.JSONResponseKeys.snippet] as? [String:AnyObject] else {
-                        return
+                    guard let snippet = item[MHClient.JSONResponseKeys.snippet] as? [String:AnyObject],
+                        let title = snippet[MHClient.JSONResponseKeys.title] as? String,
+                        let description = snippet[MHClient.JSONResponseKeys.description] as? String,
+                        let id = item[MHClient.JSONResponseKeys.ID]![MHClient.JSONResponseKeys.videoId] as? String,
+                        let thumbnailsUrl = snippet[MHClient.JSONResponseKeys.thumbnails]![MHClient.JSONResponseKeys.quality]!![MHClient.JSONResponseKeys.url] as? String
+                        else {
+                            return
                     }
 
-                    guard let title = snippet[MHClient.JSONResponseKeys.title] as? String else {
-                        return
-                    }
+                    CloudKitHelper.sharedInstance.savedMotivationItem(title, itemDescription: description, itemID: id, itemThumbnailsUrl: thumbnailsUrl, saved: false, addedDate: NSDate()) { (success, record, error) in
+                        guard success else {
+                            return
+                        }
 
-                    guard let description = snippet[MHClient.JSONResponseKeys.description] as? String else {
-                        return
-                    }
-
-                    guard let id = item[MHClient.JSONResponseKeys.ID]![MHClient.JSONResponseKeys.videoId] as? String else {
-                        return
-                    }
-
-                    guard let thumbnailsUrl = snippet[MHClient.JSONResponseKeys.thumbnails]![MHClient.JSONResponseKeys.quality]!![MHClient.JSONResponseKeys.url] as? String else {
-                        return
-                    }
-                    
-                    let _ = MotivationFeedItem(itemTitle: title, itemDescription: description, itemID: id, itemThumbnailsUrl: thumbnailsUrl, saved: false, addedDate: NSDate(), context: self.sharedContext)
+                        Async.main {
+                            let _ = MotivationFeedItem(itemTitle: title, itemDescription: description, itemID: id, itemThumbnailsUrl: thumbnailsUrl, saved: false, addedDate: NSDate(), itemRecordID: record.recordID.recordName, context: self.sharedContext)
                             CoreDataStackManager.sharedInstance.saveContext()
+                        }
                     }
-            })}
+                }
             }
         }
     }
@@ -232,25 +226,25 @@ extension MotivationFeedViewController: UICollectionViewDelegate {
         ]
 
         // TODO: Attach UITapGestureRecognizer to imageView
-//        let doubleTapToSavedItem: UITapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(savedItem))
-//        doubleTapToSavedItem.numberOfTapsRequired = 2
-//        collectionView.addGestureRecognizer(doubleTapToSavedItem)
+        //        let doubleTapToSavedItem: UITapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(savedItem))
+        //        doubleTapToSavedItem.numberOfTapsRequired = 2
+        //        collectionView.addGestureRecognizer(doubleTapToSavedItem)
 
         cell.videoPlayer.delegate = self
         cell.textLabel.text = item.itemTitle
         cell.videoPlayer.loadVideoID(item.itemID)
 
         guard item.image != nil else {
-                MHClient.sharedInstance.taskForImage(item.itemThumbnailsUrl) { imageData, error in
-                    if let image = imageData {
-                        Async.main {
-                            item.image = UIImage(data: image)
-                            cell.imageView.image = item.image
-                            UIView.animateWithDuration(0.5, delay: 0.0, options: UIViewAnimationOptions.CurveEaseOut, animations: {
-                                cell.alpha = 1.0
-                                }, completion: nil)
-                        }
+            MHClient.sharedInstance.taskForImage(item.itemThumbnailsUrl) { imageData, error in
+                if let image = imageData {
+                    Async.main {
+                        item.image = UIImage(data: image)
+                        cell.imageView.image = item.image
+                        UIView.animateWithDuration(0.5, delay: 0.0, options: UIViewAnimationOptions.CurveEaseOut, animations: {
+                            cell.alpha = 1.0
+                            }, completion: nil)
                     }
+                }
             }
             return
         }
@@ -259,7 +253,7 @@ extension MotivationFeedViewController: UICollectionViewDelegate {
             cell.imageView.image = item.image
             UIView.animateWithDuration(0.5, delay: 0.0, options: UIViewAnimationOptions.CurveEaseOut, animations: {
                 cell.alpha = 1.0
-            }, completion: nil)
+                }, completion: nil)
         }
     }
 
@@ -339,8 +333,7 @@ extension MotivationFeedViewController: NSFetchedResultsControllerDelegate {
                     }
                     })
             )
-        }
-        else if type == NSFetchedResultsChangeType.Update {
+        } else if type == NSFetchedResultsChangeType.Update {
             blockOperations.append(
                 NSBlockOperation(block: { [weak self] in
                     if let this = self {
@@ -348,8 +341,7 @@ extension MotivationFeedViewController: NSFetchedResultsControllerDelegate {
                     }
                     })
             )
-        }
-        else if type == NSFetchedResultsChangeType.Move {
+        } else if type == NSFetchedResultsChangeType.Move {
             blockOperations.append(
                 NSBlockOperation(block: { [weak self] in
                     if let this = self {
@@ -357,8 +349,7 @@ extension MotivationFeedViewController: NSFetchedResultsControllerDelegate {
                     }
                     })
             )
-        }
-        else if type == NSFetchedResultsChangeType.Delete {
+        } else if type == NSFetchedResultsChangeType.Delete {
             blockOperations.append(
                 NSBlockOperation(block: { [weak self] in
                     if let this = self {
@@ -380,8 +371,7 @@ extension MotivationFeedViewController: NSFetchedResultsControllerDelegate {
                     }
                     })
             )
-        }
-        else if type == NSFetchedResultsChangeType.Update {
+        } else if type == NSFetchedResultsChangeType.Update {
             blockOperations.append(
                 NSBlockOperation(block: { [weak self] in
                     if let this = self {
@@ -389,8 +379,7 @@ extension MotivationFeedViewController: NSFetchedResultsControllerDelegate {
                     }
                     })
             )
-        }
-        else if type == NSFetchedResultsChangeType.Delete {
+        } else if type == NSFetchedResultsChangeType.Delete {
             blockOperations.append(
                 NSBlockOperation(block: { [weak self] in
                     if let this = self {
@@ -400,7 +389,7 @@ extension MotivationFeedViewController: NSFetchedResultsControllerDelegate {
             )
         }
     }
-    
+
     func controllerDidChangeContent(controller: NSFetchedResultsController) {
         collectionView!.performBatchUpdates({ () -> Void in
             for operation: NSBlockOperation in self.blockOperations {
