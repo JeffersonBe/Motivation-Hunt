@@ -9,6 +9,7 @@
 import UIKit
 import CoreData
 import CloudKit
+import Async
 
 class ChallengeViewController: UIViewController {
 
@@ -57,6 +58,22 @@ class ChallengeViewController: UIViewController {
         view.insertSubview(blurEffectView, belowSubview: tableView)
         tableView.backgroundColor = UIColor.clearColor()
         tableView.tableFooterView = UIView(frame: CGRect.zero)
+
+        if self.fetchedResultsController.fetchedObjects?.count == 0 {
+            CloudKitHelper.sharedInstance.fetchChallenge { (success, record, error) in
+                guard error == nil else {
+                    return
+                }
+                Async.main() {
+                    CoreDataStackManager.sharedInstance.managedObjectContext.performBlock({
+                        for item in record! {
+                            let _ = Challenge(challengeDescription: item["challengeDescription"] as! String, completed: item["completed"] as! Bool, endDate: item["endDate"] as! NSDate, challengeRecordID: item.recordID.recordName, context: self.sharedContext)
+                            CoreDataStackManager.sharedInstance.saveContext()
+                        }
+                    })
+                }
+            }
+        }
     }
 
     // Initialize CoreData and NSFetchedResultsController
@@ -311,7 +328,7 @@ extension ChallengeViewController: NSFetchedResultsControllerDelegate {
             }
         }
     }
-    
+
     func controllerWillChangeContent(controller: NSFetchedResultsController) {
         tableView.beginUpdates()
     }

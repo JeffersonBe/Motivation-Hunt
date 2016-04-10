@@ -11,9 +11,9 @@ import CloudKit
 import Log
 
 class CloudKitHelper {
-    var container : CKContainer
-    var publicDB : CKDatabase
-    let privateDB : CKDatabase
+    var container: CKContainer
+    var publicDB: CKDatabase
+    let privateDB: CKDatabase
 
     // MARK: - Shared Instance
     static var sharedInstance = CloudKitHelper()
@@ -87,6 +87,11 @@ class CloudKitHelper {
             completionHandler(success: true, record: record, error: nil)
         }
     }
+}
+extension CloudKitHelper {
+
+    func fetchMotivationFeed(completionHandler: (success: Bool?, recordZone: CKRecordZone?, error: NSError?) -> Void) {
+    }
 
     // MARK: - Favorites
     func savedMotivationItem(motivationDictionary: [String:AnyObject], completionHandler: CompletionHander) {
@@ -119,7 +124,7 @@ class CloudKitHelper {
             favorites = record
         }
 
-        if favorites.valueForKey("saved") as! Int == 0  {
+        if favorites.valueForKey("saved") as! Int == 0 {
             favorites.setValue(1, forKey: "saved")
         } else {
             favorites.setValue(0, forKey: "saved")
@@ -134,6 +139,21 @@ class CloudKitHelper {
         }
     }
 
+}
+extension CloudKitHelper {
+
+    func fetchChallenge(completionHandler: (success: Bool?, record: [CKRecord]?, error: NSError?) -> Void) {
+        let predicate = NSPredicate(value: true)
+        let query = CKQuery(recordType: "Challenge", predicate: predicate)
+        privateDB.performQuery(query, inZoneWithID: nil) { (record, error) in
+            guard error == nil else {
+                self.Log.warning(error)
+                completionHandler(success: false, record: nil, error: error)
+                return
+            }
+            completionHandler(success: true, record: record!, error: nil)
+        }
+    }
     // MARK: - Challenge
     func saveChallenge(challengeDictionary: [String:AnyObject], completionHandler: CompletionHander) {
         let challenge = CKRecord(recordType: "Challenge")
@@ -143,7 +163,7 @@ class CloudKitHelper {
         challenge.setValue(challengeDictionary["endDate"] as! NSDate, forKey: "endDate")
 
         privateDB.saveRecord(challenge) { (record, error) in
-            guard record == record && error == nil else {
+            guard error == nil else {
                 self.Log.warning(error)
                 completionHandler(success: false, record: nil, error: error)
                 return
@@ -158,7 +178,7 @@ class CloudKitHelper {
                 self.Log.warning(error)
                 return
             }
-            if record!.valueForKey("completed") as! Int == 0  {
+            if record!.valueForKey("completed") as! Int == 0 {
                 record!.setValue(1, forKey: "completed")
             } else {
                 record!.setValue(0, forKey: "completed")
