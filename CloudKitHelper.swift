@@ -174,10 +174,11 @@ extension CloudKitHelper {
 
     func updateCompletedStatusChallenge(challengeID: CKRecordID, completionHandler: CompletionHander) {
         privateDB.fetchRecordWithID(challengeID) { (record, error) in
-            guard error == nil && record == record else {
+            guard error == nil else {
                 self.Log.warning(error)
                 return
             }
+
             if record!.valueForKey("completed") as! Int == 0 {
                 record!.setValue(1, forKey: "completed")
             } else {

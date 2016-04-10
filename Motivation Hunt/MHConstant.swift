@@ -16,7 +16,7 @@ extension MHClient {
     }
 
     struct Resources {
-        static let searchVideos = "https://www.googleapis.com/youtube/v3/search";
+        static let searchVideos = "https://www.googleapis.com/youtube/v3/search"
     }
 
     struct Keys {
@@ -58,6 +58,7 @@ extension MHClient {
         static let noInternetConnection = "You don't have any internet connection :-("
         static let dismiss = "Dismiss"
         static let completeBy = "Complete by:"
+        static let completedBy = "Completed by:"
         static let delete = "Delete"
         static let unComplete = "Uncompleted"
         static let complete = "Complete"
