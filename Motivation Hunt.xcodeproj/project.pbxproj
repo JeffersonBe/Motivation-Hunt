@@ -24,13 +24,14 @@
 		B42A4ED41CBD20CC00D9593D /* SecondViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B42A4ED31CBD20CC00D9593D /* SecondViewController.swift */; };
 		B42A4ED71CBD20CC00D9593D /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = B42A4ED51CBD20CC00D9593D /* Main.storyboard */; };
 		B42A4ED91CBD20CC00D9593D /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = B42A4ED81CBD20CC00D9593D /* Assets.xcassets */; };
-		B42A4EE31CBD219100D9593D /* SwiftyBeaverTV.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B4BD1DEE1CBD12170097D7F7 /* SwiftyBeaverTV.framework */; };
 		B42E42811C81CB6C0095B9BF /* MotivationFeedItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = B42E42801C81CB6C0095B9BF /* MotivationFeedItem.swift */; };
 		B42E42841C81D1350095B9BF /* youtubeCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = B42E42831C81D1350095B9BF /* youtubeCollectionViewCell.swift */; };
 		B42E42861C81DE720095B9BF /* FavouritesViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B42E42851C81DE720095B9BF /* FavouritesViewController.swift */; };
 		B439763D1C8DDE5300864949 /* Reachability.swift in Sources */ = {isa = PBXBuildFile; fileRef = B439763C1C8DDE5300864949 /* Reachability.swift */; };
 		B44ACBC81C89ECEC00C5FF96 /* ImageCache.swift in Sources */ = {isa = PBXBuildFile; fileRef = B44ACBC71C89ECEC00C5FF96 /* ImageCache.swift */; };
-		B45AA0531CBC602600C85CE0 /* SwiftyBeaver.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B45AA04E1CBC5F5D00C85CE0 /* SwiftyBeaver.framework */; };
+		B47684821CBD3E7F005AB738 /* Log.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B47684811CBD3E7F005AB738 /* Log.framework */; };
+		B47684841CBD3E8C005AB738 /* Log.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B47684831CBD3E8C005AB738 /* Log.framework */; };
+		B47684861CBD3F9C005AB738 /* SnapKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B47684851CBD3F9C005AB738 /* SnapKit.framework */; };
 		B49E0E9C1C998666008C5B62 /* LoginViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B49E0E9B1C998666008C5B62 /* LoginViewController.swift */; };
 		B4ABAA4D1CA0042100EFEBBA /* Advance.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B4ABAA471CA0042100EFEBBA /* Advance.framework */; };
 		B4ABAA4E1CA0042100EFEBBA /* Async.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B4ABAA481CA0042100EFEBBA /* Async.framework */; };
@@ -70,14 +71,15 @@
 		B42E42851C81DE720095B9BF /* FavouritesViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FavouritesViewController.swift; sourceTree = "<group>"; };
 		B439763C1C8DDE5300864949 /* Reachability.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Reachability.swift; path = "Motivation Hunt/Reachability.swift"; sourceTree = "<group>"; };
 		B44ACBC71C89ECEC00C5FF96 /* ImageCache.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ImageCache.swift; path = "Motivation Hunt/ImageCache.swift"; sourceTree = "<group>"; };
-		B45AA04E1CBC5F5D00C85CE0 /* SwiftyBeaver.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SwiftyBeaver.framework; path = Carthage/Build/iOS/SwiftyBeaver.framework; sourceTree = "<group>"; };
+		B47684811CBD3E7F005AB738 /* Log.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Log.framework; path = Carthage/Build/tvOS/Log.framework; sourceTree = "<group>"; };
+		B47684831CBD3E8C005AB738 /* Log.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Log.framework; path = Carthage/Build/iOS/Log.framework; sourceTree = "<group>"; };
+		B47684851CBD3F9C005AB738 /* SnapKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SnapKit.framework; path = Carthage/Build/tvOS/SnapKit.framework; sourceTree = "<group>"; };
 		B49E0E9B1C998666008C5B62 /* LoginViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LoginViewController.swift; sourceTree = "<group>"; };
 		B4ABAA471CA0042100EFEBBA /* Advance.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Advance.framework; path = Carthage/Build/iOS/Advance.framework; sourceTree = "<group>"; };
 		B4ABAA481CA0042100EFEBBA /* Async.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Async.framework; path = Carthage/Build/iOS/Async.framework; sourceTree = "<group>"; };
 		B4ABAA491CA0042100EFEBBA /* FontAwesome.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = FontAwesome.framework; path = Carthage/Build/iOS/FontAwesome.framework; sourceTree = "<group>"; };
 		B4ABAA4B1CA0042100EFEBBA /* SnapKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SnapKit.framework; path = Carthage/Build/iOS/SnapKit.framework; sourceTree = "<group>"; };
 		B4ABAA4C1CA0042100EFEBBA /* YouTubePlayer.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = YouTubePlayer.framework; path = Carthage/Build/iOS/YouTubePlayer.framework; sourceTree = "<group>"; };
-		B4BD1DEE1CBD12170097D7F7 /* SwiftyBeaverTV.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SwiftyBeaverTV.framework; path = Carthage/Build/tvOS/SwiftyBeaverTV.framework; sourceTree = "<group>"; };
 		B4DC95511C88CD620041AB31 /* MHClient.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = MHClient.swift; path = "Motivation Hunt/MHClient.swift"; sourceTree = "<group>"; };
 		B4DC95531C88CE8E0041AB31 /* MHConstant.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = MHConstant.swift; path = "Motivation Hunt/MHConstant.swift"; sourceTree = "<group>"; };
 		B4F721031C96142700D07A4D /* CloudKitHelper.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CloudKitHelper.swift; sourceTree = "<group>"; };
@@ -89,11 +91,11 @@
 			buildActionMask = 2147483647;
 			files = (
 				B4ABAA4D1CA0042100EFEBBA /* Advance.framework in Frameworks */,
-				B45AA0531CBC602600C85CE0 /* SwiftyBeaver.framework in Frameworks */,
 				B4ABAA4E1CA0042100EFEBBA /* Async.framework in Frameworks */,
 				B4ABAA4F1CA0042100EFEBBA /* FontAwesome.framework in Frameworks */,
 				B4ABAA511CA0042100EFEBBA /* SnapKit.framework in Frameworks */,
 				B4ABAA521CA0042100EFEBBA /* YouTubePlayer.framework in Frameworks */,
+				B47684841CBD3E8C005AB738 /* Log.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -101,7 +103,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				B42A4EE31CBD219100D9593D /* SwiftyBeaverTV.framework in Frameworks */,
+				B47684821CBD3E7F005AB738 /* Log.framework in Frameworks */,
+				B47684861CBD3F9C005AB738 /* SnapKit.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -118,10 +121,11 @@
 				B4ABAA471CA0042100EFEBBA /* Advance.framework */,
 				B4ABAA481CA0042100EFEBBA /* Async.framework */,
 				B4ABAA491CA0042100EFEBBA /* FontAwesome.framework */,
+				B47684851CBD3F9C005AB738 /* SnapKit.framework */,
 				B4ABAA4B1CA0042100EFEBBA /* SnapKit.framework */,
+				B47684811CBD3E7F005AB738 /* Log.framework */,
+				B47684831CBD3E8C005AB738 /* Log.framework */,
 				B4ABAA4C1CA0042100EFEBBA /* YouTubePlayer.framework */,
-				B4BD1DEE1CBD12170097D7F7 /* SwiftyBeaverTV.framework */,
-				B45AA04E1CBC5F5D00C85CE0 /* SwiftyBeaver.framework */,
 			);
 			sourceTree = "<group>";
 		};
@@ -323,7 +327,8 @@
 			files = (
 			);
 			inputPaths = (
-				"$(SRCROOT)/Carthage/Build/tvOS/SwiftyBeaverTV.framework",
+				"$(SRCROOT)/Carthage/Build/tvOS/Log.framework",
+				"$(SRCROOT)/Carthage/Build/tvOS/SnapKit.framework",
 			);
 			outputPaths = (
 			);
@@ -616,6 +621,7 @@
 				B42A4EDD1CBD20CC00D9593D /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 
