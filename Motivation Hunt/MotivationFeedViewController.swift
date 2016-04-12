@@ -22,6 +22,7 @@ class MotivationFeedViewController: UIViewController {
     @IBOutlet weak var collectionView: UICollectionView!
     var indicator = CustomUIActivityIndicatorView()
     var currentFavoriteindexPath: NSIndexPath!
+    let refreshCtrl = UIRefreshControl()
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -35,6 +36,9 @@ class MotivationFeedViewController: UIViewController {
         collectionView!.registerClass(youtubeCollectionViewCell.self, forCellWithReuseIdentifier: MHClient.CellIdentifier.cellWithReuseIdentifier)
         collectionView.backgroundColor = UIColor.clearColor()
         collectionView.allowsMultipleSelection = false
+
+        refreshCtrl.addTarget(self, action: #selector(MotivationFeedViewController.refreshData), forControlEvents: .ValueChanged)
+        collectionView?.addSubview(refreshCtrl)
 
         let button = UIBarButtonItem(barButtonSystemItem: UIBarButtonSystemItem.Refresh, target: self, action: #selector(refreshData))
         navigationItem.rightBarButtonItem = button
@@ -186,6 +190,9 @@ class MotivationFeedViewController: UIViewController {
                     }
                 }
             }
+        }
+        if refreshCtrl.refreshing {
+            refreshCtrl.endRefreshing()
         }
     }
 

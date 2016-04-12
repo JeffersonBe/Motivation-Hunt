@@ -9,7 +9,6 @@
 import Foundation
 import UIKit
 import CloudKit
-import Log
 import Async
 
 class LoginViewController: UIViewController {

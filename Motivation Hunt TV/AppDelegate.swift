@@ -2,11 +2,14 @@
 //  AppDelegate.swift
 //  Motivation Hunt TV
 //
-//  Created by Jefferson Bonnaire on 11/03/2016.
+//  Created by Jefferson Bonnaire on 12/04/2016.
 //  Copyright © 2016 Jefferson Bonnaire. All rights reserved.
 //
 
 import UIKit
+import SwiftyBeaver
+
+let Log = SwiftyBeaver.self
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
