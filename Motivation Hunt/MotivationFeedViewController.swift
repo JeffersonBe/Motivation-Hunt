@@ -130,6 +130,21 @@ class MotivationFeedViewController: UIViewController {
             }, completion: nil)
     }
 
+    func shareMotivation(gestureRecognizer: UIGestureRecognizer) {
+        let tapPoint: CGPoint = gestureRecognizer.locationInView(collectionView)
+        let indexPath = collectionView.indexPathForItemAtPoint(tapPoint)
+        let cell = collectionView.cellForItemAtIndexPath(indexPath!) as! motivationCollectionViewCell
+        let motivation = fetchedResultsController.objectAtIndexPath(indexPath!) as! MotivationFeedItem
+        let motivationToShare = [motivation.itemTitle, motivation.itemDescription, "https://www.youtube.com/watch?v=\(motivation.itemID)"]
+        let activityViewController = UIActivityViewController(activityItems: motivationToShare, applicationActivities: nil)
+        activityViewController.excludedActivityTypes = [UIActivityTypeAirDrop, UIActivityTypeAddToReadingList]
+
+        activityViewController.popoverPresentationController?.sourceView = cell.imageView
+        activityViewController.popoverPresentationController?.sourceRect = cell.imageView.bounds
+
+        self.presentViewController(activityViewController, animated: true, completion: nil)
+    }
+
     func refreshData() {
         indicator.startActivity()
         view.addSubview(indicator)
@@ -253,6 +268,10 @@ extension MotivationFeedViewController: UICollectionViewDelegate {
         let tapToSavedItem: UITapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(savedItem(_:)))
         tapToSavedItem.numberOfTapsRequired = 1
         cell.favoriteBarButton.addGestureRecognizer(tapToSavedItem)
+
+        let shareOnTapshareBarButton: UITapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(shareMotivation(_:)))
+        shareOnTapshareBarButton.numberOfTapsRequired = 1
+        cell.shareBarButton.addGestureRecognizer(shareOnTapshareBarButton)
 
         if item.saved {
             cell.favoriteBarButton.setTitle(String.fontAwesomeIconWithName(.Heart), forState: .Normal)
