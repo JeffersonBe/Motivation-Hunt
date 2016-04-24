@@ -1,6 +1,7 @@
-github "gilesvangruisen/Swift-YouTube-Player"
+github "netizen01/Swift-YouTube-Player" "master"
 github "storehouse/Advance" "master"
 github "delba/Log"
 github "duemunk/Async"
 github "SnapKit/SnapKit"
 github "thii/FontAwesome.swift" "0.7.0"
+github "gavinbunney/Toucan"
