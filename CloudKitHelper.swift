@@ -45,7 +45,7 @@ class CloudKitHelper {
     let Log = Logger()
 
     init() {
-        container = CKContainer.defaultContainer()
+        container = CKContainer(identifier: "iCloud.com.jeffersonbonnaire.motivationhunt")
         publicDB = container.publicCloudDatabase
         privateDB = container.privateCloudDatabase
     }
@@ -82,19 +82,6 @@ class CloudKitHelper {
                 return
             }
             completionHandler(success: true, userRecordID: recordID?.recordName, error: nil)
-        }
-    }
-
-    func getUserInfo(userRecordID: String, completionHandler: (success: Bool?, error: NSError?, firstName: String) -> ()) {
-        container.discoverUserInfoWithUserRecordID(CKRecordID(recordName: userRecordID)) { (CKDiscoveredUserInfo, error) in
-            guard error == nil else {
-                self.Log.warning(error)
-                completionHandler(success: false, error: error, firstName: "")
-                return
-            }
-            var userContact: CNContact
-            userContact = CKDiscoveredUserInfo!.displayContact!
-            completionHandler(success: true, error: nil, firstName: userContact.givenName)
         }
     }
 
@@ -218,6 +205,27 @@ extension CloudKitHelper {
         }
     }
 
+    func updateChallenge(challengeDescription: String, endDate: NSDate, challengeRecordID: CKRecordID, completionHandler: CompletionHander) {
+        privateDB.fetchRecordWithID(challengeRecordID) { (record, error) in
+            guard error == nil else {
+                self.Log.warning(error)
+                return
+            }
+
+        record!.setValue(challengeDescription, forKey: "\(ChallengeKey.challengeDescription)")
+        record!.setValue(endDate, forKey: "\(ChallengeKey.endDate)")
+
+        self.privateDB.saveRecord(record!) { (record, error) in
+            guard error == nil else {
+                self.Log.warning(error)
+                completionHandler(success: false, record: nil, error: error)
+                return
+            }
+            completionHandler(success: true, record: record, error: nil)
+        }
+        }
+    }
+
     func updateCompletedStatusChallenge(challengeID: CKRecordID, completionHandler: CompletionHander) {
         privateDB.fetchRecordWithID(challengeID) { (record, error) in
             guard error == nil else {
@@ -242,8 +250,8 @@ extension CloudKitHelper {
         }
     }
 
-    func deleteChallenge(challengeID: CKRecordID, completionHandler: (success: Bool, recordID: CKRecordID!, error: NSError?) -> Void) {
-        privateDB.deleteRecordWithID(challengeID) { (recordID, error) in
+    func deleteChallenge(challengeRecordID: CKRecordID, completionHandler: (success: Bool, recordID: CKRecordID!, error: NSError?) -> Void) {
+        privateDB.deleteRecordWithID(challengeRecordID) { (recordID, error) in
             guard recordID == recordID && error == nil else {
                 self.Log.warning(error)
                 completionHandler(success: false, recordID: nil, error: error)
