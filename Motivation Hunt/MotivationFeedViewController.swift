@@ -11,17 +11,14 @@ import CoreData
 import YouTubePlayer
 import CloudKit
 import Async
+import Toucan
 
-// https://github.com/gilesvangruisen/Swift-YouTube-Player
-
-// We use this NSUserDefaults.standardUserDefaults() to keep track of page inside Youtube API Call
 let nextPageTokenConstant = "nextPageToken"
 
 class MotivationFeedViewController: UIViewController {
 
     @IBOutlet weak var collectionView: UICollectionView!
     var indicator = CustomUIActivityIndicatorView()
-    var currentFavoriteindexPath: NSIndexPath!
     let refreshCtrl = UIRefreshControl()
 
     override func viewDidLoad() {
@@ -33,7 +30,7 @@ class MotivationFeedViewController: UIViewController {
         fetchedResultsController.delegate = self
 
         // Configure CollectionView
-        collectionView!.registerClass(youtubeCollectionViewCell.self, forCellWithReuseIdentifier: MHClient.CellIdentifier.cellWithReuseIdentifier)
+        collectionView!.registerClass(motivationCollectionViewCell.self, forCellWithReuseIdentifier: MHClient.CellIdentifier.cellWithReuseIdentifier)
         collectionView.backgroundColor = UIColor.clearColor()
         collectionView.allowsMultipleSelection = false
 
@@ -88,17 +85,17 @@ class MotivationFeedViewController: UIViewController {
     }
 
     lazy var fetchedResultsController: NSFetchedResultsController = {
-
         let fetchRequest = NSFetchRequest(entityName: "MotivationFeedItem")
         fetchRequest.sortDescriptors = [NSSortDescriptor(key: "addedDate", ascending: false)]
 
-        let fetchedResultsController = NSFetchedResultsController(fetchRequest: fetchRequest,
-                                                                  managedObjectContext: self.sharedContext,
-                                                                  sectionNameKeyPath: nil,
-                                                                  cacheName: nil)
+        let fetchedResultsController = NSFetchedResultsController(
+            fetchRequest: fetchRequest,
+            managedObjectContext: self.sharedContext,
+            sectionNameKeyPath: nil,
+            cacheName: nil
+        )
 
         return fetchedResultsController
-
     }()
 
     // MARK: - NSFetchedResultsController related property
@@ -113,11 +110,24 @@ class MotivationFeedViewController: UIViewController {
             guard error == nil else {
                 return
             }
+
             Async.main {
                 objet.saved = objet.saved ? false : true
                 CoreDataStackManager.sharedInstance.saveContext()
             }
         }
+    }
+
+    func playVideo(gestureRecognizer: UIGestureRecognizer) {
+        let tapPoint: CGPoint = gestureRecognizer.locationInView(collectionView)
+        let indexPath = collectionView.indexPathForItemAtPoint(tapPoint)
+        let cell = collectionView.cellForItemAtIndexPath(indexPath!) as! motivationCollectionViewCell
+        cell.videoPlayer.play()
+        UIView.animateWithDuration(0.5, delay: 0.0, options: UIViewAnimationOptions.CurveEaseOut, animations: {
+            cell.videoPlayer.alpha = 1
+            cell.playButton.alpha = 0
+            cell.imageView.alpha = 0
+            }, completion: nil)
     }
 
     func refreshData() {
@@ -191,6 +201,7 @@ class MotivationFeedViewController: UIViewController {
                 }
             }
         }
+
         if refreshCtrl.refreshing {
             refreshCtrl.endRefreshing()
         }
@@ -218,84 +229,65 @@ extension MotivationFeedViewController: UICollectionViewDelegate {
 
     func collectionView(collectionView: UICollectionView, cellForItemAtIndexPath indexPath: NSIndexPath) -> UICollectionViewCell {
         let motivationItem = fetchedResultsController.objectAtIndexPath(indexPath) as! MotivationFeedItem
-        let cell = collectionView.dequeueReusableCellWithReuseIdentifier(MHClient.CellIdentifier.cellWithReuseIdentifier, forIndexPath: indexPath) as! youtubeCollectionViewCell
+        let cell = collectionView.dequeueReusableCellWithReuseIdentifier(MHClient.CellIdentifier.cellWithReuseIdentifier, forIndexPath: indexPath) as! motivationCollectionViewCell
         configureCell(cell, withItem: motivationItem)
         return cell
     }
 
-    func collectionView(collectionView: UICollectionView, didSelectItemAtIndexPath indexPath: NSIndexPath) {
-        let cell = collectionView.dequeueReusableCellWithReuseIdentifier(MHClient.CellIdentifier.cellWithReuseIdentifier, forIndexPath: indexPath) as! youtubeCollectionViewCell
-
-        guard Reachability.connectedToNetwork() else {
-            let errorAlert = UIAlertController(title: MHClient.AppCopy.unableToLoadVideo, message: MHClient.AppCopy.noInternetConnection, preferredStyle: UIAlertControllerStyle.Alert)
-            errorAlert.addAction(UIAlertAction(title: MHClient.AppCopy.dismiss, style: UIAlertActionStyle.Default, handler: nil))
-            presentViewController(errorAlert, animated: true, completion: nil)
-            return
-        }
-
-        Async.main {
-            cell.videoPlayer.play()
-        }
-    }
-
-    func configureCell(cell: youtubeCollectionViewCell, withItem item: MotivationFeedItem) {
-
-        cell.videoPlayer.playerVars = [
-            "controls": "1",
-            "autoplay": "1",
-            "showinfo": "0",
-            "autohide":"2",
-            "modestbranding":"0",
-            "rel":1
-        ]
-
-        // TODO: Attach UITapGestureRecognizer to imageView
-        //        let doubleTapToSavedItem: UITapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(savedItem))
-        //        doubleTapToSavedItem.numberOfTapsRequired = 2
-        //        collectionView.addGestureRecognizer(doubleTapToSavedItem)
-
+    func configureCell(cell: motivationCollectionViewCell, withItem item: MotivationFeedItem) {
         cell.videoPlayer.delegate = self
         cell.textLabel.text = item.itemTitle
         cell.videoPlayer.loadVideoID(item.itemID)
-        let tapToSavedItem: UITapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(MotivationFeedViewController.savedItem(_:)))
+        cell.imageView.alpha = 0
+        cell.playButton.alpha = 0
+        cell.videoPlayer.alpha = 0
+
+        let playVideoOnTapPlayButton: UITapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(playVideo(_:)))
+        playVideoOnTapPlayButton.numberOfTapsRequired = 1
+        cell.playButton.addGestureRecognizer(playVideoOnTapPlayButton)
+
+        let playVideoOnTapImageView: UITapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(playVideo(_:)))
+        playVideoOnTapImageView.numberOfTapsRequired = 1
+        cell.imageView.addGestureRecognizer(playVideoOnTapImageView)
+
+        let tapToSavedItem: UITapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(savedItem(_:)))
         tapToSavedItem.numberOfTapsRequired = 1
         cell.favoriteBarButton.addGestureRecognizer(tapToSavedItem)
 
-        guard item.image != nil else {
+        if item.saved {
+            cell.favoriteBarButton.setTitle(String.fontAwesomeIconWithName(.Heart), forState: .Normal)
+        } else {
+            cell.favoriteBarButton.setTitle(String.fontAwesomeIconWithName(.HeartO), forState: .Normal)
+        }
+
+        if item.image == nil {
             MHClient.sharedInstance.taskForImage(item.itemThumbnailsUrl) { imageData, error in
-                if let image = imageData {
-                    Async.main {
-                        item.image = UIImage(data: image)
-                        cell.imageView.image = item.image
-                        UIView.animateWithDuration(0.5, delay: 0.0, options: UIViewAnimationOptions.CurveEaseOut, animations: {
-                            cell.alpha = 1.0
-                            }, completion: nil)
-                    }
+                guard error == nil else {
+                    return
+                }
+                Async.main {
+                    item.image = UIImage(data: imageData!)
                 }
             }
-            return
         }
 
         Async.main {
-            cell.imageView.image = item.image
+            cell.imageView.image = Toucan(image: item.image!).resize(CGSize(width: cell.frame.width - 10, height: cell.frame.width / 1.8), fitMode: Toucan.Resize.FitMode.Crop).maskWithRoundedRect(cornerRadius: 10).image
             UIView.animateWithDuration(0.5, delay: 0.0, options: UIViewAnimationOptions.CurveEaseOut, animations: {
-                cell.alpha = 1.0
-                }, completion: nil)
+                cell.imageView.alpha = 1
+                cell.playButton.alpha = 0.7
+            }, completion: nil)
         }
-    }
-
-    func favoriteItem(sender: UIButton) {
-        print()
     }
 
     func collectionView(collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAtIndexPath indexPath: NSIndexPath) -> CGSize {
         let device = UIDevice.currentDevice().model
         let dimensioniPhone = view.frame.width
-        var cellSize: CGSize = CGSizeMake(dimensioniPhone, dimensioniPhone * 0.9)
+        var cellSize: CGSize = CGSizeMake(dimensioniPhone, dimensioniPhone * 0.8)
         let dimensioniPad = (view.frame.width / 2) - 15
 
         if (device == "iPad" || device == "iPad Simulator") {
-            cellSize = CGSizeMake(dimensioniPad, dimensioniPad * 0.9)
+            cellSize = CGSizeMake(dimensioniPad, dimensioniPad * 0.8)
         }
         return cellSize
     }
@@ -312,9 +304,20 @@ extension MotivationFeedViewController: UICollectionViewDelegate {
 
         return edgeInsets
     }
+
+    func collectionView(collectionView: UICollectionView, didEndDisplayingCell cell: UICollectionViewCell, forItemAtIndexPath indexPath: NSIndexPath) {
+        if let cell = cell as? motivationCollectionViewCell {
+            UIView.animateWithDuration(0.5, delay: 0.0, options: UIViewAnimationOptions.CurveEaseOut, animations: {
+                cell.playButton.alpha = 0
+                cell.imageView.alpha = 0
+                }, completion: nil)
+            cell.videoPlayer.stop()
+        }
+    }
 }
 
 extension MotivationFeedViewController: YouTubePlayerDelegate {
+
     func playerStateChanged(videoPlayer: YouTubePlayerView, playerState: YouTubePlayerState) {
         if playerState == .Buffering {
             Async.main {
@@ -344,11 +347,7 @@ extension MotivationFeedViewController: YouTubePlayerDelegate {
             }
         }
     }
-
-    func playerQualityChanged(videoPlayer: YouTubePlayerView, playbackQuality: YouTubePlaybackQuality) {}
-    func playerReady(videoPlayer: YouTubePlayerView) {}
 }
-
 
 extension MotivationFeedViewController: NSFetchedResultsControllerDelegate {
     // MARK: NSFetchedResultsController delegate

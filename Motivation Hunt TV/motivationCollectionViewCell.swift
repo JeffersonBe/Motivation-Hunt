@@ -1,17 +1,16 @@
 //
-//  youtubeCollectionViewCell.swift
+//  motivationCollectionViewCell.swift
 //  Motivation Hunt
 //
-//  Created by Jefferson Bonnaire on 27/02/2016.
+//  Created by Jefferson Bonnaire on 19/04/2016.
 //  Copyright © 2016 Jefferson Bonnaire. All rights reserved.
 //
 
 import UIKit
-import YouTubePlayer
 import SnapKit
 import FontAwesome
 
-class youtubeCollectionViewCell: UICollectionViewCell {
+class motivationCollectionViewCell: UICollectionViewCell {
     var videoPlayer: YouTubePlayerView!
 
     var titleBarView: UIView!
@@ -71,7 +70,7 @@ class youtubeCollectionViewCell: UICollectionViewCell {
             make.width.equalTo(contentView.frame.width)
             make.height.equalTo(contentView.frame.width / 1.3)
         }
-        
+
         barActionView = UIView()
         barActionView.backgroundColor = UIColor.blackColor()
         contentView.insertSubview(barActionView, aboveSubview: imageView)
@@ -124,7 +123,7 @@ class youtubeCollectionViewCell: UICollectionViewCell {
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
-
+    
     override func prepareForReuse() {
         super.prepareForReuse()
     }
