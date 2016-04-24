@@ -14,7 +14,6 @@ import Async
 class LoginViewController: UIViewController {
 
     var currentUserRecordID: String!
-    var currentUserFirstName: String!
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -67,46 +66,9 @@ class LoginViewController: UIViewController {
                     return
                 }
 
-                if (NSUserDefaults.standardUserDefaults().objectForKey("currentUserRecordID") != nil) {
-                    guard self.currentUserRecordID == userRecordID else
-                    {
-                        let alertViewIcloudNotSame = UIAlertController(title: "You've changed your account", message: "To keep using your favourites and challenge, please use \(self.currentUserFirstName)'s account", preferredStyle: .Alert)
-                        let returnUserToIcloudSettings = UIAlertAction(title: "Ok got it", style: .Default, handler: { UIAlertAction in
-                            UIApplication.sharedApplication().openURL(NSURL(string:"prefs:root=CASTLE")!)
-                        })
-                        let useNewAccount = UIAlertAction(title: "Ok got it", style: .Default, handler: { UIAlertAction in
-                            // TODO: Delete everything in database and redirect user to app
-                        })
-                        alertViewIcloudNotSame.addAction(returnUserToIcloudSettings)
-                        alertViewIcloudNotSame.addAction(useNewAccount)
-                        Async.main {
-                            self.presentViewController(alertViewIcloudNotSame, animated: true, completion: nil)
-                        }
-                        return
-                    }
-                }
-
                 Async.background {
                     NSUserDefaults.standardUserDefaults().setObject(userRecordID! as String, forKey: "currentUserRecordID")
                     self.currentUserRecordID = NSUserDefaults.standardUserDefaults().objectForKey("currentUserRecordID") as! String
-                    }.background {
-                        CloudKitHelper.sharedInstance.getUserInfo(self.currentUserRecordID, completionHandler: { (success, error, firstName) in
-                            guard error == nil else {
-                                let alertViewUnableToGetUserInfo = UIAlertController(title: error?.localizedDescription, message: error?.localizedFailureReason, preferredStyle: .Alert)
-                                let returnUserToIcloudSettings = UIAlertAction(title: "Ok, call me BOSS now!", style: .Default, handler: { UIAlertAction in
-                                    Async.userInteractive {
-                                        self.showApp()
-                                        NSUserDefaults.standardUserDefaults().setObject("BOSS" as String, forKey: "currentUserFirstName")
-                                    }
-                                })
-                                alertViewUnableToGetUserInfo.addAction(returnUserToIcloudSettings)
-                                Async.main {
-                                    self.presentViewController(alertViewUnableToGetUserInfo, animated: true, completion: nil)
-                                }
-                                return
-                            }
-                            NSUserDefaults.standardUserDefaults().setObject(firstName as String, forKey: "currentUserFirstName")
-                        })
                     }.main {
                         self.showApp()
                 }
