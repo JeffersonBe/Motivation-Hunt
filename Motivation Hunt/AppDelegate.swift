@@ -8,9 +8,9 @@
 
 import UIKit
 import CoreData
-import SwiftyBeaver
+import Log
 
-let Log = SwiftyBeaver.self
+let Log = Logger()
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
@@ -19,8 +19,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     func application(application: UIApplication, didFinishLaunchingWithOptions launchOptions: [NSObject: AnyObject]?) -> Bool {
         // Override point for customization after application launch.
-        let console = ConsoleDestination()  // log to Xcode Console
-        Log.addDestination(console)
         return true
     }
 
