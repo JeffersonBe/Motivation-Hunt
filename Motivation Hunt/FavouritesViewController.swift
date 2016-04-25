@@ -10,23 +10,28 @@ import UIKit
 import CoreData
 import YouTubePlayer
 import CloudKit
+import Toucan
 import Async
+import TBEmptyDataSet
 
 class FavouritesViewController: UIViewController {
 
     @IBOutlet weak var collectionView: UICollectionView!
     var indicator = CustomUIActivityIndicatorView()
-    var currentFavoriteindexPath: NSIndexPath!
+    var shouldReloadCollectionView = false
+    var blockOperations: [NSBlockOperation] = []
 
     override func viewDidLoad() {
         super.viewDidLoad()
 
         // Initialize delegate
         collectionView.delegate = self
+        collectionView.emptyDataSetDataSource = self
+        collectionView.emptyDataSetDelegate = self
         fetchedResultsController.delegate = self
 
         // Configure CollectionView
-        collectionView!.registerClass(youtubeCollectionViewCell.self, forCellWithReuseIdentifier: MHClient.CellIdentifier.cellWithReuseIdentifier)
+        collectionView.registerClass(motivationCollectionViewCell.self, forCellWithReuseIdentifier: MHClient.CellIdentifier.cellWithReuseIdentifier)
         collectionView.backgroundColor = UIColor.clearColor()
         collectionView.allowsMultipleSelection = false
 
@@ -58,31 +63,94 @@ class FavouritesViewController: UIViewController {
         fetchRequest.sortDescriptors = [NSSortDescriptor(key: "itemID", ascending: true)]
 
         let fetchedResultsController = NSFetchedResultsController(fetchRequest: fetchRequest,
-            managedObjectContext: self.sharedContext,
-            sectionNameKeyPath: nil,
-            cacheName: nil)
-
+                                                                  managedObjectContext: self.sharedContext,
+                                                                  sectionNameKeyPath: nil,
+                                                                  cacheName: nil)
+        
         return fetchedResultsController
     }()
 
+    deinit {
+        // Cancel all block operations when VC deallocates
+        for operation: NSBlockOperation in blockOperations {
+            operation.cancel()
+        }
+
+        blockOperations.removeAll(keepCapacity: false)
+    }
+}
+
+extension FavouritesViewController {
     func savedItem(gestureRecognizer: UIGestureRecognizer) {
         let tapPoint: CGPoint = gestureRecognizer.locationInView(collectionView)
         let indexPath = collectionView.indexPathForItemAtPoint(tapPoint)
         let objet = fetchedResultsController.objectAtIndexPath(indexPath!) as! MotivationFeedItem
 
+        Async.main {
+            objet.saved = objet.saved ? false : true
+            CoreDataStackManager.sharedInstance.saveContext()
+        }
+
         CloudKitHelper.sharedInstance.updateFavorites(CKRecordID(recordName: objet.itemRecordID)) { (success, record, error) in
             guard error == nil else {
                 return
             }
-            Async.main {
-                objet.saved = objet.saved ? false : true
-                CoreDataStackManager.sharedInstance.saveContext()
-            }
         }
     }
 
-    // MARK: - NSFetchedResultsController related property
-    var blockOperations: [NSBlockOperation] = []
+    func playVideo(gestureRecognizer: UIGestureRecognizer) {
+        let tapPoint: CGPoint = gestureRecognizer.locationInView(collectionView)
+        let indexPath = collectionView.indexPathForItemAtPoint(tapPoint)
+        let cell = collectionView.cellForItemAtIndexPath(indexPath!) as! motivationCollectionViewCell
+        cell.videoPlayer.play()
+        UIView.animateWithDuration(0.5, delay: 0.0, options: UIViewAnimationOptions.CurveEaseOut, animations: {
+            cell.videoPlayer.alpha = 1
+            cell.playButton.alpha = 0
+            cell.imageView.alpha = 0
+            }, completion: nil)
+    }
+
+    func shareMotivation(gestureRecognizer: UIGestureRecognizer) {
+        let tapPoint: CGPoint = gestureRecognizer.locationInView(collectionView)
+        let indexPath = collectionView.indexPathForItemAtPoint(tapPoint)
+        let cell = collectionView.cellForItemAtIndexPath(indexPath!) as! motivationCollectionViewCell
+        let motivation = fetchedResultsController.objectAtIndexPath(indexPath!) as! MotivationFeedItem
+        let motivationToShare = [motivation.itemTitle, motivation.itemDescription, "https://www.youtube.com/watch?v=\(motivation.itemID)"]
+        let activityViewController = UIActivityViewController(activityItems: motivationToShare, applicationActivities: nil)
+        activityViewController.excludedActivityTypes = [UIActivityTypeAirDrop, UIActivityTypeAddToReadingList]
+
+        activityViewController.popoverPresentationController?.sourceView = cell.imageView
+        activityViewController.popoverPresentationController?.sourceRect = cell.imageView.bounds
+
+        self.presentViewController(activityViewController, animated: true, completion: nil)
+    }
+}
+
+extension FavouritesViewController: TBEmptyDataSetDataSource, TBEmptyDataSetDelegate {
+    func titleForEmptyDataSet(scrollView: UIScrollView!) -> NSAttributedString? {
+        // return the description for EmptyDataSet
+        let title = "You don't have any favourites"
+        let attributes = [NSFontAttributeName: UIFont.systemFontOfSize(24.0), NSForegroundColorAttributeName: UIColor.grayColor()]
+        return NSAttributedString(string: title, attributes: attributes)
+    }
+
+    func imageForEmptyDataSet(scrollView: UIScrollView!) -> UIImage? {
+        let image = UIImage(named: "iconFeatured")
+        return image
+    }
+
+    func descriptionForEmptyDataSet(scrollView: UIScrollView!) -> NSAttributedString? {
+        let title = "Add a favourites to watch later!"
+        let attributes = [NSFontAttributeName: UIFont.systemFontOfSize(18.00), NSForegroundColorAttributeName: UIColor.grayColor()]
+        return NSAttributedString(string: title, attributes: attributes)
+    }
+
+    func emptyDataSetShouldDisplay(scrollView: UIScrollView!) -> Bool {
+        guard fetchedResultsController.fetchedObjects?.count == 0 else {
+            return false
+        }
+        return true
+    }
 }
 
 extension FavouritesViewController: UICollectionViewDelegate {
@@ -94,48 +162,51 @@ extension FavouritesViewController: UICollectionViewDelegate {
 
     func collectionView(collectionView: UICollectionView, cellForItemAtIndexPath indexPath: NSIndexPath) -> UICollectionViewCell {
         let motivationItem = fetchedResultsController.objectAtIndexPath(indexPath) as! MotivationFeedItem
-        let cell = collectionView.dequeueReusableCellWithReuseIdentifier(MHClient.CellIdentifier.cellWithReuseIdentifier, forIndexPath: indexPath) as! youtubeCollectionViewCell
+        let cell = collectionView.dequeueReusableCellWithReuseIdentifier(MHClient.CellIdentifier.cellWithReuseIdentifier, forIndexPath: indexPath) as! motivationCollectionViewCell
         configureCell(cell, withItem: motivationItem)
         return cell
     }
 
-    func collectionView(collectionView: UICollectionView, didSelectItemAtIndexPath indexPath: NSIndexPath) {
-        let cell = collectionView.dequeueReusableCellWithReuseIdentifier(MHClient.CellIdentifier.cellWithReuseIdentifier, forIndexPath: indexPath) as! youtubeCollectionViewCell
-        if Reachability.connectedToNetwork() {
-            cell.videoPlayer.play()
-        } else {
-            let errorAlert = UIAlertController(title: MHClient.AppCopy.unableToLoadVideo, message: MHClient.AppCopy.noInternetConnection, preferredStyle: UIAlertControllerStyle.Alert)
-            errorAlert.addAction(UIAlertAction(title: MHClient.AppCopy.dismiss, style: UIAlertActionStyle.Default, handler: nil))
-            presentViewController(errorAlert, animated: true, completion: nil)
-        }
-    }
-
-    func configureCell(cell: youtubeCollectionViewCell, withItem item: MotivationFeedItem) {
+    func configureCell(cell: motivationCollectionViewCell, withItem item: MotivationFeedItem) {
         cell.videoPlayer.delegate = self
         cell.textLabel.text = item.itemTitle
-        cell.videoPlayer.loadVideoID(item.itemID)
-        let tapToSavedItem: UITapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(MotivationFeedViewController.savedItem(_:)))
+
+        let playVideoOnTapPlayButton: UITapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(playVideo(_:)))
+        playVideoOnTapPlayButton.numberOfTapsRequired = 1
+        cell.playButton.addGestureRecognizer(playVideoOnTapPlayButton)
+
+        let playVideoOnTapImageView: UITapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(playVideo(_:)))
+        playVideoOnTapImageView.numberOfTapsRequired = 1
+        cell.imageView.addGestureRecognizer(playVideoOnTapImageView)
+
+        let tapToSavedItem: UITapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(savedItem(_:)))
         tapToSavedItem.numberOfTapsRequired = 1
         cell.favoriteBarButton.addGestureRecognizer(tapToSavedItem)
 
-        if item.image != nil {
-            dispatch_async(dispatch_get_main_queue()) {
-                cell.imageView.image = item.image
-                UIView.animateWithDuration(0.5, delay: 0.0, options: UIViewAnimationOptions.CurveEaseOut, animations: {
-                    cell.alpha = 1.0
-                    }, completion: nil)
-            }
+        let shareOnTapshareBarButton: UITapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(shareMotivation(_:)))
+        shareOnTapshareBarButton.numberOfTapsRequired = 1
+        cell.shareBarButton.addGestureRecognizer(shareOnTapshareBarButton)
+
+        if item.saved {
+            cell.favoriteBarButton.setTitle(String.fontAwesomeIconWithName(.Heart), forState: .Normal)
         } else {
+            cell.favoriteBarButton.setTitle(String.fontAwesomeIconWithName(.HeartO), forState: .Normal)
+        }
+
+        if item.image == nil {
             MHClient.sharedInstance.taskForImage(item.itemThumbnailsUrl) { imageData, error in
-                if let image = imageData {
-                    dispatch_async(dispatch_get_main_queue()) {
-                        item.image = UIImage(data: image)
-                        cell.imageView.image = item.image
-                        UIView.animateWithDuration(0.5, delay: 0.0, options: UIViewAnimationOptions.CurveEaseOut, animations: {
-                            cell.alpha = 1.0
-                            }, completion: nil)
-                    }
+                guard error == nil else {
+                    return
                 }
+                Async.main {
+                    item.image = UIImage(data: imageData!)
+                }
+            }
+        }
+
+        if item.image != nil {
+            Async.main {
+                cell.imageView.image = Toucan(image: item.image!).resize(CGSize(width: cell.frame.width - 10, height: cell.frame.width / 1.8), fitMode: Toucan.Resize.FitMode.Crop).maskWithRoundedRect(cornerRadius: 10).image
             }
         }
     }
@@ -143,11 +214,11 @@ extension FavouritesViewController: UICollectionViewDelegate {
     func collectionView(collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAtIndexPath indexPath: NSIndexPath) -> CGSize {
         let device = UIDevice.currentDevice().model
         let dimensioniPhone = view.frame.width
-        var cellSize: CGSize = CGSizeMake(dimensioniPhone, dimensioniPhone * 0.9)
+        var cellSize: CGSize = CGSizeMake(dimensioniPhone, dimensioniPhone * 0.8)
         let dimensioniPad = (view.frame.width / 2) - 15
 
         if (device == "iPad" || device == "iPad Simulator") {
-            cellSize = CGSizeMake(dimensioniPad, dimensioniPad * 0.9)
+            cellSize = CGSizeMake(dimensioniPad, dimensioniPad * 0.8)
         }
         return cellSize
     }
@@ -163,6 +234,30 @@ extension FavouritesViewController: UICollectionViewDelegate {
         }
 
         return edgeInsets
+    }
+
+    func collectionView(collectionView: UICollectionView, didEndDisplayingCell cell: UICollectionViewCell, forItemAtIndexPath indexPath: NSIndexPath) {
+        if let cell = cell as? motivationCollectionViewCell {
+            UIView.animateWithDuration(0.5, delay: 0.0, options: UIViewAnimationOptions.CurveEaseOut, animations: {
+                cell.playButton.alpha = 0
+                cell.imageView.alpha = 0
+                }, completion: nil)
+            cell.videoPlayer.stop()
+        }
+    }
+
+    func collectionView(collectionView: UICollectionView, willDisplayCell cell: UICollectionViewCell, forItemAtIndexPath indexPath: NSIndexPath) {
+        if let cell = cell as? motivationCollectionViewCell {
+            let motivationItem = fetchedResultsController.objectAtIndexPath(indexPath) as! MotivationFeedItem
+            cell.videoPlayer.loadVideoID(motivationItem.itemID)
+            cell.imageView.alpha = 0
+            cell.playButton.alpha = 0
+            cell.videoPlayer.alpha = 0
+            UIView.animateWithDuration(0.5, delay: 0.0, options: UIViewAnimationOptions.CurveEaseOut, animations: {
+                cell.imageView.alpha = 1
+                cell.playButton.alpha = 0.7
+                }, completion: nil)
+        }
     }
 }
 
@@ -185,12 +280,9 @@ extension FavouritesViewController: YouTubePlayerDelegate {
 
 
 extension FavouritesViewController: NSFetchedResultsControllerDelegate {
-    // MARK: NSFetchedResultsController delegate
-    // Used GIST: https://gist.github.com/AppsTitude/ce072627c61ea3999b8d#file-uicollection-and-nsfetchedresultscontrollerdelegate-integration-swift-L78
-
     func controller(controller: NSFetchedResultsController, didChangeObject anObject: AnyObject, atIndexPath indexPath: NSIndexPath?, forChangeType type: NSFetchedResultsChangeType, newIndexPath: NSIndexPath?) {
-
-        if type == NSFetchedResultsChangeType.Insert {
+        switch (type) {
+        case .Insert:
             blockOperations.append(
                 NSBlockOperation(block: { [weak self] in
                     if let this = self {
@@ -198,7 +290,7 @@ extension FavouritesViewController: NSFetchedResultsControllerDelegate {
                     }
                     })
             )
-        } else if type == NSFetchedResultsChangeType.Update {
+        case .Update:
             blockOperations.append(
                 NSBlockOperation(block: { [weak self] in
                     if let this = self {
@@ -206,7 +298,7 @@ extension FavouritesViewController: NSFetchedResultsControllerDelegate {
                     }
                     })
             )
-        } else if type == NSFetchedResultsChangeType.Move {
+        case .Move:
             blockOperations.append(
                 NSBlockOperation(block: { [weak self] in
                     if let this = self {
@@ -214,7 +306,7 @@ extension FavouritesViewController: NSFetchedResultsControllerDelegate {
                     }
                     })
             )
-        } else if type == NSFetchedResultsChangeType.Delete {
+        case .Delete:
             blockOperations.append(
                 NSBlockOperation(block: { [weak self] in
                     if let this = self {
@@ -226,9 +318,8 @@ extension FavouritesViewController: NSFetchedResultsControllerDelegate {
     }
 
     func controller(controller: NSFetchedResultsController, didChangeSection sectionInfo: NSFetchedResultsSectionInfo, atIndex sectionIndex: Int, forChangeType type: NSFetchedResultsChangeType) {
-
-        if type == NSFetchedResultsChangeType.Insert {
-
+        switch (type) {
+        case .Insert:
             blockOperations.append(
                 NSBlockOperation(block: { [weak self] in
                     if let this = self {
@@ -236,7 +327,7 @@ extension FavouritesViewController: NSFetchedResultsControllerDelegate {
                     }
                     })
             )
-        } else if type == NSFetchedResultsChangeType.Update {
+        case .Update:
             blockOperations.append(
                 NSBlockOperation(block: { [weak self] in
                     if let this = self {
@@ -244,13 +335,21 @@ extension FavouritesViewController: NSFetchedResultsControllerDelegate {
                     }
                     })
             )
-        } else if type == NSFetchedResultsChangeType.Delete {
+        case .Delete:
             blockOperations.append(
                 NSBlockOperation(block: { [weak self] in
                     if let this = self {
                         this.collectionView!.deleteSections(NSIndexSet(index: sectionIndex))
                     }
                     })
+            )
+        case .Move:
+            blockOperations.append(
+                NSBlockOperation(block: { [weak self] in
+                    if let this = self {
+                        this.collectionView!.moveSection(sectionIndex, toSection: sectionIndex)
+                    }
+                })
             )
         }
     }
@@ -263,5 +362,6 @@ extension FavouritesViewController: NSFetchedResultsControllerDelegate {
             }, completion: { (finished) -> Void in
                 self.blockOperations.removeAll(keepCapacity: false)
         })
+        collectionView.reloadData()
     }
 }

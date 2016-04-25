@@ -10,6 +10,7 @@ import UIKit
 import CoreData
 import CloudKit
 import Async
+import TBEmptyDataSet
 
 class ChallengeViewController: UIViewController {
 
@@ -18,6 +19,7 @@ class ChallengeViewController: UIViewController {
     @IBOutlet weak var addChallengeButton: UIButton!
     @IBOutlet weak var tableView: UITableView!
     @IBOutlet weak var addChallengeView: UIView!
+    var currentChallengeToEdit: Challenge!
 
     var editMode: Bool = false
     var dimView: UIView!
@@ -29,6 +31,8 @@ class ChallengeViewController: UIViewController {
         // Initialize delegate
         fetchedResultsController.delegate = self
         challengeTextField.delegate = self
+        tableView.emptyDataSetDataSource = self
+        tableView.emptyDataSetDelegate = self
 
         do {
             try fetchedResultsController.performFetch()
@@ -37,16 +41,18 @@ class ChallengeViewController: UIViewController {
         }
 
         addChallengeView.hidden = true
-        let button = UIBarButtonItem(barButtonSystemItem: UIBarButtonSystemItem.Add, target: self, action: #selector(ChallengeViewController.showAddChallenge))
+        let button = UIBarButtonItem(barButtonSystemItem: UIBarButtonSystemItem.Add, target: self, action: #selector(ChallengeViewController.showOrHideChallengeView))
         navigationItem.rightBarButtonItem = button
         dimView = UIView(frame: view.frame)
         dimView.backgroundColor = UIColor.blackColor()
         dimView.alpha = 0
 
-        // Set padding on textfield: https://medium.com/@deepdeviant/how-to-set-padding-for-uitextfield-in-swift-2f830d131f40#.v25ja1v42
         let paddingView = UIView(frame: CGRectMake(0, 0, 15, challengeTextField.frame.height))
         challengeTextField.leftView = paddingView
         challengeTextField.leftViewMode = UITextFieldViewMode.Always
+        let longTapToEditChallenge: UILongPressGestureRecognizer = UILongPressGestureRecognizer(target: self, action: #selector(ChallengeViewController.editChallenge(_:)))
+        longTapToEditChallenge.minimumPressDuration = 1.5
+        tableView.addGestureRecognizer(longTapToEditChallenge)
 
         view.backgroundColor = UIColor(patternImage: UIImage(named: "backgroundFeed.png")!)
         let blurEffect = UIBlurEffect(style: UIBlurEffectStyle.Dark)
@@ -95,7 +101,7 @@ class ChallengeViewController: UIViewController {
 
     // MARK: Add Actions
 
-    func showAddChallenge() {
+    func showOrHideChallengeView() {
         editMode = editMode ? false : true
         if editMode {
             showAddChallengeView()
@@ -111,12 +117,32 @@ class ChallengeViewController: UIViewController {
         }
 
         let challengeDictionary: [String : AnyObject] = [
-            "challengeDescription": self.challengeTextField.text!,
+            "challengeDescription": challengeTextField.text!,
             "completed": 0,
-            "endDate": self.challengeDatePicker.date
+            "endDate": challengeDatePicker.date
         ]
 
         if Reachability.connectedToNetwork() {
+
+            guard currentChallengeToEdit == nil else {
+                CloudKitHelper.sharedInstance.updateChallenge(challengeTextField.text!, endDate: challengeDatePicker.date, challengeRecordID: CKRecordID(recordName: currentChallengeToEdit.challengeRecordID), completionHandler: { (success, record, error) in
+                    guard error != nil else {
+                        return
+                    }
+
+                    Async.main(){
+                        self.currentChallengeToEdit.challengeDescription = self.challengeTextField.text!
+                        self.currentChallengeToEdit.endDate = self.challengeDatePicker.date
+
+                        CoreDataStackManager.sharedInstance.saveContext()
+
+                        self.tableView.reloadData()
+                        self.showOrHideChallengeView()
+                    }
+                })
+                return
+            }
+
             CloudKitHelper.sharedInstance.saveChallenge(challengeDictionary, completionHandler: { (result, record, error) in
                 if result {
                     self.addChallengeToCoreData(challengeDictionary, challengeRecordID: record.recordID.recordName)
@@ -125,10 +151,20 @@ class ChallengeViewController: UIViewController {
                 }
             })
         }
-        showAddChallenge()
+        showOrHideChallengeView()
     }
+
+    func editChallenge(gestureRecognizer: UILongPressGestureRecognizer) {
+        if gestureRecognizer.state == .Began {
+            let tapPoint: CGPoint = gestureRecognizer.locationInView(tableView)
+            let indexPath = tableView.indexPathForRowAtPoint(tapPoint)
+            currentChallengeToEdit = fetchedResultsController.objectAtIndexPath(indexPath!) as! Challenge
+            showOrHideChallengeView()
+        }
+    }
+
     func addChallengeToCoreData(challengeDictionary: [String:AnyObject], challengeRecordID: String) {
-        dispatch_async(dispatch_get_main_queue()) {
+        Async.main {
             let _ = Challenge(
                 challengeDescription: challengeDictionary["challengeDescription"] as! String,
                 completed: challengeDictionary["completed"] as! Bool,
@@ -141,15 +177,20 @@ class ChallengeViewController: UIViewController {
 
     func showAddChallengeView() {
         challengeTextField.text = ""
-        let button = UIBarButtonItem(barButtonSystemItem: UIBarButtonSystemItem.Cancel, target: self, action: #selector(ChallengeViewController.showAddChallenge))
+        if currentChallengeToEdit != nil {
+            challengeTextField.text = currentChallengeToEdit!.challengeDescription
+            challengeDatePicker.minimumDate = currentChallengeToEdit!.endDate
+        }
         addChallengeView.hidden = false
         view.insertSubview(self.dimView, belowSubview: (self.navigationController?.navigationBar)!)
         view.insertSubview(self.addChallengeView, belowSubview: (self.navigationController?.navigationBar)!)
-        challengeDatePicker.minimumDate = NSDate()
+
+        let button = UIBarButtonItem(barButtonSystemItem: UIBarButtonSystemItem.Cancel, target: self, action: #selector(ChallengeViewController.showOrHideChallengeView))
+        navigationItem.rightBarButtonItem = button
+
         UIView.animateWithDuration(0.3, animations: {
             self.dimView.alpha = 0.3
         })
-        navigationItem.rightBarButtonItem = button
     }
 
     func HideAddChallengeView() {
@@ -159,7 +200,7 @@ class ChallengeViewController: UIViewController {
             }, completion: { finished in
                 self.dimView.removeFromSuperview()
         })
-        let button = UIBarButtonItem(barButtonSystemItem: UIBarButtonSystemItem.Add, target: self, action: #selector(ChallengeViewController.showAddChallenge))
+        let button = UIBarButtonItem(barButtonSystemItem: UIBarButtonSystemItem.Add, target: self, action: #selector(ChallengeViewController.showOrHideChallengeView))
         navigationItem.rightBarButtonItem = button
         challengeTextField.resignFirstResponder()
     }
@@ -169,6 +210,38 @@ extension ChallengeViewController: UITextFieldDelegate {
     func textFieldShouldReturn(textField: UITextField) -> Bool {
         self.view.endEditing(true)
         return false
+    }
+}
+
+extension ChallengeViewController: TBEmptyDataSetDataSource, TBEmptyDataSetDelegate {
+    func titleForEmptyDataSet(scrollView: UIScrollView!) -> NSAttributedString? {
+        // return the description for EmptyDataSet
+        let title = "You don't have any challenge"
+        let attributes = [NSFontAttributeName: UIFont.systemFontOfSize(24.0), NSForegroundColorAttributeName: UIColor.grayColor()]
+        return NSAttributedString(string: title, attributes: attributes)
+    }
+
+    func imageForEmptyDataSet(scrollView: UIScrollView!) -> UIImage? {
+        let image = UIImage(named: "iconChallenge")
+        return image
+    }
+
+    func descriptionForEmptyDataSet(scrollView: UIScrollView!) -> NSAttributedString? {
+        let title = "Challenge yourself!"
+        let attributes = [NSFontAttributeName: UIFont.systemFontOfSize(18.00), NSForegroundColorAttributeName: UIColor.grayColor()]
+        return NSAttributedString(string: title, attributes: attributes)
+    }
+
+    func emptyDataSetDidTapView(scrollView: UIScrollView!) {
+        showAddChallengeView()
+    }
+
+    func emptyDataSetShouldDisplay(scrollView: UIScrollView!) -> Bool {
+        guard fetchedResultsController.fetchedObjects?.count == 0 else {
+            return false
+        }
+
+        return true
     }
 }
 
@@ -187,7 +260,7 @@ extension ChallengeViewController: UITableViewDataSource, UITableViewDelegate {
     }
 
     func tableView(tableView: UITableView, editActionsForRowAtIndexPath indexPath: NSIndexPath) -> [UITableViewRowAction]? {
-        let challenge = self.fetchedResultsController.objectAtIndexPath(indexPath) as! Challenge
+        let challenge = fetchedResultsController.objectAtIndexPath(indexPath) as! Challenge
         let cell = tableView.dequeueReusableCellWithIdentifier(MHClient.CellIdentifier.cellWithReuseIdentifier, forIndexPath: indexPath)
 
         if challenge.completed {
@@ -197,7 +270,7 @@ extension ChallengeViewController: UITableViewDataSource, UITableViewDelegate {
             delete.backgroundColor = UIColor.redColor()
 
             let unComplete = UITableViewRowAction(style: .Normal, title: MHClient.AppCopy.unComplete) { action, index in
-                self.updateChallenge(challenge)
+                self.updateCompleteStatusChallenge(challenge)
                 cell.backgroundColor = UIColor.whiteColor()
                 tableView.setEditing(false, animated: true)
             }
@@ -205,7 +278,7 @@ extension ChallengeViewController: UITableViewDataSource, UITableViewDelegate {
             return [delete, unComplete]
         } else {
             let complete = UITableViewRowAction(style: .Normal, title: MHClient.AppCopy.complete) { action, index in
-                self.updateChallenge(challenge)
+                self.updateCompleteStatusChallenge(challenge)
                 cell.backgroundColor = UIColor(red:0.52, green:0.86, blue:0.09, alpha:1.0)
                 tableView.setEditing(false, animated: true)
             }
@@ -263,7 +336,7 @@ extension ChallengeViewController: UITableViewDataSource, UITableViewDelegate {
         }
     }
 
-    func updateChallenge(challenge: Challenge) {
+    func updateCompleteStatusChallenge(challenge: Challenge) {
         if Reachability.connectedToNetwork() && challenge.challengeRecordID != "" {
             CloudKitHelper.sharedInstance.updateCompletedStatusChallenge(CKRecordID(recordName: challenge.challengeRecordID), completionHandler: { (success, record, error) in
                 guard success else {
