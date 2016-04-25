@@ -56,6 +56,7 @@ class motivationCollectionViewCell: UICollectionViewCell {
         imageView = UIImageView()
         imageView.contentMode = UIViewContentMode.ScaleAspectFit
         contentView.addSubview(imageView)
+        addParallaxToView(imageView)
         imageView.snp_makeConstraints { (make) in
             make.top.equalTo(titleBarView.snp_bottom)
             make.width.equalTo(contentView.frame.width - 20)
@@ -125,5 +126,21 @@ class motivationCollectionViewCell: UICollectionViewCell {
 
     override func prepareForReuse() {
         super.prepareForReuse()
+    }
+
+    func addParallaxToView(vw: UIView) {
+        let amount = 15
+
+        let horizontal = UIInterpolatingMotionEffect(keyPath: "center.x", type: .TiltAlongHorizontalAxis)
+        horizontal.minimumRelativeValue = -amount
+        horizontal.maximumRelativeValue = amount
+
+        let vertical = UIInterpolatingMotionEffect(keyPath: "center.y", type: .TiltAlongVerticalAxis)
+        vertical.minimumRelativeValue = -amount
+        vertical.maximumRelativeValue = amount
+
+        let group = UIMotionEffectGroup()
+        group.motionEffects = [horizontal, vertical]
+        vw.addMotionEffect(group)
     }
 }
