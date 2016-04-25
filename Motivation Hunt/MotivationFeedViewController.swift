@@ -290,12 +290,14 @@ extension MotivationFeedViewController: UICollectionViewDelegate {
             }
         }
 
-        Async.main {
-            cell.imageView.image = Toucan(image: item.image!).resize(CGSize(width: cell.frame.width - 10, height: cell.frame.width / 1.8), fitMode: Toucan.Resize.FitMode.Crop).maskWithRoundedRect(cornerRadius: 10).image
-            UIView.animateWithDuration(0.5, delay: 0.0, options: UIViewAnimationOptions.CurveEaseOut, animations: {
-                cell.imageView.alpha = 1
-                cell.playButton.alpha = 0.7
-            }, completion: nil)
+        if item.image != nil {
+            Async.main {
+                cell.imageView.image = Toucan(image: item.image!).resize(CGSize(width: cell.frame.width - 10, height: cell.frame.width / 1.8), fitMode: Toucan.Resize.FitMode.Crop).maskWithRoundedRect(cornerRadius: 10).image
+                UIView.animateWithDuration(0.5, delay: 0.0, options: UIViewAnimationOptions.CurveEaseOut, animations: {
+                    cell.imageView.alpha = 1
+                    cell.playButton.alpha = 0.7
+                    }, completion: nil)
+            }
         }
     }
 
@@ -438,7 +440,7 @@ extension MotivationFeedViewController: NSFetchedResultsControllerDelegate {
             )
         }
     }
-
+    
     func controllerDidChangeContent(controller: NSFetchedResultsController) {
         collectionView!.performBatchUpdates({ () -> Void in
             for operation: NSBlockOperation in self.blockOperations {
