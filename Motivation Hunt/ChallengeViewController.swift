@@ -11,24 +11,27 @@ import CoreData
 import CloudKit
 import Async
 import TBEmptyDataSet
+import SnapKit
 
 class ChallengeViewController: UIViewController {
 
-    @IBOutlet weak var challengeTextField: UITextField!
-    @IBOutlet weak var challengeDatePicker: UIDatePicker!
-    @IBOutlet weak var addChallengeButton: UIButton!
-    @IBOutlet weak var tableView: UITableView!
-    @IBOutlet weak var addChallengeView: UIView!
+    var tableView: UITableView!
+    var challengeTextField: UITextField!
+    var challengeDatePicker: UIDatePicker!
+    var addChallengeButton: UIButton!
+    var addChallengeView: UIView!
     var currentChallengeToEdit: Challenge!
-
     var editMode: Bool = false
     var dimView: UIView!
 
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view, typically from a nib.
+        setupUI()
 
         // Initialize delegate
+        tableView.delegate = self
+        tableView.dataSource = self
         fetchedResultsController.delegate = self
         challengeTextField.delegate = self
         tableView.emptyDataSetDataSource = self
@@ -40,29 +43,17 @@ class ChallengeViewController: UIViewController {
             print("Error: \(error.localizedDescription)")
         }
 
+        tableView.registerClass(challengeTableViewCell.self, forCellReuseIdentifier: MHClient.CellIdentifier.cellWithReuseIdentifier)
+        tableView.allowsMultipleSelection = false
+        view.backgroundColor = UIColor.clearColor()
+
         addChallengeView.hidden = true
         let button = UIBarButtonItem(barButtonSystemItem: UIBarButtonSystemItem.Add, target: self, action: #selector(ChallengeViewController.showOrHideChallengeView))
         navigationItem.rightBarButtonItem = button
-        dimView = UIView(frame: view.frame)
-        dimView.backgroundColor = UIColor.blackColor()
-        dimView.alpha = 0
 
-        let paddingView = UIView(frame: CGRectMake(0, 0, 15, challengeTextField.frame.height))
-        challengeTextField.leftView = paddingView
-        challengeTextField.leftViewMode = UITextFieldViewMode.Always
         let longTapToEditChallenge: UILongPressGestureRecognizer = UILongPressGestureRecognizer(target: self, action: #selector(ChallengeViewController.editChallenge(_:)))
         longTapToEditChallenge.minimumPressDuration = 1.5
         tableView.addGestureRecognizer(longTapToEditChallenge)
-
-        view.backgroundColor = UIColor(patternImage: UIImage(named: "backgroundFeed.png")!)
-        let blurEffect = UIBlurEffect(style: UIBlurEffectStyle.Dark)
-        let blurEffectView = UIVisualEffectView(effect: blurEffect)
-        blurEffectView.frame = view.bounds
-        blurEffectView.autoresizingMask = [.FlexibleWidth, .FlexibleHeight]
-        view.insertSubview(blurEffectView, belowSubview: tableView)
-        tableView.backgroundColor = UIColor.clearColor()
-        tableView.tableFooterView = UIView(frame: CGRect.zero)
-        tableView.allowsMultipleSelection = false
 
         if self.fetchedResultsController.fetchedObjects?.count == 0 {
             CloudKitHelper.sharedInstance.fetchChallenge { (success, record, error) in
@@ -81,6 +72,74 @@ class ChallengeViewController: UIViewController {
         }
     }
 
+    func setupUI() {
+        tableView = UITableView()
+        tableView.backgroundColor = UIColor.clearColor()
+        tableView.tableFooterView = UIView(frame: CGRect.zero)
+        view.addSubview(tableView)
+        tableView.snp_makeConstraints { (make) in
+            make.top.equalTo(view).offset(64)
+            make.width.equalTo(view)
+            make.bottom.equalTo(view.snp_bottom).inset(64)
+        }
+
+        addChallengeView = UIView()
+        addChallengeView.backgroundColor = UIColor.whiteColor()
+        view.insertSubview(addChallengeView, aboveSubview: tableView)
+        addChallengeView.snp_makeConstraints { (make) in
+            make.top.equalTo(view).offset(64)
+            make.width.equalTo(view)
+            make.height.equalTo(250)
+        }
+
+        let paddingView = UIView(frame: CGRectMake(0, 0, 15, 50))
+        challengeTextField = UITextField()
+        challengeTextField.leftView = paddingView
+        challengeTextField.leftViewMode = UITextFieldViewMode.Always
+        challengeTextField.attributedPlaceholder = NSAttributedString(string: MHClient.AppCopy.pleaseAddAChallenge, attributes: [NSForegroundColorAttributeName: UIColor.blackColor()])
+        addChallengeView.addSubview(challengeTextField)
+        challengeTextField.snp_makeConstraints { (make) in
+            make.top.equalTo(addChallengeView.topAnchor)
+            make.height.equalTo(50)
+            make.width.equalTo(addChallengeView)
+            make.centerX.equalTo(addChallengeView)
+        }
+
+        challengeDatePicker = UIDatePicker()
+        addChallengeView.addSubview(challengeDatePicker)
+        challengeDatePicker.snp_makeConstraints { (make) in
+            make.top.equalTo(challengeTextField.snp_bottom)
+            make.height.equalTo(150)
+            make.width.equalTo(addChallengeView)
+            make.centerX.equalTo(addChallengeView)
+        }
+
+        addChallengeButton = UIButton()
+        addChallengeButton.setTitle("Add Challenge", forState: .Normal)
+        addChallengeButton.setTitleColor(UIColor.blackColor(), forState: .Normal)
+        let tapToAddChallenge: UITapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(addChallenge(_:)))
+        tapToAddChallenge.numberOfTapsRequired = 1
+        addChallengeButton.addGestureRecognizer(tapToAddChallenge)
+        addChallengeView.addSubview(addChallengeButton)
+        addChallengeButton.snp_makeConstraints { (make) in
+            make.top.equalTo(challengeDatePicker.snp_bottom)
+            make.height.equalTo(50)
+            make.width.equalTo(addChallengeView)
+            make.centerX.equalTo(addChallengeView)
+        }
+
+        dimView = UIView(frame: view.frame)
+        dimView.backgroundColor = UIColor.blackColor()
+        dimView.alpha = 0
+
+        view.backgroundColor = UIColor(patternImage: UIImage(named: "backgroundFeed.png")!)
+        let blurEffect = UIBlurEffect(style: UIBlurEffectStyle.Dark)
+        let blurEffectView = UIVisualEffectView(effect: blurEffect)
+        blurEffectView.frame = view.bounds
+        blurEffectView.autoresizingMask = [.FlexibleWidth, .FlexibleHeight]
+        view.insertSubview(blurEffectView, belowSubview: tableView)
+    }
+
     // Initialize CoreData and NSFetchedResultsController
 
     var sharedContext: NSManagedObjectContext {
@@ -91,16 +150,16 @@ class ChallengeViewController: UIViewController {
         let fetchRequest = NSFetchRequest(entityName: "Challenge")
         fetchRequest.sortDescriptors = [NSSortDescriptor(key: "completed", ascending: true)]
 
-        let fetchedResultsController = NSFetchedResultsController(fetchRequest: fetchRequest,
-                                                                  managedObjectContext: self.sharedContext,
-                                                                  sectionNameKeyPath: nil,
-                                                                  cacheName: nil)
+        let fetchedResultsController = NSFetchedResultsController(fetchRequest: fetchRequest, managedObjectContext: self.sharedContext,sectionNameKeyPath: nil, cacheName: nil)
 
         return fetchedResultsController
     }()
 
-    // MARK: Add Actions
+}
 
+extension ChallengeViewController {
+
+    // MARK: Add Actions
     func showOrHideChallengeView() {
         editMode = editMode ? false : true
         if editMode {
@@ -110,7 +169,7 @@ class ChallengeViewController: UIViewController {
         }
     }
 
-    @IBAction func addChallenge(sender: AnyObject) {
+    func addChallenge(_: UIGestureRecognizer) {
         guard challengeTextField.text != "" else {
             challengeTextField.attributedPlaceholder = NSAttributedString(string: MHClient.AppCopy.pleaseAddAChallenge, attributes: [NSForegroundColorAttributeName: UIColor.redColor()])
             return
@@ -122,35 +181,11 @@ class ChallengeViewController: UIViewController {
             "endDate": challengeDatePicker.date
         ]
 
-        if Reachability.connectedToNetwork() {
-
-            guard currentChallengeToEdit == nil else {
-                CloudKitHelper.sharedInstance.updateChallenge(challengeTextField.text!, endDate: challengeDatePicker.date, challengeRecordID: CKRecordID(recordName: currentChallengeToEdit.challengeRecordID), completionHandler: { (success, record, error) in
-                    guard error != nil else {
-                        return
-                    }
-
-                    Async.main(){
-                        self.currentChallengeToEdit.challengeDescription = self.challengeTextField.text!
-                        self.currentChallengeToEdit.endDate = self.challengeDatePicker.date
-
-                        CoreDataStackManager.sharedInstance.saveContext()
-
-                        self.tableView.reloadData()
-                        self.showOrHideChallengeView()
-                    }
-                })
-                return
+        CloudKitHelper.sharedInstance.saveChallenge(challengeDictionary, completionHandler: { (result, record, error) in
+            if result {
+                self.addChallengeToCoreData(challengeDictionary, challengeRecordID: record.recordID.recordName)
             }
-
-            CloudKitHelper.sharedInstance.saveChallenge(challengeDictionary, completionHandler: { (result, record, error) in
-                if result {
-                    self.addChallengeToCoreData(challengeDictionary, challengeRecordID: record.recordID.recordName)
-                } else {
-                    self.addChallengeToCoreData(challengeDictionary, challengeRecordID: "")
-                }
-            })
-        }
+        })
         showOrHideChallengeView()
     }
 
@@ -185,8 +220,8 @@ class ChallengeViewController: UIViewController {
         view.insertSubview(self.dimView, belowSubview: (self.navigationController?.navigationBar)!)
         view.insertSubview(self.addChallengeView, belowSubview: (self.navigationController?.navigationBar)!)
 
-        let button = UIBarButtonItem(barButtonSystemItem: UIBarButtonSystemItem.Cancel, target: self, action: #selector(ChallengeViewController.showOrHideChallengeView))
-        navigationItem.rightBarButtonItem = button
+        let cancelButton = UIBarButtonItem(barButtonSystemItem: UIBarButtonSystemItem.Cancel, target: self, action: #selector(ChallengeViewController.showOrHideChallengeView))
+        navigationItem.rightBarButtonItem = cancelButton
 
         UIView.animateWithDuration(0.3, animations: {
             self.dimView.alpha = 0.3
@@ -200,8 +235,8 @@ class ChallengeViewController: UIViewController {
             }, completion: { finished in
                 self.dimView.removeFromSuperview()
         })
-        let button = UIBarButtonItem(barButtonSystemItem: UIBarButtonSystemItem.Add, target: self, action: #selector(ChallengeViewController.showOrHideChallengeView))
-        navigationItem.rightBarButtonItem = button
+        let addButton = UIBarButtonItem(barButtonSystemItem: UIBarButtonSystemItem.Add, target: self, action: #selector(ChallengeViewController.showOrHideChallengeView))
+        navigationItem.rightBarButtonItem = addButton
         challengeTextField.resignFirstResponder()
     }
 }
@@ -246,15 +281,14 @@ extension ChallengeViewController: TBEmptyDataSetDataSource, TBEmptyDataSetDeleg
 }
 
 extension ChallengeViewController: UITableViewDataSource, UITableViewDelegate {
-
     func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        let sectionInfo = self.fetchedResultsController.sections![section]
-        return sectionInfo.numberOfObjects
+        let sectionInfo = fetchedResultsController.sections?[section]
+        return sectionInfo!.numberOfObjects
     }
 
     func tableView(tableView: UITableView,
                    cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCellWithIdentifier(MHClient.CellIdentifier.cellWithReuseIdentifier, forIndexPath: indexPath)
+        let cell = tableView.dequeueReusableCellWithIdentifier(MHClient.CellIdentifier.cellWithReuseIdentifier, forIndexPath: indexPath) as! challengeTableViewCell
         configureCell(cell, atIndexPath: indexPath)
         return cell
     }
@@ -292,33 +326,35 @@ extension ChallengeViewController: UITableViewDataSource, UITableViewDelegate {
         }
     }
 
-    func configureCell(cell: UITableViewCell, atIndexPath indexPath: NSIndexPath) {
+    func configureCell(cell: challengeTableViewCell, atIndexPath indexPath: NSIndexPath) {
         let challenge = fetchedResultsController.objectAtIndexPath(indexPath) as! Challenge
         cell.selectionStyle = UITableViewCellSelectionStyle.None
 
         if challenge.completed {
             cell.backgroundColor = UIColor(red:0.52, green:0.86, blue:0.09, alpha:1.0)
-        }
-
-        if !challenge.completed {
+        } else {
             cell.backgroundColor = UIColor.whiteColor()
         }
 
-        if let detailTextLabel = cell.detailTextLabel {
+        if let challengeDateTextLabel = cell.challengeDateTextLabel {
             let formatter = NSDateFormatter()
             formatter.dateStyle = NSDateFormatterStyle.LongStyle
             formatter.timeStyle = .ShortStyle
             let dateString = formatter.stringFromDate(challenge.endDate)
             if challenge.completed {
-                detailTextLabel.text = "\(MHClient.AppCopy.completedBy) \(dateString)"
+                challengeDateTextLabel.text = "\(MHClient.AppCopy.completedBy) \(dateString)"
             } else {
-                detailTextLabel.text = "\(MHClient.AppCopy.completeBy) \(dateString)"
+                challengeDateTextLabel.text = "\(MHClient.AppCopy.completeBy) \(dateString)"
             }
         }
 
-        if let textLabel = cell.textLabel {
-            textLabel.text = challenge.challengeDescription
+        if let challengeDescriptionTextLabel = cell.challengeDescriptionTextLabel {
+            challengeDescriptionTextLabel.text = challenge.challengeDescription
         }
+    }
+
+    func tableView(tableView: UITableView, heightForRowAtIndexPath indexPath: NSIndexPath) -> CGFloat {
+        return 64
     }
 
     func deleteChallenge(challenge: Challenge) {
@@ -365,8 +401,11 @@ extension ChallengeViewController: NSFetchedResultsControllerDelegate {
             tableView.insertSections(NSIndexSet(index: sectionIndex), withRowAnimation: UITableViewRowAnimation.Fade)
         case .Delete:
             tableView.deleteSections(NSIndexSet(index: sectionIndex), withRowAnimation: UITableViewRowAnimation.Fade)
-        default:
-            break
+        case .Move:
+            tableView.moveSection(sectionIndex, toSection: sectionIndex)
+        case .Update:
+            tableView.deleteSections(NSIndexSet(index: sectionIndex), withRowAnimation: UITableViewRowAnimation.Fade)
+            tableView.insertSections(NSIndexSet(index: sectionIndex), withRowAnimation: UITableViewRowAnimation.Fade)
         }
     }
 
@@ -383,7 +422,7 @@ extension ChallengeViewController: NSFetchedResultsControllerDelegate {
         case .Update:
             if let updateIndexPath = indexPath {
                 let cell = tableView.dequeueReusableCellWithIdentifier(MHClient.CellIdentifier.cellWithReuseIdentifier, forIndexPath: updateIndexPath)
-                configureCell(cell, atIndexPath: updateIndexPath)
+                configureCell(cell as! challengeTableViewCell, atIndexPath: updateIndexPath)
             }
         case .Move:
             if let deleteIndexPath = indexPath {
@@ -393,11 +432,11 @@ extension ChallengeViewController: NSFetchedResultsControllerDelegate {
             if let insertIndexPath = newIndexPath {
                 self.tableView.insertRowsAtIndexPaths([insertIndexPath], withRowAnimation: UITableViewRowAnimation.Fade)
                 let cell = tableView.dequeueReusableCellWithIdentifier(MHClient.CellIdentifier.cellWithReuseIdentifier, forIndexPath: insertIndexPath)
-                configureCell(cell, atIndexPath: insertIndexPath)
+                configureCell(cell as! challengeTableViewCell, atIndexPath: insertIndexPath)
             }
         }
     }
-
+    
     func controllerDidChangeContent(controller: NSFetchedResultsController) {
         tableView.endUpdates()
     }
