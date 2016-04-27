@@ -23,14 +23,6 @@ class MotivationFeedViewController: UIViewController {
     let refreshCtrl = UIRefreshControl()
     var blockOperations: [NSBlockOperation] = []
 
-    override func viewDidLayoutSubviews() {
-        if let rectNavigationBar = navigationController?.navigationBar.frame, let rectTabBar = tabBarController?.tabBar.frame  {
-            let navigationBarSpace = rectNavigationBar.size.height + rectNavigationBar.origin.y
-            let tabBarSpace = rectTabBar.size.height + rectTabBar.origin.x
-            collectionView.contentInset = UIEdgeInsetsMake(navigationBarSpace, 0, tabBarSpace, 0)
-        }
-    }
-
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view, typically from a nib.
@@ -114,6 +106,15 @@ class MotivationFeedViewController: UIViewController {
 }
 
 extension MotivationFeedViewController {
+
+    override func viewDidLayoutSubviews() {
+        if let rectNavigationBar = navigationController?.navigationBar.frame, let rectTabBar = tabBarController?.tabBar.frame  {
+            let navigationBarSpace = rectNavigationBar.size.height + rectNavigationBar.origin.y
+            let tabBarSpace = rectTabBar.size.height + rectTabBar.origin.x
+            collectionView.contentInset = UIEdgeInsetsMake(navigationBarSpace, 0, tabBarSpace, 0)
+        }
+    }
+
     func setupUI() {
         // Configure CollectionView
         collectionView = UICollectionView(frame: view.frame, collectionViewLayout: UICollectionViewFlowLayout())

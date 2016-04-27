@@ -16,16 +16,19 @@ import TBEmptyDataSet
 
 class FavouritesViewController: UIViewController {
 
-    @IBOutlet weak var collectionView: UICollectionView!
+    var collectionView: UICollectionView!
     var indicator = CustomUIActivityIndicatorView()
     var shouldReloadCollectionView = false
     var blockOperations: [NSBlockOperation] = []
 
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        setupUI()
 
         // Initialize delegate
         collectionView.delegate = self
+        collectionView.dataSource = self
         collectionView.emptyDataSetDataSource = self
         collectionView.emptyDataSetDelegate = self
         fetchedResultsController.delegate = self
@@ -78,6 +81,38 @@ class FavouritesViewController: UIViewController {
 
         blockOperations.removeAll(keepCapacity: false)
     }
+}
+
+extension FavouritesViewController {
+
+    override func viewDidLayoutSubviews() {
+        if let rectNavigationBar = navigationController?.navigationBar.frame, let rectTabBar = tabBarController?.tabBar.frame  {
+            let navigationBarSpace = rectNavigationBar.size.height + rectNavigationBar.origin.y
+            let tabBarSpace = rectTabBar.size.height + rectTabBar.origin.x
+            collectionView.contentInset = UIEdgeInsetsMake(navigationBarSpace, 0, tabBarSpace, 0)
+        }
+    }
+
+    func setupUI() {
+        // Configure CollectionView
+        collectionView = UICollectionView(frame: view.frame, collectionViewLayout: UICollectionViewFlowLayout())
+        collectionView.registerClass(motivationCollectionViewCell.self, forCellWithReuseIdentifier: MHClient.CellIdentifier.cellWithReuseIdentifier)
+        collectionView.backgroundColor = UIColor.clearColor()
+        collectionView.allowsMultipleSelection = false
+        view.addSubview(collectionView)
+        collectionView.snp_makeConstraints { (make) in
+            make.top.equalTo(view)
+            make.width.equalTo(view)
+            make.bottom.equalTo(view.snp_bottom)
+            make.center.equalTo(view)
+        }
+    }
+
+    override func willRotateToInterfaceOrientation(toInterfaceOrientation: UIInterfaceOrientation, duration: NSTimeInterval) {
+        collectionView.collectionViewLayout.invalidateLayout()
+    }
+
+    override func viewWillTransitionToSize(size: CGSize, withTransitionCoordinator coordinator: UIViewControllerTransitionCoordinator) {}
 }
 
 extension FavouritesViewController {
@@ -153,7 +188,7 @@ extension FavouritesViewController: TBEmptyDataSetDataSource, TBEmptyDataSetDele
     }
 }
 
-extension FavouritesViewController: UICollectionViewDelegate {
+extension FavouritesViewController: UICollectionViewDelegate, UICollectionViewDataSource {
 
     func collectionView(collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         let sectionInfo = fetchedResultsController.sections![section] as NSFetchedResultsSectionInfo
