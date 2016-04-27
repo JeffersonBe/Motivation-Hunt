@@ -12,31 +12,35 @@ import YouTubePlayer
 import CloudKit
 import Async
 import Toucan
+import SnapKit
 
 let nextPageTokenConstant = "nextPageToken"
 
 class MotivationFeedViewController: UIViewController {
 
-    @IBOutlet weak var collectionView: UICollectionView!
+    var collectionView: UICollectionView!
     var indicator = CustomUIActivityIndicatorView()
     let refreshCtrl = UIRefreshControl()
     var blockOperations: [NSBlockOperation] = []
+
+    override func viewDidLayoutSubviews() {
+        if let rectNavigationBar = navigationController?.navigationBar.frame, let rectTabBar = tabBarController?.tabBar.frame  {
+            let navigationBarSpace = rectNavigationBar.size.height + rectNavigationBar.origin.y
+            let tabBarSpace = rectTabBar.size.height + rectTabBar.origin.x
+            collectionView.contentInset = UIEdgeInsetsMake(navigationBarSpace, 0, tabBarSpace, 0)
+        }
+    }
 
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view, typically from a nib.
 
+        setupUI()
+
         // Initialize delegate
         collectionView.delegate = self
+        collectionView.dataSource = self
         fetchedResultsController.delegate = self
-
-        // Configure CollectionView
-        collectionView!.registerClass(motivationCollectionViewCell.self, forCellWithReuseIdentifier: MHClient.CellIdentifier.cellWithReuseIdentifier)
-        collectionView.backgroundColor = UIColor.clearColor()
-        collectionView.allowsMultipleSelection = false
-
-        refreshCtrl.addTarget(self, action: #selector(MotivationFeedViewController.refreshData), forControlEvents: .ValueChanged)
-        collectionView?.addSubview(refreshCtrl)
 
         let button = UIBarButtonItem(barButtonSystemItem: UIBarButtonSystemItem.Refresh, target: self, action: #selector(refreshData))
         navigationItem.rightBarButtonItem = button
@@ -107,6 +111,32 @@ class MotivationFeedViewController: UIViewController {
 
         blockOperations.removeAll(keepCapacity: false)
     }
+}
+
+extension MotivationFeedViewController {
+    func setupUI() {
+        // Configure CollectionView
+        collectionView = UICollectionView(frame: view.frame, collectionViewLayout: UICollectionViewFlowLayout())
+        collectionView.registerClass(motivationCollectionViewCell.self, forCellWithReuseIdentifier: MHClient.CellIdentifier.cellWithReuseIdentifier)
+        collectionView.backgroundColor = UIColor.clearColor()
+        collectionView.allowsMultipleSelection = false
+        view.addSubview(collectionView)
+        collectionView.snp_makeConstraints { (make) in
+            make.top.equalTo(view)
+            make.width.equalTo(view)
+            make.bottom.equalTo(view.snp_bottom)
+            make.center.equalTo(view)
+        }
+
+        refreshCtrl.addTarget(self, action: #selector(MotivationFeedViewController.refreshData), forControlEvents: .ValueChanged)
+        collectionView?.addSubview(refreshCtrl)
+    }
+
+    override func willRotateToInterfaceOrientation(toInterfaceOrientation: UIInterfaceOrientation, duration: NSTimeInterval) {
+        collectionView.collectionViewLayout.invalidateLayout()
+    }
+
+    override func viewWillTransitionToSize(size: CGSize, withTransitionCoordinator coordinator: UIViewControllerTransitionCoordinator) {}
 }
 
 extension MotivationFeedViewController {
@@ -233,7 +263,7 @@ extension MotivationFeedViewController {
     }
 }
 
-extension MotivationFeedViewController: UICollectionViewDelegate {
+extension MotivationFeedViewController: UICollectionViewDelegate, UICollectionViewDataSource {
 
     func collectionView(collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         let sectionInfo = fetchedResultsController.sections![section] as NSFetchedResultsSectionInfo
@@ -291,6 +321,20 @@ extension MotivationFeedViewController: UICollectionViewDelegate {
         }
     }
 
+    func collectionView(collectionView: UICollectionView, willDisplayCell cell: UICollectionViewCell, forItemAtIndexPath indexPath: NSIndexPath) {
+        if let cell = cell as? motivationCollectionViewCell {
+            let motivationItem = fetchedResultsController.objectAtIndexPath(indexPath) as! MotivationFeedItem
+            cell.videoPlayer.loadVideoID(motivationItem.itemID)
+            cell.imageView.alpha = 0
+            cell.playButton.alpha = 0
+            cell.videoPlayer.alpha = 0
+            UIView.animateWithDuration(0.5, delay: 0.0, options: UIViewAnimationOptions.CurveEaseOut, animations: {
+                cell.imageView.alpha = 1
+                cell.playButton.alpha = 0.7
+                }, completion: nil)
+        }
+    }
+
     func collectionView(collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAtIndexPath indexPath: NSIndexPath) -> CGSize {
         let device = UIDevice.currentDevice().model
         let dimensioniPhone = view.frame.width
@@ -300,6 +344,7 @@ extension MotivationFeedViewController: UICollectionViewDelegate {
         if (device == "iPad" || device == "iPad Simulator") {
             cellSize = CGSizeMake(dimensioniPad, dimensioniPad * 0.8)
         }
+        
         return cellSize
     }
 
@@ -323,20 +368,6 @@ extension MotivationFeedViewController: UICollectionViewDelegate {
                 cell.imageView.alpha = 0
                 }, completion: nil)
             cell.videoPlayer.stop()
-        }
-    }
-
-    func collectionView(collectionView: UICollectionView, willDisplayCell cell: UICollectionViewCell, forItemAtIndexPath indexPath: NSIndexPath) {
-        if let cell = cell as? motivationCollectionViewCell {
-            let motivationItem = fetchedResultsController.objectAtIndexPath(indexPath) as! MotivationFeedItem
-            cell.videoPlayer.loadVideoID(motivationItem.itemID)
-            cell.imageView.alpha = 0
-            cell.playButton.alpha = 0
-            cell.videoPlayer.alpha = 0
-            UIView.animateWithDuration(0.5, delay: 0.0, options: UIViewAnimationOptions.CurveEaseOut, animations: {
-                cell.imageView.alpha = 1
-                cell.playButton.alpha = 0.7
-                }, completion: nil)
         }
     }
 }
