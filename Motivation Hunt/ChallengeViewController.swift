@@ -168,7 +168,6 @@ class ChallengeViewController: UIViewController {
 
 extension ChallengeViewController {
 
-    // MARK: Add Actions
     func showOrHideChallengeView() {
         editMode = editMode ? false : true
         if editMode {
@@ -179,16 +178,34 @@ extension ChallengeViewController {
     }
 
     func addChallenge(_: UIGestureRecognizer) {
-        guard challengeTextField.text != "" else {
-            challengeTextField.attributedPlaceholder = NSAttributedString(string: MHClient.AppCopy.pleaseAddAChallenge, attributes: [NSForegroundColorAttributeName: UIColor.redColor()])
-            return
-        }
 
         let challengeDictionary: [String : AnyObject] = [
             "challengeDescription": challengeTextField.text!,
             "completed": 0,
             "endDate": challengeDatePicker.date
         ]
+
+        guard challengeTextField.text != "" else {
+            challengeTextField.attributedPlaceholder = NSAttributedString(string: MHClient.AppCopy.pleaseAddAChallenge, attributes: [NSForegroundColorAttributeName: UIColor.redColor()])
+            return
+        }
+
+        guard currentChallengeToEdit == nil else {
+            Async.main {
+                self.currentChallengeToEdit.challengeDescription = self.challengeTextField.text!
+                self.currentChallengeToEdit.endDate = self.challengeDatePicker.date
+                CoreDataStackManager.sharedInstance.saveContext()
+            }
+
+            CloudKitHelper.sharedInstance.updateChallenge(challengeDictionary["challengeDescription"] as! String, endDate: challengeDictionary["endDate"] as! NSDate, challengeRecordID: CKRecordID(recordName: currentChallengeToEdit.challengeRecordID), completionHandler: { (success, record, error) in
+
+                guard error == nil else {
+                    return
+                }
+            })
+            showOrHideChallengeView()
+            return
+        }
 
         CloudKitHelper.sharedInstance.saveChallenge(challengeDictionary, completionHandler: { (result, record, error) in
             if result {
@@ -221,13 +238,16 @@ extension ChallengeViewController {
 
     func showAddChallengeView() {
         challengeTextField.text = ""
-        if currentChallengeToEdit != nil {
-            challengeTextField.text = currentChallengeToEdit!.challengeDescription
-            challengeDatePicker.minimumDate = currentChallengeToEdit!.endDate
-        }
         addChallengeView.hidden = false
+
         view.insertSubview(self.dimView, belowSubview: (self.navigationController?.navigationBar)!)
         view.insertSubview(self.addChallengeView, belowSubview: (self.navigationController?.navigationBar)!)
+
+        if currentChallengeToEdit != nil {
+            challengeTextField.text = currentChallengeToEdit!.challengeDescription
+            challengeDatePicker.date = currentChallengeToEdit!.endDate
+            addChallengeButton.setTitle("Modify challenge", forState: .Normal)
+        }
 
         let cancelButton = UIBarButtonItem(barButtonSystemItem: UIBarButtonSystemItem.Cancel, target: self, action: #selector(ChallengeViewController.showOrHideChallengeView))
         navigationItem.rightBarButtonItem = cancelButton
@@ -302,6 +322,33 @@ extension ChallengeViewController: UITableViewDataSource, UITableViewDelegate {
         return cell
     }
 
+    func configureCell(cell: challengeTableViewCell, atIndexPath indexPath: NSIndexPath) {
+        let challenge = fetchedResultsController.objectAtIndexPath(indexPath) as! Challenge
+        cell.selectionStyle = UITableViewCellSelectionStyle.None
+
+        if challenge.completed {
+            cell.backgroundColor = UIColor(red:0.52, green:0.86, blue:0.09, alpha:1.0)
+        } else {
+            cell.backgroundColor = UIColor.whiteColor()
+        }
+
+        if let challengeDateTextLabel = cell.challengeDateTextLabel {
+            let formatter = NSDateFormatter()
+            formatter.dateStyle = NSDateFormatterStyle.LongStyle
+            formatter.timeStyle = .ShortStyle
+            let dateString = formatter.stringFromDate(challenge.endDate)
+            if challenge.completed {
+                challengeDateTextLabel.text = "\(MHClient.AppCopy.completedBy) \(dateString)"
+            } else {
+                challengeDateTextLabel.text = "\(MHClient.AppCopy.completeBy) \(dateString)"
+            }
+        }
+
+        if let challengeDescriptionTextLabel = cell.challengeDescriptionTextLabel {
+            challengeDescriptionTextLabel.text = challenge.challengeDescription
+        }
+    }
+
     func tableView(tableView: UITableView, editActionsForRowAtIndexPath indexPath: NSIndexPath) -> [UITableViewRowAction]? {
         let challenge = fetchedResultsController.objectAtIndexPath(indexPath) as! Challenge
         let cell = tableView.dequeueReusableCellWithIdentifier(MHClient.CellIdentifier.cellWithReuseIdentifier, forIndexPath: indexPath)
@@ -332,33 +379,6 @@ extension ChallengeViewController: UITableViewDataSource, UITableViewDelegate {
             }
             delete.backgroundColor = UIColor.redColor()
             return [delete, complete]
-        }
-    }
-
-    func configureCell(cell: challengeTableViewCell, atIndexPath indexPath: NSIndexPath) {
-        let challenge = fetchedResultsController.objectAtIndexPath(indexPath) as! Challenge
-        cell.selectionStyle = UITableViewCellSelectionStyle.None
-
-        if challenge.completed {
-            cell.backgroundColor = UIColor(red:0.52, green:0.86, blue:0.09, alpha:1.0)
-        } else {
-            cell.backgroundColor = UIColor.whiteColor()
-        }
-
-        if let challengeDateTextLabel = cell.challengeDateTextLabel {
-            let formatter = NSDateFormatter()
-            formatter.dateStyle = NSDateFormatterStyle.LongStyle
-            formatter.timeStyle = .ShortStyle
-            let dateString = formatter.stringFromDate(challenge.endDate)
-            if challenge.completed {
-                challengeDateTextLabel.text = "\(MHClient.AppCopy.completedBy) \(dateString)"
-            } else {
-                challengeDateTextLabel.text = "\(MHClient.AppCopy.completeBy) \(dateString)"
-            }
-        }
-
-        if let challengeDescriptionTextLabel = cell.challengeDescriptionTextLabel {
-            challengeDescriptionTextLabel.text = challenge.challengeDescription
         }
     }
 
@@ -407,14 +427,14 @@ extension ChallengeViewController: NSFetchedResultsControllerDelegate {
     func controller(controller: NSFetchedResultsController, didChangeSection sectionInfo: NSFetchedResultsSectionInfo, atIndex sectionIndex: Int, forChangeType type: NSFetchedResultsChangeType) {
         switch(type) {
         case .Insert:
-            tableView.insertSections(NSIndexSet(index: sectionIndex), withRowAnimation: UITableViewRowAnimation.Fade)
+            tableView.insertSections(NSIndexSet(index: sectionIndex), withRowAnimation: .Fade)
         case .Delete:
-            tableView.deleteSections(NSIndexSet(index: sectionIndex), withRowAnimation: UITableViewRowAnimation.Fade)
+            tableView.deleteSections(NSIndexSet(index: sectionIndex), withRowAnimation: .Fade)
         case .Move:
             tableView.moveSection(sectionIndex, toSection: sectionIndex)
         case .Update:
-            tableView.deleteSections(NSIndexSet(index: sectionIndex), withRowAnimation: UITableViewRowAnimation.Fade)
-            tableView.insertSections(NSIndexSet(index: sectionIndex), withRowAnimation: UITableViewRowAnimation.Fade)
+            tableView.deleteSections(NSIndexSet(index: sectionIndex), withRowAnimation: .Fade)
+            tableView.insertSections(NSIndexSet(index: sectionIndex), withRowAnimation: .Fade)
         }
     }
 
@@ -422,20 +442,19 @@ extension ChallengeViewController: NSFetchedResultsControllerDelegate {
         switch(type) {
         case .Insert:
             if let newIndexPath = newIndexPath {
-                tableView.insertRowsAtIndexPaths([newIndexPath], withRowAnimation:UITableViewRowAnimation.Fade)
+                tableView.insertRowsAtIndexPaths([newIndexPath], withRowAnimation: .Fade)
             }
         case .Delete:
             if let indexPath = indexPath {
-                tableView.deleteRowsAtIndexPaths([indexPath], withRowAnimation: UITableViewRowAnimation.Fade)
+                tableView.deleteRowsAtIndexPaths([indexPath], withRowAnimation: .Fade)
             }
         case .Update:
             if let updateIndexPath = indexPath {
-                let cell = tableView.dequeueReusableCellWithIdentifier(MHClient.CellIdentifier.cellWithReuseIdentifier, forIndexPath: updateIndexPath)
-                configureCell(cell as! challengeTableViewCell, atIndexPath: updateIndexPath)
+                tableView.reloadRowsAtIndexPaths([updateIndexPath], withRowAnimation: .Fade)
             }
         case .Move:
             if let deleteIndexPath = indexPath {
-                self.tableView.deleteRowsAtIndexPaths([deleteIndexPath], withRowAnimation: UITableViewRowAnimation.Fade)
+                self.tableView.deleteRowsAtIndexPaths([deleteIndexPath], withRowAnimation: .Fade)
             }
 
             if let insertIndexPath = newIndexPath {
