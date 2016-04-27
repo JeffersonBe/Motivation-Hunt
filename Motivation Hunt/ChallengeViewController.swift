@@ -72,15 +72,22 @@ class ChallengeViewController: UIViewController {
         }
     }
 
+    override func viewDidLayoutSubviews() {
+        if let rect = self.navigationController?.navigationBar.frame {
+            let y = rect.size.height + rect.origin.y
+            tableView.contentInset = UIEdgeInsetsMake(y, 0, 0, 0)
+        }
+    }
+
     func setupUI() {
         tableView = UITableView()
         tableView.backgroundColor = UIColor.clearColor()
         tableView.tableFooterView = UIView(frame: CGRect.zero)
         view.addSubview(tableView)
         tableView.snp_makeConstraints { (make) in
-            make.top.equalTo(view).offset(64)
+            make.top.equalTo(view)
             make.width.equalTo(view)
-            make.bottom.equalTo(view.snp_bottom).inset(64)
+            make.bottom.equalTo(view.snp_bottom)
         }
 
         addChallengeView = UIView()
@@ -96,6 +103,8 @@ class ChallengeViewController: UIViewController {
         challengeTextField = UITextField()
         challengeTextField.leftView = paddingView
         challengeTextField.leftViewMode = UITextFieldViewMode.Always
+        challengeTextField.clearButtonMode = UITextFieldViewMode.WhileEditing
+        challengeTextField.backgroundColor = UIColor(red: 0.9882, green: 0.9765, blue: 0.9804, alpha: 1.0) /* #fcf9fa */
         challengeTextField.attributedPlaceholder = NSAttributedString(string: MHClient.AppCopy.pleaseAddAChallenge, attributes: [NSForegroundColorAttributeName: UIColor.blackColor()])
         addChallengeView.addSubview(challengeTextField)
         challengeTextField.snp_makeConstraints { (make) in
