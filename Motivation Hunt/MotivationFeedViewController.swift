@@ -34,17 +34,6 @@ class MotivationFeedViewController: UIViewController {
         collectionView.dataSource = self
         fetchedResultsController.delegate = self
 
-        let button = UIBarButtonItem(barButtonSystemItem: UIBarButtonSystemItem.Refresh, target: self, action: #selector(refreshData))
-        navigationItem.rightBarButtonItem = button
-
-        // Set background View
-        view.backgroundColor = UIColor(patternImage: UIImage(named: "backgroundFeed.png")!)
-        let blurEffect = UIBlurEffect(style: UIBlurEffectStyle.Dark)
-        let blurEffectView = UIVisualEffectView(effect: blurEffect)
-        blurEffectView.frame = view.bounds
-        blurEffectView.autoresizingMask = [.FlexibleWidth, .FlexibleHeight]
-        view.insertSubview(blurEffectView, belowSubview: collectionView)
-
         do {
             try fetchedResultsController.performFetch()
         } catch let error as NSError {
@@ -131,6 +120,16 @@ extension MotivationFeedViewController {
 
         refreshCtrl.addTarget(self, action: #selector(MotivationFeedViewController.refreshData), forControlEvents: .ValueChanged)
         collectionView?.addSubview(refreshCtrl)
+
+        navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: UIBarButtonSystemItem.Refresh, target: self, action: #selector(refreshData))
+
+        // Set background View
+        view.backgroundColor = UIColor(patternImage: UIImage(named: "backgroundFeed.png")!)
+        let blurEffect = UIBlurEffect(style: UIBlurEffectStyle.Dark)
+        let blurEffectView = UIVisualEffectView(effect: blurEffect)
+        blurEffectView.frame = view.bounds
+        blurEffectView.autoresizingMask = [.FlexibleWidth, .FlexibleHeight]
+        view.insertSubview(blurEffectView, belowSubview: collectionView)
     }
 
     override func willRotateToInterfaceOrientation(toInterfaceOrientation: UIInterfaceOrientation, duration: NSTimeInterval) {
@@ -329,6 +328,7 @@ extension MotivationFeedViewController: UICollectionViewDelegate, UICollectionVi
             cell.imageView.alpha = 0
             cell.playButton.alpha = 0
             cell.videoPlayer.alpha = 0
+
             UIView.animateWithDuration(0.5, delay: 0.0, options: UIViewAnimationOptions.CurveEaseOut, animations: {
                 cell.imageView.alpha = 1
                 cell.playButton.alpha = 0.7

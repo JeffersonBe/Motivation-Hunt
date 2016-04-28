@@ -43,18 +43,6 @@ class ChallengeViewController: UIViewController {
             print("Error: \(error.localizedDescription)")
         }
 
-        tableView.registerClass(challengeTableViewCell.self, forCellReuseIdentifier: MHClient.CellIdentifier.cellWithReuseIdentifier)
-        tableView.allowsMultipleSelection = false
-        view.backgroundColor = UIColor.clearColor()
-
-        addChallengeView.hidden = true
-        let button = UIBarButtonItem(barButtonSystemItem: UIBarButtonSystemItem.Add, target: self, action: #selector(ChallengeViewController.showOrHideChallengeView))
-        navigationItem.rightBarButtonItem = button
-
-        let longTapToEditChallenge: UILongPressGestureRecognizer = UILongPressGestureRecognizer(target: self, action: #selector(ChallengeViewController.editChallenge(_:)))
-        longTapToEditChallenge.minimumPressDuration = 1.5
-        tableView.addGestureRecognizer(longTapToEditChallenge)
-
         if self.fetchedResultsController.fetchedObjects?.count == 0 {
             CloudKitHelper.sharedInstance.fetchChallenge { (success, record, error) in
                 guard error == nil else {
@@ -103,9 +91,8 @@ class ChallengeViewController: UIViewController {
             make.height.equalTo(250)
         }
 
-        let paddingView = UIView(frame: CGRectMake(0, 0, 15, 50))
         challengeTextField = UITextField()
-        challengeTextField.leftView = paddingView
+        challengeTextField.leftView = UIView(frame: CGRectMake(0, 0, 15, 50))
         challengeTextField.leftViewMode = UITextFieldViewMode.Always
         challengeTextField.clearButtonMode = UITextFieldViewMode.WhileEditing
         challengeTextField.backgroundColor = UIColor(red: 0.9882, green: 0.9765, blue: 0.9804, alpha: 1.0) /* #fcf9fa */
@@ -128,7 +115,7 @@ class ChallengeViewController: UIViewController {
         }
 
         addChallengeButton = UIButton()
-        addChallengeButton.setTitle("Add Challenge", forState: .Normal)
+        addChallengeButton.setTitle(MHClient.AppCopy.addChallenge, forState: .Normal)
         addChallengeButton.setTitleColor(UIColor.blackColor(), forState: .Normal)
         let tapToAddChallenge: UITapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(addChallenge(_:)))
         tapToAddChallenge.numberOfTapsRequired = 1
@@ -151,6 +138,17 @@ class ChallengeViewController: UIViewController {
         blurEffectView.frame = view.bounds
         blurEffectView.autoresizingMask = [.FlexibleWidth, .FlexibleHeight]
         view.insertSubview(blurEffectView, belowSubview: tableView)
+
+        tableView.registerClass(challengeTableViewCell.self, forCellReuseIdentifier: MHClient.CellIdentifier.cellWithReuseIdentifier)
+        tableView.allowsMultipleSelection = false
+        view.backgroundColor = UIColor.clearColor()
+
+        addChallengeView.hidden = true
+        navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: UIBarButtonSystemItem.Add, target: self, action: #selector(ChallengeViewController.showOrHideChallengeView))
+
+        let longTapToEditChallenge: UILongPressGestureRecognizer = UILongPressGestureRecognizer(target: self, action: #selector(ChallengeViewController.editChallenge(_:)))
+        longTapToEditChallenge.minimumPressDuration = 1.5
+        tableView.addGestureRecognizer(longTapToEditChallenge)
     }
 
     // Initialize CoreData and NSFetchedResultsController

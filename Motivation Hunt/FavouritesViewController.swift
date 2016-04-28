@@ -33,18 +33,6 @@ class FavouritesViewController: UIViewController {
         collectionView.emptyDataSetDelegate = self
         fetchedResultsController.delegate = self
 
-        // Configure CollectionView
-        collectionView.registerClass(motivationCollectionViewCell.self, forCellWithReuseIdentifier: MHClient.CellIdentifier.cellWithReuseIdentifier)
-        collectionView.backgroundColor = UIColor.clearColor()
-        collectionView.allowsMultipleSelection = false
-
-        view.backgroundColor = UIColor(patternImage: UIImage(named: "backgroundFeed.png")!)
-        let blurEffect = UIBlurEffect(style: UIBlurEffectStyle.Dark)
-        let blurEffectView = UIVisualEffectView(effect: blurEffect)
-        blurEffectView.frame = view.bounds
-        blurEffectView.autoresizingMask = [.FlexibleWidth, .FlexibleHeight]
-        view.insertSubview(blurEffectView, belowSubview: collectionView)
-
         do {
             try fetchedResultsController.performFetch()
         } catch let error as NSError {
@@ -106,6 +94,13 @@ extension FavouritesViewController {
             make.bottom.equalTo(view.snp_bottom)
             make.center.equalTo(view)
         }
+
+        view.backgroundColor = UIColor(patternImage: UIImage(named: "backgroundFeed.png")!)
+        let blurEffect = UIBlurEffect(style: UIBlurEffectStyle.Dark)
+        let blurEffectView = UIVisualEffectView(effect: blurEffect)
+        blurEffectView.frame = view.bounds
+        blurEffectView.autoresizingMask = [.FlexibleWidth, .FlexibleHeight]
+        view.insertSubview(blurEffectView, belowSubview: collectionView)
     }
 
     override func willRotateToInterfaceOrientation(toInterfaceOrientation: UIInterfaceOrientation, duration: NSTimeInterval) {
