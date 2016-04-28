@@ -73,9 +73,13 @@ class ChallengeViewController: UIViewController {
     }
 
     override func viewDidLayoutSubviews() {
-        if let rect = self.navigationController?.navigationBar.frame {
-            let y = rect.size.height + rect.origin.y
-            tableView.contentInset = UIEdgeInsetsMake(y, 0, 0, 0)
+        if let rectNavigationBar = navigationController?.navigationBar.frame, let rectTabBar = tabBarController?.tabBar.frame  {
+            let navigationBarSpace = rectNavigationBar.size.height + rectNavigationBar.origin.y
+            let tabBarSpace = rectTabBar.size.height + rectTabBar.origin.x
+            tableView.contentInset = UIEdgeInsetsMake(navigationBarSpace, 0, tabBarSpace, 0)
+            addChallengeView.snp_updateConstraints(closure: { (make) in
+                make.top.equalTo(navigationBarSpace)
+            })
         }
     }
 
