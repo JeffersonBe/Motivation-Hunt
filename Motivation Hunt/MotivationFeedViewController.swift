@@ -13,6 +13,7 @@ import CloudKit
 import Async
 import Toucan
 import SnapKit
+import Alamofire
 
 let nextPageTokenConstant = "nextPageToken"
 
@@ -41,26 +42,7 @@ class MotivationFeedViewController: UIViewController {
         }
 
         if self.fetchedResultsController.fetchedObjects?.count == 0 {
-            CloudKitHelper.sharedInstance.fetchMotivationFeedItem { (success, record, error) in
-                guard error == nil else {
-                    return
-                }
-                Async.main() {
-                    CoreDataStackManager.sharedInstance.managedObjectContext.performBlock({
-                        for item in record! {
-                            let _ = MotivationFeedItem(itemTitle: item.valueForKey("itemTitle") as! String,
-                                itemDescription: item.valueForKey("itemDescription") as! String,
-                                itemID: item.valueForKey("itemID") as! String,
-                                itemThumbnailsUrl: item.valueForKey("itemThumbnailsUrl") as! String,
-                                saved: item.valueForKey("saved") as! Bool,
-                                addedDate: item.valueForKey("addedDate") as! NSDate,
-                                itemRecordID: item.recordID.recordName,
-                                context: self.sharedContext)
-                            CoreDataStackManager.sharedInstance.saveContext()
-                        }
-                    })
-                }
-            }
+            refreshData()
         }
     }
 
@@ -162,7 +144,9 @@ extension MotivationFeedViewController {
         let tapPoint: CGPoint = gestureRecognizer.locationInView(collectionView)
         let indexPath = collectionView.indexPathForItemAtPoint(tapPoint)
         let cell = collectionView.cellForItemAtIndexPath(indexPath!) as! motivationCollectionViewCell
+
         cell.videoPlayer.play()
+
         UIView.animateWithDuration(0.5, delay: 0.0, options: UIViewAnimationOptions.CurveEaseOut, animations: {
             cell.videoPlayer.alpha = 1
             cell.playButton.alpha = 0
@@ -175,7 +159,7 @@ extension MotivationFeedViewController {
         let indexPath = collectionView.indexPathForItemAtPoint(tapPoint)
         let cell = collectionView.cellForItemAtIndexPath(indexPath!) as! motivationCollectionViewCell
         let motivation = fetchedResultsController.objectAtIndexPath(indexPath!) as! MotivationFeedItem
-        let motivationToShare = [motivation.itemTitle, motivation.itemDescription, "https://www.youtube.com/watch?v=\(motivation.itemID)"]
+        let motivationToShare = [motivation.itemTitle, motivation.itemDescription, "\(MHClient.Resources.youtubeBaseUrl)\(motivation.itemID)"]
         let activityViewController = UIActivityViewController(activityItems: motivationToShare, applicationActivities: nil)
         activityViewController.excludedActivityTypes = [UIActivityTypeAirDrop, UIActivityTypeAddToReadingList]
 
@@ -206,32 +190,36 @@ extension MotivationFeedViewController {
         if let nextPageToken = defaults.stringForKey(nextPageTokenConstant) {
             mutableParameters["pageToken"] = "\(nextPageToken)"
         }
+        let request = Alamofire.request(.GET, MHClient.Resources.searchVideos, parameters: parameters)
 
-        Async.background {
-            MHClient.sharedInstance.taskForResource(mutableParameters) { (result, error) -> Void in
-                guard (error == nil) else {
+        // TODO: Use progress
+
+//        request.progress { bytesWritten, totalBytesWritten, totalBytesExpectedToWrite in
+//            Async.main {
+//            let progressView = UIProgressView(progressViewStyle: .Bar)
+//            progressView.trackTintColor = UIColor.redColor()
+//            let percent = (Float(totalBytesWritten) / Float(totalBytesExpectedToWrite))
+//            Log.info(percent)
+//            progressView.setProgress(percent, animated: true)
+//            }
+//        }
+        request.responseJSON { response in
+                guard response.result.isSuccess,
+                    let results = response.result.value![MHClient.JSONResponseKeys.items] as? [[String:AnyObject]],
+                    let nextPageTokenKey = response.result.value!["nextPageToken"] as? String else {
                     dispatch_async(dispatch_get_main_queue(), {
                         self.indicator.stopActivity()
                         self.indicator.removeFromSuperview()
-                        let errorAlert = UIAlertController(title: "Oops… Unable to load feed", message: error!.localizedDescription, preferredStyle: UIAlertControllerStyle.Alert)
+                        let errorAlert = UIAlertController(title: "Oops… Unable to load feed", message: response.description, preferredStyle: UIAlertControllerStyle.Alert)
                         errorAlert.addAction(UIAlertAction(title: "Dismiss", style: UIAlertActionStyle.Default, handler: nil))
                         self.presentViewController(errorAlert, animated: true, completion: nil)
                     })
-                    print("There was an error with your request: \(error)")
+                    Log.warning("There was an error with your request: \(response.description)")
                     return
-                }
-
-                Async.main {
-                    self.indicator.stopActivity()
-                    self.indicator.removeFromSuperview()
                 }
 
                 let defaults = NSUserDefaults.standardUserDefaults()
-                defaults.setObject(result["nextPageToken"] as! String, forKey:nextPageTokenConstant)
-
-                guard let results = result[MHClient.JSONResponseKeys.items] as? [[String:AnyObject]] else {
-                    return
-                }
+                defaults.setObject(nextPageTokenKey, forKey:nextPageTokenConstant)
 
                 for item in results {
                     guard let snippet = item[MHClient.JSONResponseKeys.snippet] as? [String:AnyObject],
@@ -249,17 +237,22 @@ extension MotivationFeedViewController {
                         }
 
                         Async.main {
-                            let _ = MotivationFeedItem(itemTitle: title, itemDescription: description, itemID: id, itemThumbnailsUrl: thumbnailsUrl, saved: false, addedDate: NSDate(), itemRecordID: record.recordID.recordName, context: self.sharedContext)
+                            let _ = MotivationFeedItem(itemTitle: title, itemDescription: description, itemID: id, itemThumbnailsUrl: thumbnailsUrl, saved: false, addedDate: NSDate(), itemRecordID: record.recordID.recordName, theme: "motivation+success", context: self.sharedContext)
                             CoreDataStackManager.sharedInstance.saveContext()
                         }
                     }
                 }
-            }
+        }
+
+        Async.main {
+            self.indicator.stopActivity()
+            self.indicator.removeFromSuperview()
         }
 
         if refreshCtrl.refreshing {
             refreshCtrl.endRefreshing()
         }
+
     }
 }
 
@@ -345,7 +338,7 @@ extension MotivationFeedViewController: UICollectionViewDelegate, UICollectionVi
         if (device == "iPad" || device == "iPad Simulator") {
             cellSize = CGSizeMake(dimensioniPad, dimensioniPad * 0.8)
         }
-        
+
         return cellSize
     }
 
