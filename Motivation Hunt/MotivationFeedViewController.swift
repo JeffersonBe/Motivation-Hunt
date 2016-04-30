@@ -20,6 +20,7 @@ let nextPageTokenConstant = "nextPageToken"
 class MotivationFeedViewController: UIViewController {
 
     var collectionView: UICollectionView!
+    var progressView: UIProgressView!
     var indicator = CustomUIActivityIndicatorView()
     let refreshCtrl = UIRefreshControl()
     var blockOperations: [NSBlockOperation] = []
@@ -83,6 +84,9 @@ extension MotivationFeedViewController {
             let navigationBarSpace = rectNavigationBar.size.height + rectNavigationBar.origin.y
             let tabBarSpace = rectTabBar.size.height + rectTabBar.origin.x
             collectionView.contentInset = UIEdgeInsetsMake(navigationBarSpace, 0, tabBarSpace, 0)
+            progressView.snp_updateConstraints(closure: { (make) in
+                make.top.equalTo(navigationBarSpace)
+            })
         }
     }
 
@@ -104,6 +108,17 @@ extension MotivationFeedViewController {
         collectionView?.addSubview(refreshCtrl)
 
         navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: UIBarButtonSystemItem.Refresh, target: self, action: #selector(refreshData))
+
+        progressView = UIProgressView(progressViewStyle: .Bar)
+        progressView.progressTintColor = UIColor.blueColor()
+        progressView.trackTintColor = UIColor.clearColor()
+        view.addSubview(progressView)
+        view.bringSubviewToFront(progressView)
+        progressView.snp_makeConstraints { (make) in
+            make.top.equalTo(view.snp_top)
+            make.width.equalTo(view)
+            make.height.equalTo(2)
+        }
 
         // Set background View
         view.backgroundColor = UIColor(patternImage: UIImage(named: "backgroundFeed.png")!)
@@ -194,15 +209,14 @@ extension MotivationFeedViewController {
 
         // TODO: Use progress
 
-//        request.progress { bytesWritten, totalBytesWritten, totalBytesExpectedToWrite in
-//            Async.main {
-//            let progressView = UIProgressView(progressViewStyle: .Bar)
-//            progressView.trackTintColor = UIColor.redColor()
-//            let percent = (Float(totalBytesWritten) / Float(totalBytesExpectedToWrite))
-//            Log.info(percent)
-//            progressView.setProgress(percent, animated: true)
-//            }
-//        }
+        request.progress { bytesWritten, totalBytesWritten, totalBytesExpectedToWrite in
+            Async.main {
+                self.progressView.setProgress(Float(totalBytesWritten) / Float(totalBytesExpectedToWrite), animated: true)
+                if self.progressView.progress == 1 {
+                    self.progressView.progress = 0
+                }
+            }
+        }
         request.responseJSON { response in
                 guard response.result.isSuccess,
                     let results = response.result.value![MHClient.JSONResponseKeys.items] as? [[String:AnyObject]],
@@ -239,14 +253,11 @@ extension MotivationFeedViewController {
                         Async.main {
                             let _ = MotivationFeedItem(itemTitle: title, itemDescription: description, itemID: id, itemThumbnailsUrl: thumbnailsUrl, saved: false, addedDate: NSDate(), itemRecordID: record.recordID.recordName, theme: "motivation+success", context: self.sharedContext)
                             CoreDataStackManager.sharedInstance.saveContext()
+                            self.indicator.stopActivity()
+                            self.indicator.removeFromSuperview()
                         }
                     }
                 }
-        }
-
-        Async.main {
-            self.indicator.stopActivity()
-            self.indicator.removeFromSuperview()
         }
 
         if refreshCtrl.refreshing {
