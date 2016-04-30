@@ -18,12 +18,13 @@ class MotivationFeedItem: NSManagedObject {
     @NSManaged var saved: Bool
     @NSManaged var addedDate: NSDate
     @NSManaged var itemRecordID: String
+    @NSManaged var theme: String
 
     override init(entity: NSEntityDescription, insertIntoManagedObjectContext context: NSManagedObjectContext?) {
         super.init(entity: entity, insertIntoManagedObjectContext: context)
     }
 
-    init(itemTitle: String, itemDescription: String, itemID: String, itemThumbnailsUrl: String, saved: Bool, addedDate: NSDate, itemRecordID: String, context: NSManagedObjectContext) {
+    init(itemTitle: String, itemDescription: String, itemID: String, itemThumbnailsUrl: String, saved: Bool, addedDate: NSDate, itemRecordID: String, theme: String, context: NSManagedObjectContext) {
         let entity =  NSEntityDescription.entityForName("MotivationFeedItem", inManagedObjectContext: context)!
         super.init(entity: entity, insertIntoManagedObjectContext: context)
         self.itemTitle = itemTitle
@@ -33,6 +34,7 @@ class MotivationFeedItem: NSManagedObject {
         self.saved = saved
         self.addedDate = addedDate
         self.itemRecordID = itemRecordID
+        self.theme = theme
     }
 
     var image: UIImage? {

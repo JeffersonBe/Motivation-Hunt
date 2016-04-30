@@ -17,6 +17,7 @@ extension MHClient {
 
     struct Resources {
         static let searchVideos = "https://www.googleapis.com/youtube/v3/search"
+        static let youtubeBaseUrl = "https://www.youtube.com/watch?v="
     }
 
     struct Keys {

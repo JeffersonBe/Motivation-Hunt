@@ -14,9 +14,10 @@
         <attribute name="itemThumbnailsUrl" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="itemTitle" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="saved" optional="YES" attributeType="Boolean" syncable="YES"/>
+        <attribute name="theme" optional="YES" attributeType="String" syncable="YES"/>
     </entity>
     <elements>
         <element name="Challenge" positionX="-63" positionY="-18" width="128" height="105"/>
-        <element name="MotivationFeedItem" positionX="-63" positionY="9" width="128" height="150"/>
+        <element name="MotivationFeedItem" positionX="-63" positionY="9" width="128" height="165"/>
     </elements>
 </model>
