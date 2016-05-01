@@ -9,6 +9,7 @@
 import UIKit
 import CoreData
 import Log
+import CloudKit
 
 let Log = Logger()
 
@@ -19,6 +20,12 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     func application(application: UIApplication, didFinishLaunchingWithOptions launchOptions: [NSObject: AnyObject]?) -> Bool {
         // Override point for customization after application launch.
+
+        // Push notification setup
+        let settings = UIUserNotificationSettings(forTypes: [.Alert, .Badge , .Sound], categories: nil)
+        application.registerUserNotificationSettings(settings)
+        application.registerForRemoteNotifications()
+
         return true
     }
 
@@ -44,5 +51,50 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         // Called when the application is about to terminate. Save data if appropriate. See also applicationDidEnterBackground:.
         // Saves changes in the application's managed object context before the application terminates.
         CoreDataStackManager.sharedInstance.saveContext()
+    }
+
+    func application(application: UIApplication, didReceiveRemoteNotification userInfo: [NSObject : AnyObject]) {
+        Log.info(userInfo)
+
+        let cloudKitNotification = CKNotification(fromRemoteNotificationDictionary: userInfo as! [String : NSObject])
+
+        if cloudKitNotification.notificationType == .Query {
+            let queryNotification = cloudKitNotification as! CKQueryNotification
+
+            Log.info(queryNotification)
+
+            if queryNotification.queryNotificationReason == .RecordDeleted {
+                // If the record has been deleted in CloudKit then delete the local copy here
+                Log.info("RecordDeleted")
+                SyncManager.sharedInstance.ChallengeDelete(queryNotification.recordID!)
+            } else {
+                // If the record has been created or changed, we fetch the data from CloudKit
+                let database: CKDatabase
+                if queryNotification.isPublicDatabase {
+                    database = CKContainer.defaultContainer().publicCloudDatabase
+                } else {
+                    database = CKContainer.defaultContainer().privateCloudDatabase
+                }
+                
+                database.fetchRecordWithID(queryNotification.recordID!, completionHandler: { (record: CKRecord?, error: NSError?) -> Void in
+                    guard error == nil else {
+                        Log.error(error)
+                        return
+                    }
+
+                    switch queryNotification.queryNotificationReason {
+                    case .RecordCreated:
+                        Log.info("RecordCreated")
+                        SyncManager.sharedInstance.ChallengeCreated(record!)
+                    case .RecordDeleted:
+                        Log.info("RecordDeleted")
+                        SyncManager.sharedInstance.ChallengeDelete(record!.recordID)
+                    case .RecordUpdated:
+                        Log.info("RecordUpdated")
+                        SyncManager.sharedInstance.ChallengeUpdated(record!)
+                    }
+                })
+            }
+        }
     }
 }

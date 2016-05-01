@@ -97,6 +97,7 @@ class CloudKitHelper {
         }
     }
 }
+
 extension CloudKitHelper {
 
     func fetchMotivationFeedItem(completionHandler: (success: Bool?, record: [CKRecord]?, error: NSError?) -> Void) {
@@ -258,6 +259,68 @@ extension CloudKitHelper {
                 return
             }
             completionHandler(success: true, recordID: recordID, error: nil)
+        }
+    }
+
+    //MARK: Subscription
+
+    func fetchNotificationChanges() {
+        let operation = CKFetchNotificationChangesOperation(previousServerChangeToken: nil)
+
+        var notificationIDsToMarkRead = [CKNotificationID]()
+
+        operation.notificationChangedBlock = { (notification: CKNotification) -> Void in
+            // Process each notification received
+            if notification.notificationType == .Query {
+                let queryNotification = notification as! CKQueryNotification
+                let reason = queryNotification.queryNotificationReason
+                let recordID = queryNotification.recordID
+
+                // Do your process here depending on the reason of the change
+
+                // Add the notification id to the array of processed notifications to mark them as read
+                notificationIDsToMarkRead.append(queryNotification.notificationID!)
+            }
+        }
+
+        operation.fetchNotificationChangesCompletionBlock = { (serverChangeToken: CKServerChangeToken?, operationError: NSError?) -> Void in
+            guard operationError == nil else {
+                // Handle the error here
+                return
+            }
+
+            // Mark the notifications as read to avoid processing them again
+            let markOperation = CKMarkNotificationsReadOperation(notificationIDsToMarkRead: notificationIDsToMarkRead)
+            markOperation.markNotificationsReadCompletionBlock = { (notificationIDsMarkedRead: [CKNotificationID]?, operationError: NSError?) -> Void in
+                guard operationError == nil else {
+                    // Handle the error here
+                    return
+                }
+            }
+
+            let operationQueue = NSOperationQueue()
+            operationQueue.addOperation(markOperation)
+        }
+        
+        let operationQueue = NSOperationQueue()
+        operationQueue.addOperation(operation)
+    }
+}
+
+extension CloudKitHelper {
+    // MARK: Subscription
+    func subscribeToChallengeCreation() {
+        let predicate = NSPredicate(format: "TRUEPREDICATE")
+        let subscription = CKSubscription(recordType: "\(RecordType.Challenge)",
+                                          predicate: predicate,
+                                          options: [.FiresOnRecordCreation, .FiresOnRecordUpdate, .FiresOnRecordDeletion])
+
+        privateDB.saveSubscription(subscription) { (subscription: CKSubscription?, error: NSError?) -> Void in
+            guard error == nil else {
+                // Handle the error here
+                return
+            }
+            // Save that we have subscribed successfully to keep track and avoid trying to subscribe again
         }
     }
 }
