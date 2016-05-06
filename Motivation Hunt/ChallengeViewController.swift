@@ -37,10 +37,13 @@ class ChallengeViewController: UIViewController {
         tableView.emptyDataSetDataSource = self
         tableView.emptyDataSetDelegate = self
 
+        CloudKitHelper.sharedInstance.subscribeToChallengeCreation()
+        CloudKitHelper.sharedInstance.fetchNotificationChanges()
+
         do {
             try fetchedResultsController.performFetch()
         } catch let error as NSError {
-            print("Error: \(error.localizedDescription)")
+            Log.error("Error: \(error.localizedDescription)")
         }
 
         if self.fetchedResultsController.fetchedObjects?.count == 0 {
@@ -60,7 +63,15 @@ class ChallengeViewController: UIViewController {
         }
     }
 
+    override func viewWillAppear(animated: Bool) {
+        addChallengeView.center.y -= view.bounds.width
+        dimView.alpha = 0
+    }
+
     override func viewDidLayoutSubviews() {
+        if !editMode {
+            addChallengeView.center.y -= view.bounds.width
+        }
         if let rectNavigationBar = navigationController?.navigationBar.frame, let rectTabBar = tabBarController?.tabBar.frame  {
             let navigationBarSpace = rectNavigationBar.size.height + rectNavigationBar.origin.y
             let tabBarSpace = rectTabBar.size.height + rectTabBar.origin.x
@@ -130,7 +141,6 @@ class ChallengeViewController: UIViewController {
 
         dimView = UIView(frame: view.frame)
         dimView.backgroundColor = UIColor.blackColor()
-        dimView.alpha = 0
 
         view.backgroundColor = UIColor(patternImage: UIImage(named: "backgroundFeed.png")!)
         let blurEffect = UIBlurEffect(style: UIBlurEffectStyle.Dark)
@@ -141,10 +151,9 @@ class ChallengeViewController: UIViewController {
 
         tableView.registerClass(challengeTableViewCell.self, forCellReuseIdentifier: MHClient.CellIdentifier.cellWithReuseIdentifier)
         tableView.allowsMultipleSelection = false
-        view.backgroundColor = UIColor.clearColor()
 
-        addChallengeView.hidden = true
         navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: UIBarButtonSystemItem.Add, target: self, action: #selector(ChallengeViewController.showOrHideChallengeView))
+        navigationController?.hidesBarsOnSwipe = true
 
         let longTapToEditChallenge: UILongPressGestureRecognizer = UILongPressGestureRecognizer(target: self, action: #selector(ChallengeViewController.editChallenge(_:)))
         longTapToEditChallenge.minimumPressDuration = 1.5
@@ -240,35 +249,36 @@ extension ChallengeViewController {
 
     func showAddChallengeView() {
         challengeTextField.text = ""
-        addChallengeView.hidden = false
-
-        view.insertSubview(self.dimView, belowSubview: (self.navigationController?.navigationBar)!)
-        view.insertSubview(self.addChallengeView, belowSubview: (self.navigationController?.navigationBar)!)
-
         if currentChallengeToEdit != nil {
             challengeTextField.text = currentChallengeToEdit!.challengeDescription
             challengeDatePicker.date = currentChallengeToEdit!.endDate
             addChallengeButton.setTitle("Modify challenge", forState: .Normal)
         }
 
-        let cancelButton = UIBarButtonItem(barButtonSystemItem: UIBarButtonSystemItem.Cancel, target: self, action: #selector(ChallengeViewController.showOrHideChallengeView))
-        navigationItem.rightBarButtonItem = cancelButton
-
-        UIView.animateWithDuration(0.3, animations: {
+        UIView.animateWithDuration(0.3, delay: 0.0, options: .CurveEaseOut, animations: {
+            self.addChallengeView.center.y += self.view.bounds.width
             self.dimView.alpha = 0.3
+            }, completion: { finished in
+                self.navigationItem.rightBarButtonItem = UIBarButtonItem(
+                    barButtonSystemItem: UIBarButtonSystemItem.Cancel,
+                    target: self,
+                    action: #selector(ChallengeViewController.showOrHideChallengeView)
+                )
         })
     }
 
     func HideAddChallengeView() {
-        addChallengeView.hidden = true
-        UIView.animateWithDuration(0.3, animations: {
+        UIView.animateWithDuration(0.3, delay: 0.0, options: .CurveEaseOut, animations: {
+            self.addChallengeView.center.y -= self.view.bounds.width
             self.dimView.alpha = 0
             }, completion: { finished in
-                self.dimView.removeFromSuperview()
+                self.navigationItem.rightBarButtonItem = UIBarButtonItem(
+                    barButtonSystemItem: UIBarButtonSystemItem.Add,
+                    target: self,
+                    action: #selector(ChallengeViewController.showOrHideChallengeView)
+                )
+                self.challengeTextField.resignFirstResponder()
         })
-        let addButton = UIBarButtonItem(barButtonSystemItem: UIBarButtonSystemItem.Add, target: self, action: #selector(ChallengeViewController.showOrHideChallengeView))
-        navigationItem.rightBarButtonItem = addButton
-        challengeTextField.resignFirstResponder()
     }
 }
 
@@ -299,7 +309,7 @@ extension ChallengeViewController: TBEmptyDataSetDataSource, TBEmptyDataSetDeleg
     }
 
     func emptyDataSetDidTapView(scrollView: UIScrollView!) {
-        showAddChallengeView()
+        showOrHideChallengeView()
     }
 
     func emptyDataSetShouldDisplay(scrollView: UIScrollView!) -> Bool {
@@ -389,32 +399,26 @@ extension ChallengeViewController: UITableViewDataSource, UITableViewDelegate {
     }
 
     func deleteChallenge(challenge: Challenge) {
-        if Reachability.connectedToNetwork() && challenge.challengeRecordID != "" {
-            CloudKitHelper.sharedInstance.deleteChallenge(CKRecordID(recordName: challenge.challengeRecordID), completionHandler: { (success, record, error) in
-                guard success else {
-                    return
-                }
-
-                Async.main {
-                    self.sharedContext.deleteObject(challenge)
-                    CoreDataStackManager.sharedInstance.saveContext()
-                }
-            })
+        CloudKitHelper.sharedInstance.deleteChallenge(CKRecordID(recordName: challenge.challengeRecordID), completionHandler: { (success, record, error) in
+            guard success else {
+                return
+            }
+        })
+        Async.main {
+            self.sharedContext.deleteObject(challenge)
+            CoreDataStackManager.sharedInstance.saveContext()
         }
     }
 
     func updateCompleteStatusChallenge(challenge: Challenge) {
-        if Reachability.connectedToNetwork() && challenge.challengeRecordID != "" {
-            CloudKitHelper.sharedInstance.updateCompletedStatusChallenge(CKRecordID(recordName: challenge.challengeRecordID), completionHandler: { (success, record, error) in
-                guard success else {
-                    return
-                }
-
-                Async.main {
-                    challenge.completed = challenge.completed ? false : true
-                    CoreDataStackManager.sharedInstance.saveContext()
-                }
-            })
+        CloudKitHelper.sharedInstance.updateCompletedStatusChallenge(CKRecordID(recordName: challenge.challengeRecordID), completionHandler: { (success, record, error) in
+            guard success else {
+                return
+            }
+        })
+        Async.main {
+            challenge.completed = challenge.completed ? false : true
+            CoreDataStackManager.sharedInstance.saveContext()
         }
     }
 }
@@ -432,11 +436,11 @@ extension ChallengeViewController: NSFetchedResultsControllerDelegate {
             tableView.insertSections(NSIndexSet(index: sectionIndex), withRowAnimation: .Fade)
         case .Delete:
             tableView.deleteSections(NSIndexSet(index: sectionIndex), withRowAnimation: .Fade)
-        case .Move:
-            tableView.moveSection(sectionIndex, toSection: sectionIndex)
         case .Update:
             tableView.deleteSections(NSIndexSet(index: sectionIndex), withRowAnimation: .Fade)
             tableView.insertSections(NSIndexSet(index: sectionIndex), withRowAnimation: .Fade)
+        case .Move:
+            tableView.moveSection(sectionIndex, toSection: sectionIndex)
         }
     }
 
