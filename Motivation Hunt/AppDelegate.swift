@@ -26,6 +26,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         application.registerUserNotificationSettings(settings)
         application.registerForRemoteNotifications()
 
+        configureStatusBar()
+
         return true
     }
 
@@ -96,5 +98,18 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
                 })
             }
         }
+    }
+    func configureStatusBar() {
+        UIApplication.sharedApplication().statusBarStyle = .LightContent
+        setStatusBarBackgroundColor(UIColor.blackTransparentColor())
+    }
+
+    func setStatusBarBackgroundColor(color: UIColor) {
+
+        guard let statusBar = UIApplication.sharedApplication().valueForKey("statusBarWindow")?.valueForKey("statusBar") as? UIView else {
+            return
+        }
+
+        statusBar.backgroundColor = color
     }
 }

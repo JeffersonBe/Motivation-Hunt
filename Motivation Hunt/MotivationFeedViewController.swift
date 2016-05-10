@@ -127,6 +127,15 @@ extension MotivationFeedViewController {
         blurEffectView.frame = view.bounds
         blurEffectView.autoresizingMask = [.FlexibleWidth, .FlexibleHeight]
         view.insertSubview(blurEffectView, belowSubview: collectionView)
+
+        let blurEffectStatusBar = UIBlurEffect(style: UIBlurEffectStyle.Light)
+        let blurEffectViewStatusBar = UIVisualEffectView(effect: blurEffectStatusBar)
+        blurEffectViewStatusBar.frame = UIApplication.sharedApplication().statusBarFrame
+        blurEffectViewStatusBar.autoresizingMask = [.FlexibleWidth, .FlexibleHeight]
+        view.insertSubview(blurEffectViewStatusBar, aboveSubview: collectionView)
+        
+        navigationController?.hidesBarsOnSwipe = true
+        setNeedsStatusBarAppearanceUpdate()
     }
 
     override func willRotateToInterfaceOrientation(toInterfaceOrientation: UIInterfaceOrientation, duration: NSTimeInterval) {
@@ -134,6 +143,10 @@ extension MotivationFeedViewController {
     }
 
     override func viewWillTransitionToSize(size: CGSize, withTransitionCoordinator coordinator: UIViewControllerTransitionCoordinator) {}
+
+    override func preferredStatusBarStyle() -> UIStatusBarStyle {
+        return .LightContent
+    }
 }
 
 extension MotivationFeedViewController {

@@ -149,6 +149,12 @@ class ChallengeViewController: UIViewController {
         blurEffectView.autoresizingMask = [.FlexibleWidth, .FlexibleHeight]
         view.insertSubview(blurEffectView, belowSubview: tableView)
 
+        let blurEffectStatusBar = UIBlurEffect(style: UIBlurEffectStyle.Light)
+        let blurEffectViewStatusBar = UIVisualEffectView(effect: blurEffectStatusBar)
+        blurEffectViewStatusBar.frame = UIApplication.sharedApplication().statusBarFrame
+        blurEffectViewStatusBar.autoresizingMask = [.FlexibleWidth, .FlexibleHeight]
+        view.insertSubview(blurEffectViewStatusBar, aboveSubview: tableView)
+
         tableView.registerClass(challengeTableViewCell.self, forCellReuseIdentifier: MHClient.CellIdentifier.cellWithReuseIdentifier)
         tableView.allowsMultipleSelection = false
 
@@ -158,6 +164,12 @@ class ChallengeViewController: UIViewController {
         let longTapToEditChallenge: UILongPressGestureRecognizer = UILongPressGestureRecognizer(target: self, action: #selector(ChallengeViewController.editChallenge(_:)))
         longTapToEditChallenge.minimumPressDuration = 1.5
         tableView.addGestureRecognizer(longTapToEditChallenge)
+
+        setNeedsStatusBarAppearanceUpdate()
+    }
+
+    override func preferredStatusBarStyle() -> UIStatusBarStyle {
+        return .LightContent
     }
 
     // Initialize CoreData and NSFetchedResultsController
@@ -259,6 +271,7 @@ extension ChallengeViewController {
             self.addChallengeView.center.y += self.view.bounds.width
             self.dimView.alpha = 0.3
             }, completion: { finished in
+                self.navigationController?.hidesBarsOnSwipe = false
                 self.navigationItem.rightBarButtonItem = UIBarButtonItem(
                     barButtonSystemItem: UIBarButtonSystemItem.Cancel,
                     target: self,
@@ -272,6 +285,7 @@ extension ChallengeViewController {
             self.addChallengeView.center.y -= self.view.bounds.width
             self.dimView.alpha = 0
             }, completion: { finished in
+                self.navigationController?.hidesBarsOnSwipe = true
                 self.navigationItem.rightBarButtonItem = UIBarButtonItem(
                     barButtonSystemItem: UIBarButtonSystemItem.Add,
                     target: self,
