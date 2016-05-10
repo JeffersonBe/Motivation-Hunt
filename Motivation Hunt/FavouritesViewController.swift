@@ -51,12 +51,16 @@ class FavouritesViewController: UIViewController {
         let fetchRequest = NSFetchRequest(entityName: "MotivationFeedItem")
         let predicate = NSPredicate(format: "saved == 1")
         fetchRequest.predicate = predicate
-        fetchRequest.sortDescriptors = [NSSortDescriptor(key: "itemID", ascending: true)]
+        fetchRequest.sortDescriptors = [NSSortDescriptor(
+            key: "itemID",
+            ascending: true)]
 
-        let fetchedResultsController = NSFetchedResultsController(fetchRequest: fetchRequest,
-                                                                  managedObjectContext: self.sharedContext,
-                                                                  sectionNameKeyPath: nil,
-                                                                  cacheName: nil)
+        let fetchedResultsController = NSFetchedResultsController(
+            fetchRequest: fetchRequest,
+            managedObjectContext: self.sharedContext,
+            sectionNameKeyPath: nil,
+            cacheName: nil
+        )
         
         return fetchedResultsController
     }()
@@ -105,7 +109,6 @@ extension FavouritesViewController {
         let blurEffectStatusBar = UIBlurEffect(style: UIBlurEffectStyle.Light)
         let blurEffectViewStatusBar = UIVisualEffectView(effect: blurEffectStatusBar)
         blurEffectViewStatusBar.frame = UIApplication.sharedApplication().statusBarFrame
-        blurEffectViewStatusBar.autoresizingMask = [.FlexibleWidth, .FlexibleHeight]
         view.insertSubview(blurEffectViewStatusBar, aboveSubview: collectionView)
 
         navigationController?.hidesBarsOnSwipe = true
@@ -200,6 +203,10 @@ extension FavouritesViewController: UICollectionViewDelegate, UICollectionViewDa
 
     func collectionView(collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         let sectionInfo = fetchedResultsController.sections![section] as NSFetchedResultsSectionInfo
+        if fetchedResultsController.sections?[section].numberOfObjects < 10 {
+            navigationController?.hidesBarsOnSwipe = false
+            setNeedsStatusBarAppearanceUpdate()
+        }
         return sectionInfo.numberOfObjects
     }
 

@@ -141,6 +141,7 @@ class ChallengeViewController: UIViewController {
 
         dimView = UIView(frame: view.frame)
         dimView.backgroundColor = UIColor.blackColor()
+        view.insertSubview(dimView, belowSubview: addChallengeView)
 
         view.backgroundColor = UIColor(patternImage: UIImage(named: "backgroundFeed.png")!)
         let blurEffect = UIBlurEffect(style: UIBlurEffectStyle.Dark)
@@ -152,19 +153,17 @@ class ChallengeViewController: UIViewController {
         let blurEffectStatusBar = UIBlurEffect(style: UIBlurEffectStyle.Light)
         let blurEffectViewStatusBar = UIVisualEffectView(effect: blurEffectStatusBar)
         blurEffectViewStatusBar.frame = UIApplication.sharedApplication().statusBarFrame
-        blurEffectViewStatusBar.autoresizingMask = [.FlexibleWidth, .FlexibleHeight]
         view.insertSubview(blurEffectViewStatusBar, aboveSubview: tableView)
 
         tableView.registerClass(challengeTableViewCell.self, forCellReuseIdentifier: MHClient.CellIdentifier.cellWithReuseIdentifier)
         tableView.allowsMultipleSelection = false
 
         navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: UIBarButtonSystemItem.Add, target: self, action: #selector(ChallengeViewController.showOrHideChallengeView))
-        navigationController?.hidesBarsOnSwipe = true
 
         let longTapToEditChallenge: UILongPressGestureRecognizer = UILongPressGestureRecognizer(target: self, action: #selector(ChallengeViewController.editChallenge(_:)))
         longTapToEditChallenge.minimumPressDuration = 1.5
         tableView.addGestureRecognizer(longTapToEditChallenge)
-
+        navigationController?.hidesBarsOnSwipe = true
         setNeedsStatusBarAppearanceUpdate()
     }
 
@@ -338,6 +337,10 @@ extension ChallengeViewController: TBEmptyDataSetDataSource, TBEmptyDataSetDeleg
 extension ChallengeViewController: UITableViewDataSource, UITableViewDelegate {
     func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         let sectionInfo = fetchedResultsController.sections?[section]
+        if fetchedResultsController.sections?[section].numberOfObjects < 10 {
+            navigationController?.hidesBarsOnSwipe = false
+            setNeedsStatusBarAppearanceUpdate()
+        }
         return sectionInfo!.numberOfObjects
     }
 
