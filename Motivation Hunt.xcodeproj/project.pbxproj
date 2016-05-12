@@ -30,6 +30,7 @@
 		B42E42841C81D1350095B9BF /* motivationCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = B42E42831C81D1350095B9BF /* motivationCollectionViewCell.swift */; };
 		B42E42861C81DE720095B9BF /* FavouritesViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B42E42851C81DE720095B9BF /* FavouritesViewController.swift */; };
 		B42EC23A1CCE47E000367B83 /* TBEmptyDataSet.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B42EC2391CCE47E000367B83 /* TBEmptyDataSet.framework */; };
+		B42F85431CDF27840016F9B2 /* Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = B42F85421CDF27840016F9B2 /* Extensions.swift */; };
 		B43403FB1CBD6BDF00F9793E /* CloudKitHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4F721031C96142700D07A4D /* CloudKitHelper.swift */; };
 		B439763D1C8DDE5300864949 /* Reachability.swift in Sources */ = {isa = PBXBuildFile; fileRef = B439763C1C8DDE5300864949 /* Reachability.swift */; };
 		B44ACBC81C89ECEC00C5FF96 /* ImageCache.swift in Sources */ = {isa = PBXBuildFile; fileRef = B44ACBC71C89ECEC00C5FF96 /* ImageCache.swift */; };
@@ -51,9 +52,14 @@
 		B4ABAA4E1CA0042100EFEBBA /* Async.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B4ABAA481CA0042100EFEBBA /* Async.framework */; };
 		B4ABAA4F1CA0042100EFEBBA /* FontAwesome.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B4ABAA491CA0042100EFEBBA /* FontAwesome.framework */; };
 		B4ABAA511CA0042100EFEBBA /* SnapKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B4ABAA4B1CA0042100EFEBBA /* SnapKit.framework */; };
+		B4B17E251CE477D800C36F9E /* GoogleAnalytics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B4B17E241CE477D800C36F9E /* GoogleAnalytics.framework */; };
+		B4B17E271CE4789300C36F9E /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = B4B17E261CE4789300C36F9E /* GoogleService-Info.plist */; };
+		B4B17E281CE4789300C36F9E /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = B4B17E261CE4789300C36F9E /* GoogleService-Info.plist */; };
 		B4DC90D11CCD2CD100CA1C46 /* YouTubePlayer.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B4DC90D01CCD2CD100CA1C46 /* YouTubePlayer.framework */; };
 		B4DC95521C88CD620041AB31 /* MHClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4DC95511C88CD620041AB31 /* MHClient.swift */; };
 		B4DC95541C88CE8E0041AB31 /* MHConstant.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4DC95531C88CE8E0041AB31 /* MHConstant.swift */; };
+		B4EA3A8E1CD5152B00AE117F /* Alamofire.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B4EA3A8D1CD5152B00AE117F /* Alamofire.framework */; };
+		B4EA3A901CD5559500AE117F /* SyncManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4EA3A8F1CD5559500AE117F /* SyncManager.swift */; };
 		B4F721041C96142700D07A4D /* CloudKitHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4F721031C96142700D07A4D /* CloudKitHelper.swift */; };
 /* End PBXBuildFile section */
 
@@ -86,6 +92,7 @@
 		B42E42831C81D1350095B9BF /* motivationCollectionViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = motivationCollectionViewCell.swift; sourceTree = "<group>"; };
 		B42E42851C81DE720095B9BF /* FavouritesViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FavouritesViewController.swift; sourceTree = "<group>"; };
 		B42EC2391CCE47E000367B83 /* TBEmptyDataSet.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = TBEmptyDataSet.framework; path = Carthage/Build/iOS/TBEmptyDataSet.framework; sourceTree = "<group>"; };
+		B42F85421CDF27840016F9B2 /* Extensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Extensions.swift; sourceTree = "<group>"; };
 		B43403FC1CBD6CE500F9793E /* Motivation Hunt TV.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = "Motivation Hunt TV.entitlements"; sourceTree = "<group>"; };
 		B439763C1C8DDE5300864949 /* Reachability.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Reachability.swift; path = "Motivation Hunt/Reachability.swift"; sourceTree = "<group>"; };
 		B44ACBC71C89ECEC00C5FF96 /* ImageCache.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ImageCache.swift; path = "Motivation Hunt/ImageCache.swift"; sourceTree = "<group>"; };
@@ -100,9 +107,13 @@
 		B4ABAA481CA0042100EFEBBA /* Async.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Async.framework; path = Carthage/Build/iOS/Async.framework; sourceTree = "<group>"; };
 		B4ABAA491CA0042100EFEBBA /* FontAwesome.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = FontAwesome.framework; path = Carthage/Build/iOS/FontAwesome.framework; sourceTree = "<group>"; };
 		B4ABAA4B1CA0042100EFEBBA /* SnapKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SnapKit.framework; path = Carthage/Build/iOS/SnapKit.framework; sourceTree = "<group>"; };
+		B4B17E241CE477D800C36F9E /* GoogleAnalytics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = GoogleAnalytics.framework; path = Carthage/Build/iOS/GoogleAnalytics.framework; sourceTree = "<group>"; };
+		B4B17E261CE4789300C36F9E /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		B4DC90D01CCD2CD100CA1C46 /* YouTubePlayer.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = YouTubePlayer.framework; path = Carthage/Build/iOS/YouTubePlayer.framework; sourceTree = "<group>"; };
 		B4DC95511C88CD620041AB31 /* MHClient.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = MHClient.swift; path = "Motivation Hunt/MHClient.swift"; sourceTree = "<group>"; };
 		B4DC95531C88CE8E0041AB31 /* MHConstant.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = MHConstant.swift; path = "Motivation Hunt/MHConstant.swift"; sourceTree = "<group>"; };
+		B4EA3A8D1CD5152B00AE117F /* Alamofire.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Alamofire.framework; path = Carthage/Build/iOS/Alamofire.framework; sourceTree = "<group>"; };
+		B4EA3A8F1CD5559500AE117F /* SyncManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SyncManager.swift; sourceTree = "<group>"; };
 		B4F721031C96142700D07A4D /* CloudKitHelper.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CloudKitHelper.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -114,8 +125,10 @@
 				B4A3E8AB1CC5883400D2749B /* CloudKit.framework in Frameworks */,
 				B4ABAA4D1CA0042100EFEBBA /* Advance.framework in Frameworks */,
 				B4ABAA4E1CA0042100EFEBBA /* Async.framework in Frameworks */,
+				B4EA3A8E1CD5152B00AE117F /* Alamofire.framework in Frameworks */,
 				B4ABAA4F1CA0042100EFEBBA /* FontAwesome.framework in Frameworks */,
 				B4ABAA511CA0042100EFEBBA /* SnapKit.framework in Frameworks */,
+				B4B17E251CE477D800C36F9E /* GoogleAnalytics.framework in Frameworks */,
 				B4DC90D11CCD2CD100CA1C46 /* YouTubePlayer.framework in Frameworks */,
 				B42EC23A1CCE47E000367B83 /* TBEmptyDataSet.framework in Frameworks */,
 				B471CC0C1CC7A66500A65D01 /* Toucan.framework in Frameworks */,
@@ -160,7 +173,6 @@
 		B41BF3361C7D0D7200E27074 /* Motivation Hunt */ = {
 			isa = PBXGroup;
 			children = (
-				B423BDD61C96110700CD7224 /* Motivation Hunt.entitlements */,
 				B41BF3371C7D0D7200E27074 /* AppDelegate.swift */,
 				B41BF34C1C7D122400E27074 /* Controllers */,
 				B42E42821C81D1080095B9BF /* View */,
@@ -184,8 +196,9 @@
 		B41BF34F1C7D12A600E27074 /* Models */ = {
 			isa = PBXGroup;
 			children = (
-				B41BF3531C7D149500E27074 /* CoreDataStackManager.swift */,
+				B423BDD61C96110700CD7224 /* Motivation Hunt.entitlements */,
 				B41BF3501C7D12C800E27074 /* MotivationHuntModel.xcdatamodeld */,
+				B41BF3531C7D149500E27074 /* CoreDataStackManager.swift */,
 				B41BF3551C7D153300E27074 /* Challenge.swift */,
 				B42E42801C81CB6C0095B9BF /* MotivationFeedItem.swift */,
 			);
@@ -196,13 +209,16 @@
 		B42280081C9D720D0017D5AB /* Shared */ = {
 			isa = PBXGroup;
 			children = (
+				B4B17E261CE4789300C36F9E /* GoogleService-Info.plist */,
 				B41BF34F1C7D12A600E27074 /* Models */,
 				B4F721031C96142700D07A4D /* CloudKitHelper.swift */,
+				B4EA3A8F1CD5559500AE117F /* SyncManager.swift */,
 				B439763C1C8DDE5300864949 /* Reachability.swift */,
 				B4DC95511C88CD620041AB31 /* MHClient.swift */,
 				B44ACBC71C89ECEC00C5FF96 /* ImageCache.swift */,
 				B4DC95531C88CE8E0041AB31 /* MHConstant.swift */,
 				B40741F61C89A3AA00AFC870 /* Key.plist */,
+				B42F85421CDF27840016F9B2 /* Extensions.swift */,
 			);
 			name = Shared;
 			sourceTree = "<group>";
@@ -245,6 +261,8 @@
 		B49730EB1CCAEE430086F61D /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				B4B17E241CE477D800C36F9E /* GoogleAnalytics.framework */,
+				B4EA3A8D1CD5152B00AE117F /* Alamofire.framework */,
 				B42EC2391CCE47E000367B83 /* TBEmptyDataSet.framework */,
 				B4DC90D01CCD2CD100CA1C46 /* YouTubePlayer.framework */,
 				B4A3E8AC1CC589F000D2749B /* CloudKit.framework */,
@@ -360,6 +378,7 @@
 			files = (
 				B40741F71C89A3AA00AFC870 /* Key.plist in Resources */,
 				B41BF3451C7D0D7200E27074 /* LaunchScreen.storyboard in Resources */,
+				B4B17E271CE4789300C36F9E /* GoogleService-Info.plist in Resources */,
 				B41BF3421C7D0D7200E27074 /* Assets.xcassets in Resources */,
 				B41BF33D1C7D0D7200E27074 /* Main.storyboard in Resources */,
 			);
@@ -371,6 +390,7 @@
 			files = (
 				B42A4ED91CBD20CC00D9593D /* Assets.xcassets in Resources */,
 				B42A4ED71CBD20CC00D9593D /* Main.storyboard in Resources */,
+				B4B17E281CE4789300C36F9E /* GoogleService-Info.plist in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -407,6 +427,8 @@
 				"$(SRCROOT)/Carthage/Build/iOS/Log.framework",
 				"$(SRCROOT)/Carthage/Build/iOS/Toucan.framework",
 				"$(SRCROOT)/Carthage/Build/iOS/TBEmptyDataSet.framework",
+				"$(SRCROOT)/Carthage/Build/iOS/Alamofire.framework",
+				"$(SRCROOT)/Carthage/Build/iOS/GoogleAnalytics.framework",
 			);
 			outputPaths = (
 			);
@@ -421,6 +443,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				B4EA3A901CD5559500AE117F /* SyncManager.swift in Sources */,
 				B49E0E9C1C998666008C5B62 /* LoginViewController.swift in Sources */,
 				B41A9E271C7DAADB001635C2 /* MotivationFeedViewController.swift in Sources */,
 				B41BF3521C7D12C800E27074 /* MotivationHuntModel.xcdatamodeld in Sources */,
@@ -432,6 +455,7 @@
 				B41CE7EC1C8B6F68002FCBC2 /* CustomUIActivityIndicatorView.swift in Sources */,
 				B42E42811C81CB6C0095B9BF /* MotivationFeedItem.swift in Sources */,
 				B41BF3381C7D0D7200E27074 /* AppDelegate.swift in Sources */,
+				B42F85431CDF27840016F9B2 /* Extensions.swift in Sources */,
 				B42E42841C81D1350095B9BF /* motivationCollectionViewCell.swift in Sources */,
 				B41CE7EA1C8B5B54002FCBC2 /* challengeTableViewCell.swift in Sources */,
 				B41BF3541C7D149500E27074 /* CoreDataStackManager.swift in Sources */,
@@ -507,6 +531,7 @@
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				COPY_PHASE_STRIP = NO;
 				DEBUG_INFORMATION_FORMAT = dwarf;
@@ -552,7 +577,8 @@
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				CODE_SIGN_IDENTITY = "iPhone Distribution: Jefferson Bonnaire (DXXE2BH2EU)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: Jefferson Bonnaire (DXXE2BH2EU)";
 				COPY_PHASE_STRIP = NO;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				ENABLE_NS_ASSERTIONS = NO;
@@ -601,8 +627,8 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = "Motivation Hunt/Motivation Hunt.entitlements";
-				CODE_SIGN_IDENTITY = "iPhone Developer";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				CODE_SIGN_IDENTITY = "iPhone Distribution";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)/Carthage/Build/iOS",
@@ -614,7 +640,7 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.jeffersonbonnaire.motivationhunt;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "";
+				PROVISIONING_PROFILE = "cba361b0-0726-4842-b151-294cbfc2f9f1";
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Release;

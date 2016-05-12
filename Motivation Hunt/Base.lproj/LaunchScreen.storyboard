@@ -19,14 +19,14 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="iconLaunchScreen" translatesAutoresizingMaskIntoConstraints="NO" id="6mt-LA-OSv">
-                                <rect key="frame" x="250" y="250" width="100" height="100"/>
+                                <rect key="frame" x="227" y="217" width="146" height="166"/>
                                 <constraints>
-                                    <constraint firstAttribute="width" secondItem="6mt-LA-OSv" secondAttribute="height" multiplier="1:1" id="PaV-2W-d67"/>
-                                    <constraint firstAttribute="width" secondItem="6mt-LA-OSv" secondAttribute="height" multiplier="1:1" id="TL7-au-Ejy"/>
+                                    <constraint firstAttribute="width" secondItem="6mt-LA-OSv" secondAttribute="height" multiplier="1:1" constant="-20" id="PaV-2W-d67"/>
+                                    <constraint firstAttribute="width" secondItem="6mt-LA-OSv" secondAttribute="height" multiplier="1:1" constant="-20" id="TL7-au-Ejy"/>
                                 </constraints>
                             </imageView>
                         </subviews>
-                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <color key="backgroundColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
                         <constraints>
                             <constraint firstItem="6mt-LA-OSv" firstAttribute="centerY" secondItem="Ze5-6b-2t3" secondAttribute="centerY" id="k1q-wR-ISe"/>
                             <constraint firstItem="6mt-LA-OSv" firstAttribute="centerX" secondItem="Ze5-6b-2t3" secondAttribute="centerX" id="w6Z-Eo-bQt"/>
@@ -39,6 +39,6 @@
         </scene>
     </scenes>
     <resources>
-        <image name="iconLaunchScreen" width="100" height="100"/>
+        <image name="iconLaunchScreen" width="146" height="166"/>
     </resources>
 </document>
