@@ -10,6 +10,7 @@ import UIKit
 import CoreData
 import Log
 import CloudKit
+import GoogleAnalytics
 
 let Log = Logger()
 
@@ -26,7 +27,17 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         application.registerUserNotificationSettings(settings)
         application.registerForRemoteNotifications()
 
-        configureStatusBar()
+        // Configure Status Bar
+        UIApplication.sharedApplication().statusBarStyle = .LightContent
+        if let statusBar = UIApplication.sharedApplication().valueForKey("statusBarWindow")?.valueForKey("statusBar") as? UIView {
+            statusBar.backgroundColor = UIColor.blackTransparentColor()
+        }
+
+        // Configure Google Analytics
+        let gai = GAI.sharedInstance()
+        gai.trackerWithTrackingId("UA-77655829-1")
+        gai.trackUncaughtExceptions = true  // report uncaught exceptions
+        gai.logger.logLevel = GAILogLevel.Verbose  // remove before app release
 
         return true
     }
@@ -98,18 +109,5 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
                 })
             }
         }
-    }
-    func configureStatusBar() {
-        UIApplication.sharedApplication().statusBarStyle = .LightContent
-        setStatusBarBackgroundColor(UIColor.blackTransparentColor())
-    }
-
-    func setStatusBarBackgroundColor(color: UIColor) {
-
-        guard let statusBar = UIApplication.sharedApplication().valueForKey("statusBarWindow")?.valueForKey("statusBar") as? UIView else {
-            return
-        }
-
-        statusBar.backgroundColor = color
     }
 }

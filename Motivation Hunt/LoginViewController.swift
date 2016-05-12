@@ -10,6 +10,7 @@ import Foundation
 import UIKit
 import CloudKit
 import Async
+import GoogleAnalytics
 
 class LoginViewController: UIViewController {
 
@@ -17,14 +18,11 @@ class LoginViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
+
         UIApplication.sharedApplication().networkActivityIndicatorVisible = true
         if (NSUserDefaults.standardUserDefaults().objectForKey("currentUserRecordID") != nil) {
             currentUserRecordID = NSUserDefaults.standardUserDefaults().objectForKey("currentUserRecordID") as! String
-        }
-        // Check if connected to network, if not we show the app because we cannot check if the iCloud has changed
-        guard Reachability.connectedToNetwork() else {
             showApp()
-            return
         }
 
         let group = AsyncGroup()
@@ -34,15 +32,26 @@ class LoginViewController: UIViewController {
             CloudKitHelper.sharedInstance.requestPermission({ (granted, error) in
                 guard granted else {
                     Async.main {
-                        let alertViewIcloudNotGranted = UIAlertController(title: error?.localizedDescription, message: error?.localizedFailureReason, preferredStyle: .Alert)
-                        let returnUserToIcloudSettings = UIAlertAction(title: "Redirect me to icloud settings", style: .Default, handler: { UIAlertAction in
+                        let alertViewIcloudNotGranted = UIAlertController(
+                            title: error?.localizedDescription,
+                            message: error?.localizedFailureReason,
+                            preferredStyle: .Alert)
+                        let returnUserToIcloudSettings = UIAlertAction(
+                            title: "Redirect me to icloud settings",
+                            style: .Default,
+                            handler: { UIAlertAction in
                             Async.userInteractive {
-                                UIApplication.sharedApplication()
+                                UIApplication
+                                    .sharedApplication()
                                     .openURL(NSURL(string:"prefs:root=CASTLE")!)
                             }
                         })
                         alertViewIcloudNotGranted.addAction(returnUserToIcloudSettings)
-                        self.presentViewController(alertViewIcloudNotGranted, animated: true, completion: nil)
+                        self.presentViewController(
+                            alertViewIcloudNotGranted,
+                            animated: true,
+                            completion: nil
+                        )
                     }
                     return
                 }
@@ -53,13 +62,23 @@ class LoginViewController: UIViewController {
         group.background {
             CloudKitHelper.sharedInstance.getUser({ (success, userRecordID, error) in
                 guard success && userRecordID == userRecordID else {
-                    let alertViewIcloudNotGranted = UIAlertController(title: error?.localizedDescription, message: error?.localizedFailureReason, preferredStyle: .Alert)
-                    let returnUserToIcloudSettings = UIAlertAction(title: "Fix icloud", style: .Default, handler: { UIAlertAction in
+                    let alertViewIcloudNotGranted = UIAlertController(
+                        title: error?.localizedDescription,
+                        message: error?.localizedFailureReason,
+                        preferredStyle: .Alert
+                    )
+                    let returnUserToIcloudSettings = UIAlertAction(
+                        title: "Fix icloud",
+                        style: .Default,
+                        handler: { UIAlertAction in
                         Async.userInteractive {
-                            UIApplication.sharedApplication().openURL(NSURL(string:"prefs:root=CASTLE")!)
+                            UIApplication
+                                .sharedApplication()
+                                .openURL(NSURL(string:"prefs:root=CASTLE")!)
                         }
                     })
-                    alertViewIcloudNotGranted.addAction(returnUserToIcloudSettings)
+                    alertViewIcloudNotGranted
+                        .addAction(returnUserToIcloudSettings)
                     Async.main {
                         self.presentViewController(alertViewIcloudNotGranted, animated: true, completion: nil)
                     }
@@ -68,7 +87,9 @@ class LoginViewController: UIViewController {
 
                 Async.background {
                     NSUserDefaults.standardUserDefaults().setObject(userRecordID! as String, forKey: "currentUserRecordID")
-                    self.currentUserRecordID = NSUserDefaults.standardUserDefaults().objectForKey("currentUserRecordID") as! String
+                    self.currentUserRecordID = NSUserDefaults
+                        .standardUserDefaults()
+                        .objectForKey("currentUserRecordID") as! String
                     }.main {
                         self.showApp()
                 }
@@ -76,9 +97,23 @@ class LoginViewController: UIViewController {
         }
     }
 
+    override func viewWillAppear(animated: Bool) {
+        super.viewWillAppear(true)
+
+        let tracker = GAI.sharedInstance().defaultTracker
+        tracker.set(kGAIScreenName, value: "LoginViewController")
+
+        let builder: NSObject = GAIDictionaryBuilder.createScreenView().build()
+        tracker.send(builder as! [NSObject : AnyObject])
+    }
+
     func showApp() {
         let viewController = self.storyboard!.instantiateViewControllerWithIdentifier("tabBarController")
-        self.presentViewController(viewController, animated: true, completion: nil)
-        UIApplication.sharedApplication().networkActivityIndicatorVisible = false
+        self.presentViewController(viewController,
+                                   animated: true,
+                                   completion: nil)
+        UIApplication
+            .sharedApplication()
+            .networkActivityIndicatorVisible = false
     }
 }

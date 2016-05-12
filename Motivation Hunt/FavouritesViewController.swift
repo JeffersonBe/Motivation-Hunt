@@ -13,6 +13,7 @@ import CloudKit
 import Toucan
 import Async
 import TBEmptyDataSet
+import GoogleAnalytics
 
 class FavouritesViewController: UIViewController {
 
@@ -38,6 +39,16 @@ class FavouritesViewController: UIViewController {
         } catch let error as NSError {
             print("Error: \(error.localizedDescription)")
         }
+    }
+
+    override func viewWillAppear(animated: Bool) {
+        super.viewWillAppear(true)
+
+        let tracker = GAI.sharedInstance().defaultTracker
+        tracker.set(kGAIScreenName, value: "FavouritesViewController")
+
+        let builder: NSObject = GAIDictionaryBuilder.createScreenView().build()
+        tracker.send(builder as! [NSObject : AnyObject])
     }
 
     // Initialize CoreData and NSFetchedResultsController

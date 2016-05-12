@@ -14,6 +14,7 @@ import Async
 import Toucan
 import SnapKit
 import Alamofire
+import GoogleAnalytics
 
 let nextPageTokenConstant = "nextPageToken"
 
@@ -45,6 +46,16 @@ class MotivationFeedViewController: UIViewController {
         if self.fetchedResultsController.fetchedObjects?.count == 0 {
             refreshData()
         }
+    }
+
+    override func viewWillAppear(animated: Bool) {
+        super.viewWillAppear(true)
+
+        let tracker = GAI.sharedInstance().defaultTracker
+        tracker.set(kGAIScreenName, value: "MotivationFeedViewController")
+
+        let builder: NSObject = GAIDictionaryBuilder.createScreenView().build()
+        tracker.send(builder as! [NSObject : AnyObject])
     }
 
     // Initialize CoreData and NSFetchedResultsController
@@ -169,6 +180,14 @@ extension MotivationFeedViewController {
     }
 
     func playVideo(gestureRecognizer: UIGestureRecognizer) {
+        let tracker = GAI.sharedInstance().defaultTracker
+        let builder: NSObject = GAIDictionaryBuilder.createEventWithCategory(
+            "MotivationFeedViewController",
+            action: "playVideo",
+            label: "User play video",
+            value: nil).build()
+        tracker.send(builder as! [NSObject : AnyObject])
+
         let tapPoint: CGPoint = gestureRecognizer.locationInView(collectionView)
         let indexPath = collectionView.indexPathForItemAtPoint(tapPoint)
         let cell = collectionView.cellForItemAtIndexPath(indexPath!) as! motivationCollectionViewCell

@@ -12,6 +12,7 @@ import CloudKit
 import Async
 import TBEmptyDataSet
 import SnapKit
+import GoogleAnalytics
 
 class ChallengeViewController: UIViewController {
 
@@ -64,6 +65,13 @@ class ChallengeViewController: UIViewController {
     }
 
     override func viewWillAppear(animated: Bool) {
+        super.viewWillAppear(true)
+
+        let tracker = GAI.sharedInstance().defaultTracker
+        tracker.set(kGAIScreenName, value: "ChallengeViewController")
+
+        let builder: NSObject = GAIDictionaryBuilder.createScreenView().build()
+        tracker.send(builder as! [NSObject : AnyObject])
         addChallengeView.center.y -= view.bounds.width
         dimView.alpha = 0
     }
