@@ -254,18 +254,6 @@ extension ChallengeViewController {
         }
     }
 
-    func addChallengeToCoreData(challengeDictionary: [String:AnyObject], challengeRecordID: String) {
-        Async.main {
-            let _ = Challenge(
-                challengeDescription: challengeDictionary["challengeDescription"] as! String,
-                completed: challengeDictionary["completed"] as! Bool,
-                endDate: challengeDictionary["endDate"] as! NSDate,
-                challengeRecordID: challengeRecordID,
-                context: self.sharedContext)
-            CoreDataStackManager.sharedInstance.saveContext()
-        }
-    }
-
     func showAddChallengeView() {
         challengeTextField.text = ""
         if currentChallengeToEdit != nil {
@@ -423,16 +411,28 @@ extension ChallengeViewController: UITableViewDataSource, UITableViewDelegate {
         return 64
     }
 
+    func addChallengeToCoreData(challengeDictionary: [String:AnyObject], challengeRecordID: String) {
+        Async.main {
+            let _ = Challenge(
+                challengeDescription: challengeDictionary["challengeDescription"] as! String,
+                completed: challengeDictionary["completed"] as! Bool,
+                endDate: challengeDictionary["endDate"] as! NSDate,
+                challengeRecordID: challengeRecordID,
+                context: self.sharedContext)
+            CoreDataStackManager.sharedInstance.saveContext()
+        }
+    }
+
     func deleteChallenge(challenge: Challenge) {
         CloudKitHelper.sharedInstance.deleteChallenge(CKRecordID(recordName: challenge.challengeRecordID), completionHandler: { (success, record, error) in
             guard success else {
                 return
             }
+            Async.main {
+                self.sharedContext.deleteObject(challenge)
+                CoreDataStackManager.sharedInstance.saveContext()
+            }
         })
-        Async.main {
-            self.sharedContext.deleteObject(challenge)
-            CoreDataStackManager.sharedInstance.saveContext()
-        }
     }
 
     func updateCompleteStatusChallenge(challenge: Challenge) {
@@ -440,11 +440,11 @@ extension ChallengeViewController: UITableViewDataSource, UITableViewDelegate {
             guard success else {
                 return
             }
+            Async.main {
+                challenge.completed = challenge.completed ? false : true
+                CoreDataStackManager.sharedInstance.saveContext()
+            }
         })
-        Async.main {
-            challenge.completed = challenge.completed ? false : true
-            CoreDataStackManager.sharedInstance.saveContext()
-        }
     }
 }
 
