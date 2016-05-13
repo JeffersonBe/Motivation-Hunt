@@ -237,9 +237,8 @@ extension MotivationFeedViewController {
         if let nextPageToken = defaults.stringForKey(nextPageTokenConstant) {
             mutableParameters["pageToken"] = "\(nextPageToken)"
         }
-        let request = Alamofire.request(.GET, MHClient.Resources.searchVideos, parameters: parameters)
 
-        // TODO: Use progress
+        let request = Alamofire.request(.GET, MHClient.Resources.searchVideos, parameters: mutableParameters)
 
         request.progress { bytesWritten, totalBytesWritten, totalBytesExpectedToWrite in
             Async.main {
