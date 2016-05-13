@@ -228,9 +228,9 @@ extension FavouritesViewController: UICollectionViewDelegate, UICollectionViewDa
         return cell
     }
 
-    func configureCell(cell: motivationCollectionViewCell, withItem item: MotivationFeedItem) {
+    func configureCell(cell: motivationCollectionViewCell, withItem motivationItem: MotivationFeedItem) {
         cell.videoPlayer.delegate = self
-        cell.textLabel.text = item.itemTitle
+        cell.textLabel.text = motivationItem.itemTitle
 
         let playVideoOnTapPlayButton: UITapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(playVideo(_:)))
         playVideoOnTapPlayButton.numberOfTapsRequired = 1
@@ -248,22 +248,49 @@ extension FavouritesViewController: UICollectionViewDelegate, UICollectionViewDa
         shareOnTapshareBarButton.numberOfTapsRequired = 1
         cell.shareBarButton.addGestureRecognizer(shareOnTapshareBarButton)
 
-        if item.saved {
+        if motivationItem.saved {
             cell.favoriteBarButton.setTitle(String.fontAwesomeIconWithName(.Heart), forState: .Normal)
         } else {
             cell.favoriteBarButton.setTitle(String.fontAwesomeIconWithName(.HeartO), forState: .Normal)
         }
 
-        if item.image == nil {
-            MHClient.sharedInstance.taskForImage(item.itemThumbnailsUrl) { imageData, error in
+        if motivationItem.image == nil {
+            MHClient.sharedInstance.taskForImage(motivationItem.itemThumbnailsUrl) { imageData, error in
                 guard error == nil else {
                     return
                 }
                 Async.main {
-                    item.image = UIImage(data: imageData!)
+                    motivationItem.image = UIImage(data: imageData!)
                     cell.imageView.image = Toucan(image: motivationItem.image!).resize(CGSize(width: cell.frame.width - 10, height: cell.frame.width / 1.8), fitMode: Toucan.Resize.FitMode.Crop).maskWithRoundedRect(cornerRadius: 10).image
                 }
             }
+        }
+    }
+
+    func collectionView(collectionView: UICollectionView, willDisplayCell cell: UICollectionViewCell, forItemAtIndexPath indexPath: NSIndexPath) {
+        if let cell = cell as? motivationCollectionViewCell {
+            let motivationItem = fetchedResultsController.objectAtIndexPath(indexPath) as! MotivationFeedItem
+            cell.videoPlayer.loadVideoID(motivationItem.itemID)
+            cell.imageView.alpha = 0
+            cell.playButton.alpha = 0
+            cell.videoPlayer.alpha = 0
+
+            if motivationItem.image != nil {
+                Async.main {
+                    cell.imageView.image = Toucan(image: motivationItem.image!).resize(CGSize(width: cell.frame.width - 10, height: cell.frame.width / 1.8), fitMode: Toucan.Resize.FitMode.Crop).maskWithRoundedRect(cornerRadius: 10).image
+                }
+            }
+
+            UIView.animateWithDuration(0.5, delay: 0.0, options: UIViewAnimationOptions.CurveEaseOut, animations: {
+                cell.imageView.alpha = 1
+                cell.playButton.alpha = 0.7
+                }, completion: nil)
+        }
+    }
+
+    func collectionView(collectionView: UICollectionView, didEndDisplayingCell cell: UICollectionViewCell, forItemAtIndexPath indexPath: NSIndexPath) {
+        if let cell = cell as? motivationCollectionViewCell {
+            cell.videoPlayer.stop()
         }
     }
 
@@ -290,33 +317,6 @@ extension FavouritesViewController: UICollectionViewDelegate, UICollectionViewDa
         }
 
         return edgeInsets
-    }
-
-    func collectionView(collectionView: UICollectionView, didEndDisplayingCell cell: UICollectionViewCell, forItemAtIndexPath indexPath: NSIndexPath) {
-        if let cell = cell as? motivationCollectionViewCell {
-            cell.videoPlayer.stop()
-        }
-    }
-
-    func collectionView(collectionView: UICollectionView, willDisplayCell cell: UICollectionViewCell, forItemAtIndexPath indexPath: NSIndexPath) {
-        if let cell = cell as? motivationCollectionViewCell {
-            let motivationItem = fetchedResultsController.objectAtIndexPath(indexPath) as! MotivationFeedItem
-            cell.videoPlayer.loadVideoID(motivationItem.itemID)
-            cell.imageView.alpha = 0
-            cell.playButton.alpha = 0
-            cell.videoPlayer.alpha = 0
-
-            if motivationItem.image != nil {
-                Async.main {
-                    cell.imageView.image = Toucan(image: motivationItem.image!).resize(CGSize(width: cell.frame.width - 10, height: cell.frame.width / 1.8), fitMode: Toucan.Resize.FitMode.Crop).maskWithRoundedRect(cornerRadius: 10).image
-                }
-            }
-
-            UIView.animateWithDuration(0.5, delay: 0.0, options: UIViewAnimationOptions.CurveEaseOut, animations: {
-                cell.imageView.alpha = 1
-                cell.playButton.alpha = 0.7
-                }, completion: nil)
-        }
     }
 }
 
