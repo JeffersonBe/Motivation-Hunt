@@ -261,13 +261,8 @@ extension FavouritesViewController: UICollectionViewDelegate, UICollectionViewDa
                 }
                 Async.main {
                     item.image = UIImage(data: imageData!)
+                    cell.imageView.image = Toucan(image: motivationItem.image!).resize(CGSize(width: cell.frame.width - 10, height: cell.frame.width / 1.8), fitMode: Toucan.Resize.FitMode.Crop).maskWithRoundedRect(cornerRadius: 10).image
                 }
-            }
-        }
-
-        if item.image != nil {
-            Async.main {
-                cell.imageView.image = Toucan(image: item.image!).resize(CGSize(width: cell.frame.width - 10, height: cell.frame.width / 1.8), fitMode: Toucan.Resize.FitMode.Crop).maskWithRoundedRect(cornerRadius: 10).image
             }
         }
     }
@@ -299,10 +294,6 @@ extension FavouritesViewController: UICollectionViewDelegate, UICollectionViewDa
 
     func collectionView(collectionView: UICollectionView, didEndDisplayingCell cell: UICollectionViewCell, forItemAtIndexPath indexPath: NSIndexPath) {
         if let cell = cell as? motivationCollectionViewCell {
-            UIView.animateWithDuration(0.5, delay: 0.0, options: UIViewAnimationOptions.CurveEaseOut, animations: {
-                cell.playButton.alpha = 0
-                cell.imageView.alpha = 0
-                }, completion: nil)
             cell.videoPlayer.stop()
         }
     }
@@ -314,6 +305,13 @@ extension FavouritesViewController: UICollectionViewDelegate, UICollectionViewDa
             cell.imageView.alpha = 0
             cell.playButton.alpha = 0
             cell.videoPlayer.alpha = 0
+
+            if motivationItem.image != nil {
+                Async.main {
+                    cell.imageView.image = Toucan(image: motivationItem.image!).resize(CGSize(width: cell.frame.width - 10, height: cell.frame.width / 1.8), fitMode: Toucan.Resize.FitMode.Crop).maskWithRoundedRect(cornerRadius: 10).image
+                }
+            }
+
             UIView.animateWithDuration(0.5, delay: 0.0, options: UIViewAnimationOptions.CurveEaseOut, animations: {
                 cell.imageView.alpha = 1
                 cell.playButton.alpha = 0.7
