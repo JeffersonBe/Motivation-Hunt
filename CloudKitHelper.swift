@@ -273,8 +273,8 @@ extension CloudKitHelper {
             // Process each notification received
             if notification.notificationType == .Query {
                 let queryNotification = notification as! CKQueryNotification
-                let reason = queryNotification.queryNotificationReason
-                let recordID = queryNotification.recordID
+//                let reason = queryNotification.queryNotificationReason
+//                let recordID = queryNotification.recordID
 
                 // Do your process here depending on the reason of the change
 
