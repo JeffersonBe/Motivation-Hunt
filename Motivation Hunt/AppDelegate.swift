@@ -37,7 +37,13 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         let gai = GAI.sharedInstance()
         gai.trackerWithTrackingId("UA-77655829-1")
         gai.trackUncaughtExceptions = true  // report uncaught exceptions
-        gai.logger.logLevel = GAILogLevel.Verbose  // remove before app release
+
+        #if DEBUG
+            gai.logger.logLevel = GAILogLevel.Verbose  // remove before app release
+        #else
+            gai.logger.logLevel = GAILogLevel.None  // remove before app release
+            Log.enabled = false
+        #endif
 
         return true
     }
@@ -67,7 +73,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     }
 
     func application(application: UIApplication, didReceiveRemoteNotification userInfo: [NSObject : AnyObject]) {
-        Log.info(userInfo)
 
         let cloudKitNotification = CKNotification(fromRemoteNotificationDictionary: userInfo as! [String : NSObject])
 

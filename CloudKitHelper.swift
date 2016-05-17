@@ -52,6 +52,13 @@ class CloudKitHelper {
 
     // MARK: User
 
+    func isIcloudAvailable() -> Bool {
+        guard NSFileManager.defaultManager().ubiquityIdentityToken != nil else {
+            return false
+        }
+        return true
+    }
+
     func requestPermission(completionHandler: (granted: Bool, error: NSError?) -> ()) {
         container.requestApplicationPermission(CKApplicationPermissions.UserDiscoverability, completionHandler: { applicationPermissionStatus, error in
             guard applicationPermissionStatus == CKApplicationPermissionStatus.Granted else {
