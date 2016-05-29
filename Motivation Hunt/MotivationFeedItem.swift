@@ -11,39 +11,39 @@ import CoreData
 
 class MotivationFeedItem: NSManagedObject {
 
-    @NSManaged var itemID: String
+    @NSManaged var itemRecordID: String
+    @NSManaged var itemVideoID: String
     @NSManaged var itemTitle: String
     @NSManaged var itemDescription: String
     @NSManaged var itemThumbnailsUrl: String
     @NSManaged var saved: Bool
     @NSManaged var addedDate: NSDate
-    @NSManaged var itemRecordID: String
     @NSManaged var theme: String
 
     override init(entity: NSEntityDescription, insertIntoManagedObjectContext context: NSManagedObjectContext?) {
         super.init(entity: entity, insertIntoManagedObjectContext: context)
     }
 
-    init(itemTitle: String, itemDescription: String, itemID: String, itemThumbnailsUrl: String, saved: Bool, addedDate: NSDate, itemRecordID: String, theme: String, context: NSManagedObjectContext) {
+    init(itemRecordID: String, itemVideoID: String, itemTitle: String, itemDescription: String, itemThumbnailsUrl: String, saved: Bool, addedDate: NSDate, theme: String, context: NSManagedObjectContext) {
         let entity =  NSEntityDescription.entityForName("MotivationFeedItem", inManagedObjectContext: context)!
         super.init(entity: entity, insertIntoManagedObjectContext: context)
+        self.itemRecordID = itemRecordID
+        self.itemVideoID = itemVideoID
         self.itemTitle = itemTitle
         self.itemDescription = itemDescription
-        self.itemID = itemID
         self.itemThumbnailsUrl = itemThumbnailsUrl
         self.saved = saved
         self.addedDate = addedDate
-        self.itemRecordID = itemRecordID
         self.theme = theme
     }
 
     var image: UIImage? {
         get {
-            return MHClient.Caches.imageCache.imageWithIdentifier(itemID)
+            return MHClient.Caches.imageCache.imageWithIdentifier(itemVideoID)
         }
 
         set {
-            MHClient.Caches.imageCache.storeImage(newValue, withIdentifier: itemID)
+            MHClient.Caches.imageCache.storeImage(newValue, withIdentifier: itemVideoID)
         }
     }
 }

@@ -63,7 +63,7 @@ class FavouritesViewController: UIViewController {
         let predicate = NSPredicate(format: "saved == 1")
         fetchRequest.predicate = predicate
         fetchRequest.sortDescriptors = [NSSortDescriptor(
-            key: "itemID",
+            key: "itemVideoID",
             ascending: true)]
 
         let fetchedResultsController = NSFetchedResultsController(
@@ -143,16 +143,35 @@ extension FavouritesViewController {
         let indexPath = collectionView.indexPathForItemAtPoint(tapPoint)
         let objet = fetchedResultsController.objectAtIndexPath(indexPath!) as! MotivationFeedItem
 
-        Async.main {
-            objet.saved = objet.saved ? false : true
-            CoreDataStackManager.sharedInstance.saveContext()
-        }
-
         CloudKitHelper.sharedInstance.updateFavorites(CKRecordID(recordName: objet.itemRecordID)) { (success, record, error) in
             guard error == nil else {
                 return
             }
+
+            Async.main {
+                objet.saved = objet.saved ? false : true
+                CoreDataStackManager.sharedInstance.saveContext()
+            }
         }
+    }
+
+    func shareMotivation(gestureRecognizer: UIGestureRecognizer) {
+        let tapPoint: CGPoint = gestureRecognizer.locationInView(collectionView)
+        let indexPath = collectionView.indexPathForItemAtPoint(tapPoint)
+        let cell = collectionView.cellForItemAtIndexPath(indexPath!) as! motivationCollectionViewCell
+        let motivation = fetchedResultsController.objectAtIndexPath(indexPath!) as! MotivationFeedItem
+        let motivationToShare = [motivation.itemTitle, motivation.itemDescription, "https://www.youtube.com/watch?v=\(motivation.itemVideoID)"]
+        let activityViewController = UIActivityViewController(activityItems: motivationToShare, applicationActivities: nil)
+        activityViewController.excludedActivityTypes = [UIActivityTypeAirDrop, UIActivityTypeAddToReadingList]
+
+        activityViewController
+            .popoverPresentationController?
+            .sourceView = cell.imageView
+        activityViewController
+            .popoverPresentationController?
+            .sourceRect = cell.imageView.bounds
+
+        self.presentViewController(activityViewController, animated: true, completion: nil)
     }
 
     func playVideo(gestureRecognizer: UIGestureRecognizer) {
@@ -166,26 +185,10 @@ extension FavouritesViewController {
             cell.imageView.alpha = 0
             }, completion: nil)
     }
-
-    func shareMotivation(gestureRecognizer: UIGestureRecognizer) {
-        let tapPoint: CGPoint = gestureRecognizer.locationInView(collectionView)
-        let indexPath = collectionView.indexPathForItemAtPoint(tapPoint)
-        let cell = collectionView.cellForItemAtIndexPath(indexPath!) as! motivationCollectionViewCell
-        let motivation = fetchedResultsController.objectAtIndexPath(indexPath!) as! MotivationFeedItem
-        let motivationToShare = [motivation.itemTitle, motivation.itemDescription, "https://www.youtube.com/watch?v=\(motivation.itemID)"]
-        let activityViewController = UIActivityViewController(activityItems: motivationToShare, applicationActivities: nil)
-        activityViewController.excludedActivityTypes = [UIActivityTypeAirDrop, UIActivityTypeAddToReadingList]
-
-        activityViewController.popoverPresentationController?.sourceView = cell.imageView
-        activityViewController.popoverPresentationController?.sourceRect = cell.imageView.bounds
-
-        self.presentViewController(activityViewController, animated: true, completion: nil)
-    }
 }
 
 extension FavouritesViewController: TBEmptyDataSetDataSource, TBEmptyDataSetDelegate {
     func titleForEmptyDataSet(scrollView: UIScrollView!) -> NSAttributedString? {
-        // return the description for EmptyDataSet
         let title = "You don't have any favourites"
         let attributes = [NSFontAttributeName: UIFont.systemFontOfSize(24.0), NSForegroundColorAttributeName: UIColor.grayColor()]
         return NSAttributedString(string: title, attributes: attributes)
@@ -270,7 +273,7 @@ extension FavouritesViewController: UICollectionViewDelegate, UICollectionViewDa
     func collectionView(collectionView: UICollectionView, willDisplayCell cell: UICollectionViewCell, forItemAtIndexPath indexPath: NSIndexPath) {
         if let cell = cell as? motivationCollectionViewCell {
             let motivationItem = fetchedResultsController.objectAtIndexPath(indexPath) as! MotivationFeedItem
-            cell.videoPlayer.loadVideoID(motivationItem.itemID)
+            cell.videoPlayer.loadVideoID(motivationItem.itemVideoID)
             cell.imageView.alpha = 0
             cell.playButton.alpha = 0
             cell.videoPlayer.alpha = 0

@@ -15,6 +15,7 @@ import Toucan
 import SnapKit
 import Alamofire
 import GoogleAnalytics
+import TBEmptyDataSet
 
 let nextPageTokenConstant = "nextPageToken"
 
@@ -43,8 +44,15 @@ class MotivationFeedViewController: UIViewController {
             print("Error: \(error.localizedDescription)")
         }
 
-        if self.fetchedResultsController.fetchedObjects?.count == 0 {
-            refreshData()
+        if fetchedResultsController.fetchedObjects?.count == 0 {
+            fetchUserData({ (success) in
+                guard success == true else {
+                    Async.main {
+                        self.addNewMotivationItem()
+                    }
+                    return
+                }
+            })
         }
     }
 
@@ -115,10 +123,10 @@ extension MotivationFeedViewController {
             make.center.equalTo(view)
         }
 
-        refreshCtrl.addTarget(self, action: #selector(MotivationFeedViewController.refreshData), forControlEvents: .ValueChanged)
+        refreshCtrl.addTarget(self, action: #selector(MotivationFeedViewController.addNewMotivationItem), forControlEvents: .ValueChanged)
         collectionView?.addSubview(refreshCtrl)
 
-        navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: UIBarButtonSystemItem.Refresh, target: self, action: #selector(refreshData))
+        navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: UIBarButtonSystemItem.Refresh, target: self, action: #selector(addNewMotivationItem))
 
         progressView = UIProgressView(progressViewStyle: .Bar)
         progressView.progressTintColor = UIColor.blueColor()
@@ -206,7 +214,7 @@ extension MotivationFeedViewController {
         let indexPath = collectionView.indexPathForItemAtPoint(tapPoint)
         let cell = collectionView.cellForItemAtIndexPath(indexPath!) as! motivationCollectionViewCell
         let motivation = fetchedResultsController.objectAtIndexPath(indexPath!) as! MotivationFeedItem
-        let motivationToShare = [motivation.itemTitle, motivation.itemDescription, "\(MHClient.Resources.youtubeBaseUrl)\(motivation.itemID)"]
+        let motivationToShare = [motivation.itemTitle, motivation.itemDescription, "\(MHClient.Resources.youtubeBaseUrl)\(motivation.itemVideoID)"]
         let activityViewController = UIActivityViewController(activityItems: motivationToShare, applicationActivities: nil)
         activityViewController.excludedActivityTypes = [UIActivityTypeAirDrop, UIActivityTypeAddToReadingList]
 
@@ -216,15 +224,51 @@ extension MotivationFeedViewController {
         self.presentViewController(activityViewController, animated: true, completion: nil)
     }
 
-    func refreshData() {
+    func fetchUserData(completionHandler: (success: Bool?) -> Void) {
+        indicator.startActivity()
+        view.addSubview(indicator)
+        CloudKitHelper.sharedInstance.fetchAllMotivationFeedItem { (success, record, error) in
+            guard success == true else {
+                self.indicator.stopActivity()
+                self.indicator.removeFromSuperview()
+                completionHandler(success: false)
+                return
+            }
+
+            completionHandler(success: true)
+
+            record?.forEach({ (record) in
+                Async.main {
+                CoreDataStackManager.sharedInstance.managedObjectContext.performBlock({
+                    let _ = MotivationFeedItem(
+                        itemRecordID: record.recordID.recordName,
+                        itemVideoID: record.valueForKey("itemVideoID") as! String,
+                        itemTitle: record.valueForKey("itemTitle") as! String,
+                        itemDescription: record.valueForKey("itemDescription") as! String,
+                        itemThumbnailsUrl: record.valueForKey("itemThumbnailsUrl") as! String,
+                        saved: record.valueForKey("saved") as! Bool,
+                        addedDate: record.valueForKey("addedDate") as! NSDate,
+                        theme: record.valueForKey("theme") as! String,
+                        context: self.sharedContext)
+                })
+                CoreDataStackManager.sharedInstance.saveContext()
+                }
+            })
+        }
+        self.indicator.stopActivity()
+        self.indicator.removeFromSuperview()
+    }
+
+    func addNewMotivationItem() {
         indicator.startActivity()
         view.addSubview(indicator)
         var mutableParameters: [String : AnyObject]
+        let theme = "motivation+success"
 
         let parameters: [String : AnyObject] = [
             MHClient.JSONKeys.part:MHClient.JSONKeys.snippet,
             MHClient.JSONKeys.order:MHClient.JSONKeys.viewCount,
-            MHClient.JSONKeys.query: "motivation+success",
+            MHClient.JSONKeys.query: theme,
             MHClient.JSONKeys.type:MHClient.JSONKeys.videoType,
             MHClient.JSONKeys.videoDefinition:MHClient.JSONKeys.qualityHigh,
             MHClient.JSONKeys.maxResults: 10,
@@ -267,22 +311,24 @@ extension MotivationFeedViewController {
                 defaults.setObject(nextPageTokenKey, forKey:nextPageTokenConstant)
 
                 for item in results {
-                    guard let snippet = item[MHClient.JSONResponseKeys.snippet] as? [String:AnyObject],
+                    guard let videoID = item[MHClient.JSONResponseKeys.ID]![MHClient.JSONResponseKeys.videoId] as? String,
+                        let snippet = item[MHClient.JSONResponseKeys.snippet] as? [String:AnyObject],
                         let title = snippet[MHClient.JSONResponseKeys.title] as? String,
                         let description = snippet[MHClient.JSONResponseKeys.description] as? String,
-                        let id = item[MHClient.JSONResponseKeys.ID]![MHClient.JSONResponseKeys.videoId] as? String,
                         let thumbnailsUrl = snippet[MHClient.JSONResponseKeys.thumbnails]![MHClient.JSONResponseKeys.quality]!![MHClient.JSONResponseKeys.url] as? String
                         else {
+                            Log.warning("Didn't successfully unwrap Youtube JSON")
                             return
                     }
 
-                    CloudKitHelper.sharedInstance.savedMotivationItem(title, itemDescription: description, itemID: id, itemThumbnailsUrl: thumbnailsUrl, saved: false, addedDate: NSDate()) { (success, record, error) in
+                    CloudKitHelper.sharedInstance.savedMotivationItem(videoID, itemTitle: title, itemDescription: description, itemThumbnailsUrl: thumbnailsUrl, saved: false, addedDate: NSDate(), theme: theme) { (success, record, error) in
                         guard success else {
+                            Log.error(error)
                             return
                         }
 
                         Async.main {
-                            let _ = MotivationFeedItem(itemTitle: title, itemDescription: description, itemID: id, itemThumbnailsUrl: thumbnailsUrl, saved: false, addedDate: NSDate(), itemRecordID: record.recordID.recordName, theme: "motivation+success", context: self.sharedContext)
+                            let _ = MotivationFeedItem(itemRecordID: record.recordID.recordName, itemVideoID: videoID, itemTitle: title, itemDescription: description, itemThumbnailsUrl: thumbnailsUrl, saved: false, addedDate: NSDate(), theme: theme, context: self.sharedContext)
                             CoreDataStackManager.sharedInstance.saveContext()
                             self.indicator.stopActivity()
                             self.indicator.removeFromSuperview()
@@ -354,7 +400,7 @@ extension MotivationFeedViewController: UICollectionViewDelegate, UICollectionVi
     func collectionView(collectionView: UICollectionView, willDisplayCell cell: UICollectionViewCell, forItemAtIndexPath indexPath: NSIndexPath) {
         if let cell = cell as? motivationCollectionViewCell {
             let motivationItem = fetchedResultsController.objectAtIndexPath(indexPath) as! MotivationFeedItem
-            cell.videoPlayer.loadVideoID(motivationItem.itemID)
+            cell.videoPlayer.loadVideoID(motivationItem.itemVideoID)
             cell.imageView.alpha = 0
             cell.playButton.alpha = 0
             cell.videoPlayer.alpha = 0

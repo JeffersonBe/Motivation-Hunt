@@ -16,13 +16,14 @@ enum RecordType: String {
 }
 
 enum MotivationFeedItemKey: String {
-    case itemID = "itemID"
+    case itemVideoID = "itemVideoID"
     case itemTitle = "itemTitle"
     case itemDescription = "itemDescription"
     case itemThumbnailsUrl = "itemThumbnailsUrl"
     case saved = "saved"
     case addedDate = "addedDate"
     case itemRecordID = "itemRecordID"
+    case theme = "theme"
 }
 
 enum ChallengeKey: String {
@@ -105,7 +106,22 @@ class CloudKitHelper {
     }
 }
 
+// Mark: MotivationFeedItem
+
 extension CloudKitHelper {
+
+    func fetchAllMotivationFeedItem(completionHandler: (success: Bool?, record: [CKRecord]?, error: NSError?) -> Void) {
+        let predicate = NSPredicate(value: true)
+        let query = CKQuery(recordType: "\(RecordType.MotivationFeedItem)", predicate: predicate)
+        privateDB.performQuery(query, inZoneWithID: nil) { (record, error) in
+            guard error == nil else {
+                self.Log.warning(error)
+                completionHandler(success: false, record: nil, error: error)
+                return
+            }
+            completionHandler(success: true, record: record!, error: nil)
+        }
+    }
 
     func fetchMotivationFeedItem(completionHandler: (success: Bool?, record: [CKRecord]?, error: NSError?) -> Void) {
         let predicate = NSPredicate(value: true)
@@ -120,16 +136,16 @@ extension CloudKitHelper {
         }
     }
 
-    // MARK: - Favorites
-    func savedMotivationItem(itemTitle: String, itemDescription: String, itemID: String, itemThumbnailsUrl: String, saved: Bool, addedDate: NSDate, completionHandler: CompletionHander) {
+    func savedMotivationItem(itemVideoID: String, itemTitle: String, itemDescription: String, itemThumbnailsUrl: String, saved: Bool, addedDate: NSDate, theme: String, completionHandler: CompletionHander) {
         let motivationItem = CKRecord(recordType: "\(RecordType.MotivationFeedItem)")
 
-        motivationItem.setValue(itemID, forKey: "\(MotivationFeedItemKey.itemID)")
+        motivationItem.setValue(itemVideoID, forKey: "\(MotivationFeedItemKey.itemVideoID)")
         motivationItem.setValue(itemTitle, forKey: "\(MotivationFeedItemKey.itemTitle)")
         motivationItem.setValue(itemDescription, forKey: "\(MotivationFeedItemKey.itemDescription)")
         motivationItem.setValue(itemThumbnailsUrl, forKey: "\(MotivationFeedItemKey.itemThumbnailsUrl)")
         motivationItem.setValue(saved, forKey: "\(MotivationFeedItemKey.saved)")
         motivationItem.setValue(addedDate, forKey: "\(MotivationFeedItemKey.addedDate)")
+        motivationItem.setValue(theme, forKey: "\(MotivationFeedItemKey.theme)")
 
         privateDB.saveRecord(motivationItem) { (record, error) in
             guard record == record && error == nil else {
@@ -140,6 +156,11 @@ extension CloudKitHelper {
             completionHandler(success: true, record: record, error: nil)
         }
     }
+}
+
+// MARK: - Favorites
+
+extension CloudKitHelper {
 
     func fetchFavorites(completionHandler: (success: Bool?, record: [CKRecord]?, error: NSError?) -> Void) {
         let predicate = NSPredicate(format: "\(MotivationFeedItemKey.saved) == 1")
