@@ -39,9 +39,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         gai.trackUncaughtExceptions = true  // report uncaught exceptions
 
         #if DEBUG
-            gai.logger.logLevel = GAILogLevel.Verbose  // remove before app release
+            gai.logger.logLevel = GAILogLevel.Error
         #else
-            gai.logger.logLevel = GAILogLevel.None  // remove before app release
+            gai.logger.logLevel = GAILogLevel.None
             Log.enabled = false
         #endif
 
