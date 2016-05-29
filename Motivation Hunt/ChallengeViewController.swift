@@ -220,17 +220,18 @@ extension ChallengeViewController {
             return
         }
 
+        // Modify Challenge based on Edit mode
+
         guard currentChallengeToEdit == nil else {
-            Async.main {
-                self.currentChallengeToEdit.challengeDescription = self.challengeTextField.text!
-                self.currentChallengeToEdit.endDate = self.challengeDatePicker.date
-                CoreDataStackManager.sharedInstance.saveContext()
-            }
 
-            CloudKitHelper.sharedInstance.updateChallenge(challengeDictionary["challengeDescription"] as! String, endDate: challengeDictionary["endDate"] as! NSDate, challengeRecordID: CKRecordID(recordName: currentChallengeToEdit.challengeRecordID), completionHandler: { (success, record, error) in
-
+            CloudKitHelper.sharedInstance.updateChallenge(challengeDictionary, completionHandler: { (success, record, error) in
                 guard error == nil else {
                     return
+                }
+                Async.main {
+                    self.currentChallengeToEdit.challengeDescription = self.challengeTextField.text!
+                    self.currentChallengeToEdit.endDate = self.challengeDatePicker.date
+                    CoreDataStackManager.sharedInstance.saveContext()
                 }
             })
             showOrHideChallengeView()

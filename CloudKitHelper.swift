@@ -234,15 +234,15 @@ extension CloudKitHelper {
         }
     }
 
-    func updateChallenge(challengeDescription: String, endDate: NSDate, challengeRecordID: CKRecordID, completionHandler: CompletionHander) {
-        privateDB.fetchRecordWithID(challengeRecordID) { (record, error) in
+    func updateChallenge(challengeDictionary: [String:AnyObject], completionHandler: CompletionHander) {
+        privateDB.fetchRecordWithID(CKRecordID(recordName: challengeDictionary["challengeRecordID"] as! String)) { (record, error) in
             guard error == nil else {
                 self.Log.warning(error)
                 return
             }
 
-        record!.setValue(challengeDescription, forKey: "\(ChallengeKey.challengeDescription)")
-        record!.setValue(endDate, forKey: "\(ChallengeKey.endDate)")
+        record!.setValue(challengeDictionary["challengeDescription"], forKey: "\(ChallengeKey.challengeDescription)")
+        record!.setValue(challengeDictionary["endDate"], forKey: "\(ChallengeKey.endDate)")
 
         self.privateDB.saveRecord(record!) { (record, error) in
             guard error == nil else {
