@@ -62,6 +62,7 @@ class CloudKitHelper {
 
     func requestPermission(completionHandler: (granted: Bool, error: NSError?) -> ()) {
         container.requestApplicationPermission(CKApplicationPermissions.UserDiscoverability, completionHandler: { applicationPermissionStatus, error in
+
             guard applicationPermissionStatus == CKApplicationPermissionStatus.Granted else {
                 self.Log.warning(error, applicationPermissionStatus)
                 completionHandler(granted: false, error: error)
@@ -113,6 +114,7 @@ extension CloudKitHelper {
     func fetchAllMotivationFeedItem(completionHandler: (success: Bool?, record: [CKRecord]?, error: NSError?) -> Void) {
         let predicate = NSPredicate(value: true)
         let query = CKQuery(recordType: "\(RecordType.MotivationFeedItem)", predicate: predicate)
+
         privateDB.performQuery(query, inZoneWithID: nil) { (record, error) in
             guard error == nil else {
                 self.Log.warning(error)
@@ -126,6 +128,7 @@ extension CloudKitHelper {
     func fetchMotivationFeedItem(completionHandler: (success: Bool?, record: [CKRecord]?, error: NSError?) -> Void) {
         let predicate = NSPredicate(value: true)
         let query = CKQuery(recordType: "\(RecordType.MotivationFeedItem)", predicate: predicate)
+
         privateDB.performQuery(query, inZoneWithID: nil) { (record, error) in
             guard error == nil else {
                 self.Log.warning(error)
@@ -139,13 +142,20 @@ extension CloudKitHelper {
     func savedMotivationItem(itemVideoID: String, itemTitle: String, itemDescription: String, itemThumbnailsUrl: String, saved: Bool, addedDate: NSDate, theme: String, completionHandler: CompletionHander) {
         let motivationItem = CKRecord(recordType: "\(RecordType.MotivationFeedItem)")
 
-        motivationItem.setValue(itemVideoID, forKey: "\(MotivationFeedItemKey.itemVideoID)")
-        motivationItem.setValue(itemTitle, forKey: "\(MotivationFeedItemKey.itemTitle)")
-        motivationItem.setValue(itemDescription, forKey: "\(MotivationFeedItemKey.itemDescription)")
-        motivationItem.setValue(itemThumbnailsUrl, forKey: "\(MotivationFeedItemKey.itemThumbnailsUrl)")
-        motivationItem.setValue(saved, forKey: "\(MotivationFeedItemKey.saved)")
-        motivationItem.setValue(addedDate, forKey: "\(MotivationFeedItemKey.addedDate)")
-        motivationItem.setValue(theme, forKey: "\(MotivationFeedItemKey.theme)")
+        motivationItem.setValue(itemVideoID,
+                                forKey: "\(MotivationFeedItemKey.itemVideoID)")
+        motivationItem.setValue(itemTitle,
+                                forKey: "\(MotivationFeedItemKey.itemTitle)")
+        motivationItem.setValue(itemDescription,
+                                forKey: "\(MotivationFeedItemKey.itemDescription)")
+        motivationItem.setValue(itemThumbnailsUrl,
+                                forKey: "\(MotivationFeedItemKey.itemThumbnailsUrl)")
+        motivationItem.setValue(saved,
+                                forKey: "\(MotivationFeedItemKey.saved)")
+        motivationItem.setValue(addedDate,
+                                forKey: "\(MotivationFeedItemKey.addedDate)")
+        motivationItem.setValue(theme,
+                                forKey: "\(MotivationFeedItemKey.theme)")
 
         privateDB.saveRecord(motivationItem) { (record, error) in
             guard record == record && error == nil else {
@@ -165,6 +175,7 @@ extension CloudKitHelper {
     func fetchFavorites(completionHandler: (success: Bool?, record: [CKRecord]?, error: NSError?) -> Void) {
         let predicate = NSPredicate(format: "\(MotivationFeedItemKey.saved) == 1")
         let query = CKQuery(recordType: "\(RecordType.MotivationFeedItem)", predicate: predicate)
+
         privateDB.performQuery(query, inZoneWithID: nil) { (record, error) in
             guard error == nil else {
                 self.Log.warning(error)
@@ -207,6 +218,7 @@ extension CloudKitHelper {
     func fetchChallenge(completionHandler: (success: Bool?, record: [CKRecord]?, error: NSError?) -> Void) {
         let predicate = NSPredicate(value: true)
         let query = CKQuery(recordType: "\(RecordType.Challenge)", predicate: predicate)
+        
         privateDB.performQuery(query, inZoneWithID: nil) { (record, error) in
             guard error == nil else {
                 self.Log.warning(error)
@@ -216,13 +228,17 @@ extension CloudKitHelper {
             completionHandler(success: true, record: record!, error: nil)
         }
     }
+
     // MARK: - Challenge
     func saveChallenge(challengeDictionary: [String:AnyObject], completionHandler: CompletionHander) {
         let challenge = CKRecord(recordType: "\(RecordType.Challenge)")
 
-        challenge.setValue(challengeDictionary["\(ChallengeKey.challengeDescription)"] as! String, forKey: "\(ChallengeKey.challengeDescription)")
-        challenge.setValue(challengeDictionary["\(ChallengeKey.completed)"] as! Bool, forKey: "\(ChallengeKey.completed)")
-        challenge.setValue(challengeDictionary["\(ChallengeKey.endDate)"] as! NSDate, forKey: "\(ChallengeKey.endDate)")
+        challenge.setValue(challengeDictionary["\(ChallengeKey.challengeDescription)"] as! String,
+                           forKey: "\(ChallengeKey.challengeDescription)")
+        challenge.setValue(challengeDictionary["\(ChallengeKey.completed)"] as! Bool,
+                           forKey: "\(ChallengeKey.completed)")
+        challenge.setValue(challengeDictionary["\(ChallengeKey.endDate)"] as! NSDate,
+                           forKey: "\(ChallengeKey.endDate)")
 
         privateDB.saveRecord(challenge) { (record, error) in
             guard error == nil else {
@@ -241,8 +257,10 @@ extension CloudKitHelper {
                 return
             }
 
-        record!.setValue(challengeDictionary["challengeDescription"], forKey: "\(ChallengeKey.challengeDescription)")
-        record!.setValue(challengeDictionary["endDate"], forKey: "\(ChallengeKey.endDate)")
+        record!.setValue(challengeDictionary["challengeDescription"],
+                         forKey: "\(ChallengeKey.challengeDescription)")
+        record!.setValue(challengeDictionary["endDate"],
+                         forKey: "\(ChallengeKey.endDate)")
 
         self.privateDB.saveRecord(record!) { (record, error) in
             guard error == nil else {
