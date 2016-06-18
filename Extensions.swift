@@ -11,6 +11,6 @@ import UIKit
 
 extension UIColor {
     static func blackTransparentColor() -> UIColor {
-        return UIColor(red:0.11, green:0.11, blue:0.11, alpha: 0.8)
+        return UIColor(red:0.08, green:0.08, blue:0.08, alpha:1.00)
     }
 }
