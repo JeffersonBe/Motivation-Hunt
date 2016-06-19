@@ -251,15 +251,16 @@ extension CloudKitHelper {
     }
 
     func updateChallenge(challengeDictionary: [String:AnyObject], completionHandler: CompletionHander) {
+
         privateDB.fetchRecordWithID(CKRecordID(recordName: challengeDictionary["challengeRecordID"] as! String)) { (record, error) in
             guard error == nil else {
                 self.Log.warning(error)
                 return
             }
 
-        record!.setValue(challengeDictionary["challengeDescription"],
+            record!.setValue(challengeDictionary["challengeDescription"],
                          forKey: "\(ChallengeKey.challengeDescription)")
-        record!.setValue(challengeDictionary["endDate"],
+            record!.setValue(challengeDictionary["endDate"],
                          forKey: "\(ChallengeKey.endDate)")
 
         self.privateDB.saveRecord(record!) { (record, error) in
@@ -281,9 +282,9 @@ extension CloudKitHelper {
             }
 
             if record!.valueForKey("\(ChallengeKey.completed)") as! Int == 0 {
-                record!.setValue(1, forKey: "\(ChallengeKey.completed)")
+                record!.setValue(true, forKey: "\(ChallengeKey.completed)")
             } else {
-                record!.setValue(0, forKey: "\(ChallengeKey.completed)")
+                record!.setValue(false, forKey: "\(ChallengeKey.completed)")
             }
 
             self.privateDB.saveRecord(record!) { (record, error) in
