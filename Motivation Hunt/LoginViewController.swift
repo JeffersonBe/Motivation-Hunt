@@ -30,10 +30,13 @@ class LoginViewController: UIViewController {
         UIApplication.sharedApplication().networkActivityIndicatorVisible = true
 
         // Check is user already log in
-        if let userRecordID = NSUserDefaults.standardUserDefaults()
-            .objectForKey("currentUserRecordID") {
-            currentUserRecordID = userRecordID as! String
+        guard NSUserDefaults.standardUserDefaults()
+            .objectForKey("currentUserRecordID") == nil else {
+            currentUserRecordID = NSUserDefaults
+                    .standardUserDefaults()
+                    .objectForKey("currentUserRecordID") as! String
             showApp()
+            return
         }
 
         loginIcloudUser()
@@ -109,12 +112,9 @@ class LoginViewController: UIViewController {
         UIApplication
             .sharedApplication()
             .networkActivityIndicatorVisible = false
-        let viewController = storyboard!.instantiateViewControllerWithIdentifier("tabBarController")
+        let viewController = self.storyboard?.instantiateViewControllerWithIdentifier("tabBarController")
         Async.main {
-            self.presentViewController(
-                viewController,
-                animated: true,
-                completion: nil)
+            self.presentViewController(viewController!, animated: true, completion: nil)
         }
     }
 
