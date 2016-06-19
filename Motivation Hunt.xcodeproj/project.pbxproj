@@ -606,7 +606,7 @@
 				CODE_SIGN_ENTITLEMENTS = "Motivation Hunt/Motivation Hunt.entitlements";
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
-				CURRENT_PROJECT_VERSION = 0.6.2;
+				CURRENT_PROJECT_VERSION = 0.6.3;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)/Carthage/Build/iOS",
@@ -632,7 +632,7 @@
 				CODE_SIGN_ENTITLEMENTS = "Motivation Hunt/Motivation Hunt.entitlements";
 				CODE_SIGN_IDENTITY = "iPhone Distribution";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution";
-				CURRENT_PROJECT_VERSION = 0.6.2;
+				CURRENT_PROJECT_VERSION = 0.6.3;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)/Carthage/Build/iOS",
@@ -658,7 +658,7 @@
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				CLANG_ANALYZER_NONNULL = YES;
 				CODE_SIGN_ENTITLEMENTS = "Motivation Hunt TV/Motivation Hunt TV.entitlements";
-				CURRENT_PROJECT_VERSION = 0.6.2;
+				CURRENT_PROJECT_VERSION = 0.6.3;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)/Carthage/Build/tvOS",
@@ -682,7 +682,7 @@
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				CLANG_ANALYZER_NONNULL = YES;
 				CODE_SIGN_ENTITLEMENTS = "Motivation Hunt TV/Motivation Hunt TV.entitlements";
-				CURRENT_PROJECT_VERSION = 0.6.2;
+				CURRENT_PROJECT_VERSION = 0.6.3;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)/Carthage/Build/tvOS",
