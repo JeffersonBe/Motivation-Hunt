@@ -24,6 +24,7 @@ class ChallengeViewController: UIViewController {
     var currentChallengeToEdit: Challenge!
     var editMode: Bool = false
     var dimView: UIView!
+    let layer = CAGradientLayer()
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -77,6 +78,7 @@ class ChallengeViewController: UIViewController {
     }
 
     override func viewDidLayoutSubviews() {
+        layer.frame = view.frame
         if !editMode {
             addChallengeView.center.y -= view.bounds.width
         }
@@ -91,6 +93,7 @@ class ChallengeViewController: UIViewController {
     }
 
     func setupUI() {
+        view.backgroundColor = UIColor(red: 0, green: 0, blue: 0, alpha: 1.0) /* #000000 */
         tableView = UITableView()
         tableView.backgroundColor = UIColor.clearColor()
         tableView.tableFooterView = UIView(frame: CGRect.zero)
@@ -151,17 +154,13 @@ class ChallengeViewController: UIViewController {
         dimView.backgroundColor = UIColor.blackColor()
         view.insertSubview(dimView, belowSubview: addChallengeView)
 
-        view.backgroundColor = UIColor(patternImage: UIImage(named: "backgroundFeed.png")!)
-        let blurEffect = UIBlurEffect(style: UIBlurEffectStyle.Dark)
-        let blurEffectView = UIVisualEffectView(effect: blurEffect)
-        blurEffectView.frame = view.bounds
-        blurEffectView.autoresizingMask = [.FlexibleWidth, .FlexibleHeight]
-        view.insertSubview(blurEffectView, belowSubview: tableView)
-
-        let blurEffectStatusBar = UIBlurEffect(style: UIBlurEffectStyle.Light)
-        let blurEffectViewStatusBar = UIVisualEffectView(effect: blurEffectStatusBar)
-        blurEffectViewStatusBar.frame = UIApplication.sharedApplication().statusBarFrame
-        view.insertSubview(blurEffectViewStatusBar, aboveSubview: tableView)
+        // Set background View
+        layer.frame = view.frame
+        let color1 = UIColor(red: 0, green: 0, blue: 0, alpha: 1.0).CGColor /* #000000 */
+        let color2 = UIColor(red: 0.1294, green: 0.1294, blue: 0.1294, alpha: 1.0).CGColor /* #212121 */
+        layer.colors = [color1, color2]
+        layer.contentsGravity = kCAGravityResize
+        view.layer.insertSublayer(layer, below: tableView.layer)
 
         tableView.registerClass(challengeTableViewCell.self, forCellReuseIdentifier: MHClient.CellIdentifier.cellWithReuseIdentifier)
         tableView.allowsMultipleSelection = false

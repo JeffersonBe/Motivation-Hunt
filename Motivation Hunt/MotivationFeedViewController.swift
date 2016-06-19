@@ -25,6 +25,7 @@ class MotivationFeedViewController: UIViewController {
     var progressView: UIProgressView!
     var indicator = CustomUIActivityIndicatorView()
     let refreshCtrl = UIRefreshControl()
+    let layer = CAGradientLayer()
     var blockOperations: [NSBlockOperation] = []
 
     override func viewDidLoad() {
@@ -99,6 +100,7 @@ class MotivationFeedViewController: UIViewController {
 extension MotivationFeedViewController {
 
     override func viewDidLayoutSubviews() {
+        layer.frame = view.frame
         if let rectNavigationBar = navigationController?.navigationBar.frame, let rectTabBar = tabBarController?.tabBar.frame  {
             let navigationBarSpace = rectNavigationBar.size.height + rectNavigationBar.origin.y
             let tabBarSpace = rectTabBar.size.height + rectTabBar.origin.x
@@ -110,10 +112,12 @@ extension MotivationFeedViewController {
     }
 
     func setupUI() {
+
+        view.backgroundColor = UIColor(red: 0, green: 0, blue: 0, alpha: 1.0) /* #000000 */
         // Configure CollectionView
         collectionView = UICollectionView(frame: view.frame, collectionViewLayout: UICollectionViewFlowLayout())
         collectionView.registerClass(motivationCollectionViewCell.self, forCellWithReuseIdentifier: MHClient.CellIdentifier.cellWithReuseIdentifier)
-        collectionView.backgroundColor = UIColor.clearColor()
+        collectionView.backgroundColor = UIColor.clearColor() /* #000000 */
         collectionView.allowsMultipleSelection = false
         view.addSubview(collectionView)
         collectionView.snp_makeConstraints { (make) in
@@ -140,24 +144,20 @@ extension MotivationFeedViewController {
         }
 
         // Set background View
-        view.backgroundColor = UIColor(patternImage: UIImage(named: "backgroundFeed.png")!)
-        let blurEffect = UIBlurEffect(style: UIBlurEffectStyle.Dark)
-        let blurEffectView = UIVisualEffectView(effect: blurEffect)
-        blurEffectView.frame = view.bounds
-        blurEffectView.autoresizingMask = [.FlexibleWidth, .FlexibleHeight]
-        view.insertSubview(blurEffectView, belowSubview: collectionView)
+        layer.frame = view.frame
+        let color1 = UIColor(red: 0, green: 0, blue: 0, alpha: 1.0).CGColor /* #000000 */
+        let color2 = UIColor(red: 0.1294, green: 0.1294, blue: 0.1294, alpha: 1.0).CGColor /* #212121 */
+        layer.colors = [color1, color2]
+        layer.masksToBounds = true
+        layer.contentsGravity = kCAGravityResize
+        view.layer.insertSublayer(layer, below: collectionView.layer)
 
-        let blurEffectStatusBar = UIBlurEffect(style: UIBlurEffectStyle.Light)
-        let blurEffectViewStatusBar = UIVisualEffectView(effect: blurEffectStatusBar)
-        blurEffectViewStatusBar.frame = UIApplication.sharedApplication().statusBarFrame
-        blurEffectViewStatusBar.autoresizingMask = [.FlexibleWidth, .FlexibleHeight]
-        view.insertSubview(blurEffectViewStatusBar, aboveSubview: collectionView)
-        
         navigationController?.hidesBarsOnSwipe = true
         setNeedsStatusBarAppearanceUpdate()
     }
 
     override func willRotateToInterfaceOrientation(toInterfaceOrientation: UIInterfaceOrientation, duration: NSTimeInterval) {
+        Log.info("willRotateToInterfaceOrientation")
         collectionView.collectionViewLayout.invalidateLayout()
     }
 
@@ -227,6 +227,7 @@ extension MotivationFeedViewController {
     func fetchUserData(completionHandler: (success: Bool?) -> Void) {
         indicator.startActivity()
         view.addSubview(indicator)
+
         CloudKitHelper.sharedInstance.fetchAllMotivationFeedItem { (success, record, error) in
             guard success == true else {
                 self.indicator.stopActivity()
@@ -235,25 +236,26 @@ extension MotivationFeedViewController {
                 return
             }
 
-            completionHandler(success: true)
-
             record?.forEach({ (record) in
                 Async.main {
-                CoreDataStackManager.sharedInstance.managedObjectContext.performBlock({
-                    let _ = MotivationFeedItem(
-                        itemRecordID: record.recordID.recordName,
-                        itemVideoID: record.valueForKey("itemVideoID") as! String,
-                        itemTitle: record.valueForKey("itemTitle") as! String,
-                        itemDescription: record.valueForKey("itemDescription") as! String,
-                        itemThumbnailsUrl: record.valueForKey("itemThumbnailsUrl") as! String,
-                        saved: record.valueForKey("saved") as! Bool,
-                        addedDate: record.valueForKey("addedDate") as! NSDate,
-                        theme: record.valueForKey("theme") as! String,
-                        context: self.sharedContext)
-                })
-                CoreDataStackManager.sharedInstance.saveContext()
+                    CoreDataStackManager.sharedInstance.managedObjectContext.performBlock({
+                        let _ = MotivationFeedItem(
+                            itemRecordID: record.recordID.recordName,
+                            itemVideoID: record.valueForKey("itemVideoID") as! String,
+                            itemTitle: record.valueForKey("itemTitle") as! String,
+                            itemDescription: record.valueForKey("itemDescription") as! String,
+                            itemThumbnailsUrl: record.valueForKey("itemThumbnailsUrl") as! String,
+                            saved: record.valueForKey("saved") as! Bool,
+                            addedDate: record.valueForKey("addedDate") as! NSDate,
+                            theme: record.valueForKey("theme") as! String,
+                            context: self.sharedContext
+                        )
+                    })
+                    CoreDataStackManager.sharedInstance.saveContext()
                 }
             })
+            Log.info("Here")
+            completionHandler(success: true)
         }
         self.indicator.stopActivity()
         self.indicator.removeFromSuperview()
@@ -384,7 +386,7 @@ extension MotivationFeedViewController: UICollectionViewDelegate, UICollectionVi
             cell.favoriteBarButton.setTitle(String.fontAwesomeIconWithName(.HeartO), forState: .Normal)
         }
 
-        if motivationItem.image == nil {
+        guard motivationItem.image != nil else {
             MHClient.sharedInstance.taskForImage(motivationItem.itemThumbnailsUrl) { imageData, error in
                 guard error == nil else {
                     return
@@ -394,7 +396,9 @@ extension MotivationFeedViewController: UICollectionViewDelegate, UICollectionVi
                     cell.imageView.image = Toucan(image: motivationItem.image!).resize(CGSize(width: cell.frame.width - 10, height: cell.frame.width / 1.8), fitMode: Toucan.Resize.FitMode.Crop).maskWithRoundedRect(cornerRadius: 10).image
                 }
             }
+            return
         }
+        cell.imageView.image = Toucan(image: motivationItem.image!).resize(CGSize(width: cell.frame.width - 10, height: cell.frame.width / 1.8), fitMode: Toucan.Resize.FitMode.Crop).maskWithRoundedRect(cornerRadius: 10).image
     }
 
     func collectionView(collectionView: UICollectionView, willDisplayCell cell: UICollectionViewCell, forItemAtIndexPath indexPath: NSIndexPath) {
@@ -433,7 +437,6 @@ extension MotivationFeedViewController: UICollectionViewDelegate, UICollectionVi
         if (device == "iPad" || device == "iPad Simulator") {
             cellSize = CGSizeMake(dimensioniPad, dimensioniPad * 0.8)
         }
-
         return cellSize
     }
 

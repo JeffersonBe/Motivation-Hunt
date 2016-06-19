@@ -20,6 +20,7 @@ class FavouritesViewController: UIViewController {
     var collectionView: UICollectionView!
     var indicator = CustomUIActivityIndicatorView()
     var shouldReloadCollectionView = false
+    let layer = CAGradientLayer()
     var blockOperations: [NSBlockOperation] = []
 
     override func viewDidLoad() {
@@ -89,6 +90,7 @@ class FavouritesViewController: UIViewController {
 extension FavouritesViewController {
 
     override func viewDidLayoutSubviews() {
+        layer.frame = view.frame
         if let rectNavigationBar = navigationController?.navigationBar.frame, let rectTabBar = tabBarController?.tabBar.frame  {
             let navigationBarSpace = rectNavigationBar.size.height + rectNavigationBar.origin.y
             let tabBarSpace = rectTabBar.size.height + rectTabBar.origin.x
@@ -97,6 +99,7 @@ extension FavouritesViewController {
     }
 
     func setupUI() {
+        view.backgroundColor = UIColor(red: 0, green: 0, blue: 0, alpha: 1.0) /* #000000 */
         // Configure CollectionView
         collectionView = UICollectionView(frame: view.frame, collectionViewLayout: UICollectionViewFlowLayout())
         collectionView.registerClass(motivationCollectionViewCell.self, forCellWithReuseIdentifier: MHClient.CellIdentifier.cellWithReuseIdentifier)
@@ -110,17 +113,15 @@ extension FavouritesViewController {
             make.center.equalTo(view)
         }
 
-        view.backgroundColor = UIColor(patternImage: UIImage(named: "backgroundFeed.png")!)
-        let blurEffect = UIBlurEffect(style: UIBlurEffectStyle.Dark)
-        let blurEffectView = UIVisualEffectView(effect: blurEffect)
-        blurEffectView.frame = view.bounds
-        blurEffectView.autoresizingMask = [.FlexibleWidth, .FlexibleHeight]
-        view.insertSubview(blurEffectView, belowSubview: collectionView)
-
-        let blurEffectStatusBar = UIBlurEffect(style: UIBlurEffectStyle.Light)
-        let blurEffectViewStatusBar = UIVisualEffectView(effect: blurEffectStatusBar)
-        blurEffectViewStatusBar.frame = UIApplication.sharedApplication().statusBarFrame
-        view.insertSubview(blurEffectViewStatusBar, aboveSubview: collectionView)
+        // Set background View
+        layer.frame = view.frame
+        let color1 = UIColor(red: 0, green: 0, blue: 0, alpha: 1.0).CGColor /* #000000 */
+        let color2 = UIColor(red: 0.1294, green: 0.1294, blue: 0.1294, alpha: 1.0).CGColor /* #212121 */
+        layer.colors = [color1, color2]
+        layer.locations = [0.0, 1.0]
+        layer.masksToBounds = true
+        layer.contentsGravity = kCAGravityResize
+        view.layer.insertSublayer(layer, below: collectionView.layer)
 
         navigationController?.hidesBarsOnSwipe = true
         setNeedsStatusBarAppearanceUpdate()
@@ -257,7 +258,7 @@ extension FavouritesViewController: UICollectionViewDelegate, UICollectionViewDa
             cell.favoriteBarButton.setTitle(String.fontAwesomeIconWithName(.HeartO), forState: .Normal)
         }
 
-        if motivationItem.image == nil {
+        guard motivationItem.image != nil else {
             MHClient.sharedInstance.taskForImage(motivationItem.itemThumbnailsUrl) { imageData, error in
                 guard error == nil else {
                     return
@@ -267,7 +268,10 @@ extension FavouritesViewController: UICollectionViewDelegate, UICollectionViewDa
                     cell.imageView.image = Toucan(image: motivationItem.image!).resize(CGSize(width: cell.frame.width - 10, height: cell.frame.width / 1.8), fitMode: Toucan.Resize.FitMode.Crop).maskWithRoundedRect(cornerRadius: 10).image
                 }
             }
+
+            return
         }
+        cell.imageView.image = Toucan(image: motivationItem.image!).resize(CGSize(width: cell.frame.width - 10, height: cell.frame.width / 1.8), fitMode: Toucan.Resize.FitMode.Crop).maskWithRoundedRect(cornerRadius: 10).image
     }
 
     func collectionView(collectionView: UICollectionView, willDisplayCell cell: UICollectionViewCell, forItemAtIndexPath indexPath: NSIndexPath) {
