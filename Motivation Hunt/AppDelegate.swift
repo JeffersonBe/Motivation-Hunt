@@ -23,8 +23,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         // Override point for customization after application launch.
 
         // Push notification setup
-        let settings = UIUserNotificationSettings(forTypes: [.Alert, .Badge , .Sound], categories: nil)
-        application.registerUserNotificationSettings(settings)
+        let notificationInfo = CKNotificationInfo()
+        notificationInfo.shouldSendContentAvailable = true
         application.registerForRemoteNotifications()
 
         // Configure Status Bar
