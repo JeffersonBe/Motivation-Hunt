@@ -33,16 +33,20 @@ platform :ios do
   desc "This will also make sure the profile is up to date"
   lane :beta do
     # match(type: "appstore") # more information: https://codesigning.guide
+
+    increment_version_number(
+        bump_type: "patch" # Automatically increment patch version number
+    )
+
     gym(
         scheme: "Motivation Hunt",
         silent: true,
         clean: true
     ) # Build your app - more options available
-    increment_version_number(
-        bump_type: "patch" # Automatically increment patch version number
-    )
+
     pilot
     skip_waiting_for_build_processing
+    clear_derived_data
 
     # sh "your_script.sh"
     # You can also use other beta testing services here (run `fastlane actions`)
