@@ -66,3 +66,9 @@ fastlane/report.xml
 fastlane/Preview.html
 fastlane/screenshots
 fastlane/test_output
+
+# Ensembles Framework
+Ensembles.framework/
+Ensembles.bundle/
+CDECloudKitFileSystem.h
+CDECloudKitFileSystem.m
