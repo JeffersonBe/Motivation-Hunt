@@ -41,7 +41,6 @@
 		B46A76C81D58F7F000ADBF43 /* CDECloudKitFileSystem.m in Sources */ = {isa = PBXBuildFile; fileRef = B46A76C71D58F7F000ADBF43 /* CDECloudKitFileSystem.m */; };
 		B46A76C91D58F7F000ADBF43 /* CDECloudKitFileSystem.m in Sources */ = {isa = PBXBuildFile; fileRef = B46A76C71D58F7F000ADBF43 /* CDECloudKitFileSystem.m */; };
 		B46A76CA1D590E7A00ADBF43 /* Ensembles.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B46A76BD1D58F02D00ADBF43 /* Ensembles.framework */; };
-		B46A76CB1D590F2C00ADBF43 /* Ensembles.framework in Resources */ = {isa = PBXBuildFile; fileRef = B46A76BD1D58F02D00ADBF43 /* Ensembles.framework */; };
 		B471CC0C1CC7A66500A65D01 /* Toucan.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B471CC0B1CC7A66500A65D01 /* Toucan.framework */; };
 		B47684821CBD3E7F005AB738 /* Log.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B47684811CBD3E7F005AB738 /* Log.framework */; };
 		B47684841CBD3E8C005AB738 /* Log.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B47684831CBD3E8C005AB738 /* Log.framework */; };
@@ -410,7 +409,6 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				B46A76CB1D590F2C00ADBF43 /* Ensembles.framework in Resources */,
 				B40741F71C89A3AA00AFC870 /* Key.plist in Resources */,
 				B41BF3451C7D0D7200E27074 /* LaunchScreen.storyboard in Resources */,
 				B46A76C11D58F03F00ADBF43 /* Ensembles.bundle in Resources */,

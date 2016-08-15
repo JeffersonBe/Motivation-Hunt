@@ -20,8 +20,9 @@ platform :ios do
     # ENV["SLACK_URL"] = "https://hooks.slack.com/services/..."
 
     carthage(
-        platform: "iOS"         # Define which platform to build for (one of ‘all’, ‘Mac’, ‘iOS’, ‘watchOS’, 'tvOS', or comma-separated values of the formers except for ‘all’)
+        platform: "iOS" # Define which platform to build for (one of ‘all’, ‘Mac’, ‘iOS’, ‘watchOS’, 'tvOS', or comma-separated values of the formers except for ‘all’)
     )
+
   end
 
   desc "Runs all the tests"
@@ -41,6 +42,7 @@ platform :ios do
     gym(
         scheme: "Motivation Hunt",
         silent: true,
+        use_legacy_build_api: true,
         clean: true
     ) # Build your app - more options available
 
