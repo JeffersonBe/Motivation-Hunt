@@ -46,7 +46,7 @@ class CloudKitHelper {
     let Log = Logger()
 
     init() {
-        container = CKContainer(identifier: "iCloud.com.jeffersonbonnaire.motivationhunt")
+        container = CKContainer(identifier: MHClient.Constants.CKBaseUrl)
         publicDB = container.publicCloudDatabase
         privateDB = container.privateCloudDatabase
     }

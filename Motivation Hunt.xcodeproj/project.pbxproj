@@ -8,13 +8,14 @@
 
 /* Begin PBXBuildFile section */
 		B40741F71C89A3AA00AFC870 /* Key.plist in Resources */ = {isa = PBXBuildFile; fileRef = B40741F61C89A3AA00AFC870 /* Key.plist */; };
+		B40D683C1D5ED28600B424D0 /* CloudKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B40D683B1D5ED28600B424D0 /* CloudKit.framework */; };
 		B41A9E271C7DAADB001635C2 /* MotivationFeedViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B41BF3391C7D0D7200E27074 /* MotivationFeedViewController.swift */; };
 		B41BF3381C7D0D7200E27074 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = B41BF3371C7D0D7200E27074 /* AppDelegate.swift */; };
 		B41BF33D1C7D0D7200E27074 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = B41BF33B1C7D0D7200E27074 /* Main.storyboard */; };
 		B41BF3421C7D0D7200E27074 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = B41BF3411C7D0D7200E27074 /* Assets.xcassets */; };
 		B41BF3451C7D0D7200E27074 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = B41BF3431C7D0D7200E27074 /* LaunchScreen.storyboard */; };
 		B41BF34E1C7D124600E27074 /* ChallengeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B41BF34D1C7D124600E27074 /* ChallengeViewController.swift */; };
-		B41BF3521C7D12C800E27074 /* MotivationHuntModel.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = B41BF3501C7D12C800E27074 /* MotivationHuntModel.xcdatamodeld */; };
+		B41BF3521C7D12C800E27074 /* MotivationHunt.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = B41BF3501C7D12C800E27074 /* MotivationHunt.xcdatamodeld */; };
 		B41BF3541C7D149500E27074 /* CoreDataStackManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = B41BF3531C7D149500E27074 /* CoreDataStackManager.swift */; };
 		B41BF3561C7D153300E27074 /* Challenge.swift in Sources */ = {isa = PBXBuildFile; fileRef = B41BF3551C7D153300E27074 /* Challenge.swift */; };
 		B41CE7EA1C8B5B54002FCBC2 /* challengeTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = B41CE7E91C8B5B54002FCBC2 /* challengeTableViewCell.swift */; };
@@ -34,19 +35,24 @@
 		B43403FB1CBD6BDF00F9793E /* CloudKitHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4F721031C96142700D07A4D /* CloudKitHelper.swift */; };
 		B439763D1C8DDE5300864949 /* Reachability.swift in Sources */ = {isa = PBXBuildFile; fileRef = B439763C1C8DDE5300864949 /* Reachability.swift */; };
 		B44ACBC81C89ECEC00C5FF96 /* ImageCache.swift in Sources */ = {isa = PBXBuildFile; fileRef = B44ACBC71C89ECEC00C5FF96 /* ImageCache.swift */; };
+		B46A76BF1D58F02D00ADBF43 /* Ensembles.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B46A76BD1D58F02D00ADBF43 /* Ensembles.framework */; };
+		B46A76C11D58F03F00ADBF43 /* Ensembles.bundle in Resources */ = {isa = PBXBuildFile; fileRef = B46A76C01D58F03F00ADBF43 /* Ensembles.bundle */; };
+		B46A76C21D58F03F00ADBF43 /* Ensembles.bundle in Resources */ = {isa = PBXBuildFile; fileRef = B46A76C01D58F03F00ADBF43 /* Ensembles.bundle */; };
+		B46A76C81D58F7F000ADBF43 /* CDECloudKitFileSystem.m in Sources */ = {isa = PBXBuildFile; fileRef = B46A76C71D58F7F000ADBF43 /* CDECloudKitFileSystem.m */; };
+		B46A76C91D58F7F000ADBF43 /* CDECloudKitFileSystem.m in Sources */ = {isa = PBXBuildFile; fileRef = B46A76C71D58F7F000ADBF43 /* CDECloudKitFileSystem.m */; };
+		B46A76CA1D590E7A00ADBF43 /* Ensembles.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B46A76BD1D58F02D00ADBF43 /* Ensembles.framework */; };
+		B46A76CB1D590F2C00ADBF43 /* Ensembles.framework in Resources */ = {isa = PBXBuildFile; fileRef = B46A76BD1D58F02D00ADBF43 /* Ensembles.framework */; };
 		B471CC0C1CC7A66500A65D01 /* Toucan.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B471CC0B1CC7A66500A65D01 /* Toucan.framework */; };
 		B47684821CBD3E7F005AB738 /* Log.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B47684811CBD3E7F005AB738 /* Log.framework */; };
 		B47684841CBD3E8C005AB738 /* Log.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B47684831CBD3E8C005AB738 /* Log.framework */; };
 		B47684861CBD3F9C005AB738 /* SnapKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B47684851CBD3F9C005AB738 /* SnapKit.framework */; };
 		B48E1ECD1CC5A14F00482581 /* CoreDataStackManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = B41BF3531C7D149500E27074 /* CoreDataStackManager.swift */; };
-		B48E1ECE1CC5A15300482581 /* MotivationHuntModel.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = B41BF3501C7D12C800E27074 /* MotivationHuntModel.xcdatamodeld */; };
+		B48E1ECE1CC5A15300482581 /* MotivationHunt.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = B41BF3501C7D12C800E27074 /* MotivationHunt.xcdatamodeld */; };
 		B48E1ECF1CC5A15600482581 /* Challenge.swift in Sources */ = {isa = PBXBuildFile; fileRef = B41BF3551C7D153300E27074 /* Challenge.swift */; };
 		B48E1ED01CC5A15E00482581 /* MotivationFeedItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = B42E42801C81CB6C0095B9BF /* MotivationFeedItem.swift */; };
 		B48E1ED11CC5A18100482581 /* MHClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4DC95511C88CD620041AB31 /* MHClient.swift */; };
 		B48E1ED21CC5A1E200482581 /* ImageCache.swift in Sources */ = {isa = PBXBuildFile; fileRef = B44ACBC71C89ECEC00C5FF96 /* ImageCache.swift */; };
 		B48E1ED31CC5A1E600482581 /* MHConstant.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4DC95531C88CE8E0041AB31 /* MHConstant.swift */; };
-		B49E0E9C1C998666008C5B62 /* LoginViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B49E0E9B1C998666008C5B62 /* LoginViewController.swift */; };
-		B4A3E8AB1CC5883400D2749B /* CloudKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B4A3E8AA1CC5883400D2749B /* CloudKit.framework */; };
 		B4A3E8AD1CC589F000D2749B /* CloudKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B4A3E8AC1CC589F000D2749B /* CloudKit.framework */; };
 		B4ABAA4D1CA0042100EFEBBA /* Advance.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B4ABAA471CA0042100EFEBBA /* Advance.framework */; };
 		B4ABAA4E1CA0042100EFEBBA /* Async.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B4ABAA481CA0042100EFEBBA /* Async.framework */; };
@@ -59,12 +65,12 @@
 		B4DC95521C88CD620041AB31 /* MHClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4DC95511C88CD620041AB31 /* MHClient.swift */; };
 		B4DC95541C88CE8E0041AB31 /* MHConstant.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4DC95531C88CE8E0041AB31 /* MHConstant.swift */; };
 		B4EA3A8E1CD5152B00AE117F /* Alamofire.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B4EA3A8D1CD5152B00AE117F /* Alamofire.framework */; };
-		B4EA3A901CD5559500AE117F /* SyncManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4EA3A8F1CD5559500AE117F /* SyncManager.swift */; };
 		B4F721041C96142700D07A4D /* CloudKitHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4F721031C96142700D07A4D /* CloudKitHelper.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
 		B40741F61C89A3AA00AFC870 /* Key.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = Key.plist; path = "Motivation Hunt/Key.plist"; sourceTree = "<group>"; };
+		B40D683B1D5ED28600B424D0 /* CloudKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CloudKit.framework; path = System/Library/Frameworks/CloudKit.framework; sourceTree = SDKROOT; };
 		B41BF3341C7D0D7200E27074 /* Motivation Hunt.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Motivation Hunt.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		B41BF3371C7D0D7200E27074 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		B41BF3391C7D0D7200E27074 /* MotivationFeedViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MotivationFeedViewController.swift; sourceTree = "<group>"; };
@@ -73,12 +79,12 @@
 		B41BF3441C7D0D7200E27074 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		B41BF3461C7D0D7200E27074 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		B41BF34D1C7D124600E27074 /* ChallengeViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ChallengeViewController.swift; sourceTree = "<group>"; };
-		B41BF3511C7D12C800E27074 /* MotivationHuntModel.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = MotivationHuntModel.xcdatamodel; sourceTree = "<group>"; };
+		B41BF3511C7D12C800E27074 /* MotivationHunt.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = MotivationHunt.xcdatamodel; sourceTree = "<group>"; };
 		B41BF3531C7D149500E27074 /* CoreDataStackManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CoreDataStackManager.swift; sourceTree = "<group>"; };
 		B41BF3551C7D153300E27074 /* Challenge.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Challenge.swift; sourceTree = "<group>"; };
 		B41CE7E91C8B5B54002FCBC2 /* challengeTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = challengeTableViewCell.swift; sourceTree = "<group>"; };
 		B41CE7EB1C8B6F68002FCBC2 /* CustomUIActivityIndicatorView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CustomUIActivityIndicatorView.swift; sourceTree = "<group>"; };
-		B423BDD61C96110700CD7224 /* Motivation Hunt.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = "Motivation Hunt.entitlements"; sourceTree = "<group>"; };
+		B423BDD61C96110700CD7224 /* Motivation Hunt.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.xml; name = "Motivation Hunt.entitlements"; path = "Motivation Hunt/Motivation Hunt.entitlements"; sourceTree = "<group>"; };
 		B423E3481CC6257D0020D39D /* Async.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Async.framework; path = Carthage/Build/tvOS/Async.framework; sourceTree = "<group>"; };
 		B423E34B1CC627DD0020D39D /* motivationCollectionViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = motivationCollectionViewCell.swift; sourceTree = "<group>"; };
 		B42A4ECD1CBD20CC00D9593D /* Motivation Hunt TV.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Motivation Hunt TV.app"; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -96,12 +102,16 @@
 		B43403FC1CBD6CE500F9793E /* Motivation Hunt TV.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = "Motivation Hunt TV.entitlements"; sourceTree = "<group>"; };
 		B439763C1C8DDE5300864949 /* Reachability.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Reachability.swift; path = "Motivation Hunt/Reachability.swift"; sourceTree = "<group>"; };
 		B44ACBC71C89ECEC00C5FF96 /* ImageCache.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ImageCache.swift; path = "Motivation Hunt/ImageCache.swift"; sourceTree = "<group>"; };
+		B46A76BD1D58F02D00ADBF43 /* Ensembles.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Ensembles.framework; path = "../../../../Library/Mobile Documents/com~apple~CloudDocs/Ensembles Basic Support/Ensembles 2.4.1/Binaries/iOS/Static Framework/Ensembles.framework"; sourceTree = "<group>"; };
+		B46A76C01D58F03F00ADBF43 /* Ensembles.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = Ensembles.bundle; sourceTree = "<group>"; };
+		B46A76C41D58F7EF00ADBF43 /* Motivation Hunt-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Motivation Hunt-Bridging-Header.h"; sourceTree = "<group>"; };
+		B46A76C51D58F7F000ADBF43 /* Motivation Hunt TV-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Motivation Hunt TV-Bridging-Header.h"; sourceTree = "<group>"; };
+		B46A76C61D58F7F000ADBF43 /* CDECloudKitFileSystem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CDECloudKitFileSystem.h; sourceTree = "<group>"; };
+		B46A76C71D58F7F000ADBF43 /* CDECloudKitFileSystem.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CDECloudKitFileSystem.m; sourceTree = "<group>"; };
 		B471CC0B1CC7A66500A65D01 /* Toucan.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Toucan.framework; path = Carthage/Build/iOS/Toucan.framework; sourceTree = "<group>"; };
 		B47684811CBD3E7F005AB738 /* Log.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Log.framework; path = Carthage/Build/tvOS/Log.framework; sourceTree = "<group>"; };
 		B47684831CBD3E8C005AB738 /* Log.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Log.framework; path = Carthage/Build/iOS/Log.framework; sourceTree = "<group>"; };
 		B47684851CBD3F9C005AB738 /* SnapKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SnapKit.framework; path = Carthage/Build/tvOS/SnapKit.framework; sourceTree = "<group>"; };
-		B49E0E9B1C998666008C5B62 /* LoginViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LoginViewController.swift; sourceTree = "<group>"; };
-		B4A3E8AA1CC5883400D2749B /* CloudKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CloudKit.framework; path = System/Library/Frameworks/CloudKit.framework; sourceTree = SDKROOT; };
 		B4A3E8AC1CC589F000D2749B /* CloudKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CloudKit.framework; path = Platforms/AppleTVOS.platform/Developer/SDKs/AppleTVOS9.2.sdk/System/Library/Frameworks/CloudKit.framework; sourceTree = DEVELOPER_DIR; };
 		B4ABAA471CA0042100EFEBBA /* Advance.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Advance.framework; path = Carthage/Build/iOS/Advance.framework; sourceTree = "<group>"; };
 		B4ABAA481CA0042100EFEBBA /* Async.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Async.framework; path = Carthage/Build/iOS/Async.framework; sourceTree = "<group>"; };
@@ -113,7 +123,6 @@
 		B4DC95511C88CD620041AB31 /* MHClient.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = MHClient.swift; path = "Motivation Hunt/MHClient.swift"; sourceTree = "<group>"; };
 		B4DC95531C88CE8E0041AB31 /* MHConstant.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = MHConstant.swift; path = "Motivation Hunt/MHConstant.swift"; sourceTree = "<group>"; };
 		B4EA3A8D1CD5152B00AE117F /* Alamofire.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Alamofire.framework; path = Carthage/Build/iOS/Alamofire.framework; sourceTree = "<group>"; };
-		B4EA3A8F1CD5559500AE117F /* SyncManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SyncManager.swift; sourceTree = "<group>"; };
 		B4F721031C96142700D07A4D /* CloudKitHelper.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CloudKitHelper.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -122,7 +131,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				B4A3E8AB1CC5883400D2749B /* CloudKit.framework in Frameworks */,
+				B46A76CA1D590E7A00ADBF43 /* Ensembles.framework in Frameworks */,
 				B4ABAA4D1CA0042100EFEBBA /* Advance.framework in Frameworks */,
 				B4ABAA4E1CA0042100EFEBBA /* Async.framework in Frameworks */,
 				B4EA3A8E1CD5152B00AE117F /* Alamofire.framework in Frameworks */,
@@ -131,6 +140,7 @@
 				B4B17E251CE477D800C36F9E /* GoogleAnalytics.framework in Frameworks */,
 				B4DC90D11CCD2CD100CA1C46 /* YouTubePlayer.framework in Frameworks */,
 				B42EC23A1CCE47E000367B83 /* TBEmptyDataSet.framework in Frameworks */,
+				B40D683C1D5ED28600B424D0 /* CloudKit.framework in Frameworks */,
 				B471CC0C1CC7A66500A65D01 /* Toucan.framework in Frameworks */,
 				B47684841CBD3E8C005AB738 /* Log.framework in Frameworks */,
 			);
@@ -144,6 +154,7 @@
 				B423E3491CC6257D0020D39D /* Async.framework in Frameworks */,
 				B47684821CBD3E7F005AB738 /* Log.framework in Frameworks */,
 				B47684861CBD3F9C005AB738 /* SnapKit.framework in Frameworks */,
+				B46A76BF1D58F02D00ADBF43 /* Ensembles.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -153,6 +164,7 @@
 		B41BF32B1C7D0D7200E27074 = {
 			isa = PBXGroup;
 			children = (
+				B423BDD61C96110700CD7224 /* Motivation Hunt.entitlements */,
 				B42280081C9D720D0017D5AB /* Shared */,
 				B41BF3361C7D0D7200E27074 /* Motivation Hunt */,
 				B42A4ECE1CBD20CC00D9593D /* Motivation Hunt TV */,
@@ -185,7 +197,6 @@
 		B41BF34C1C7D122400E27074 /* Controllers */ = {
 			isa = PBXGroup;
 			children = (
-				B49E0E9B1C998666008C5B62 /* LoginViewController.swift */,
 				B41BF3391C7D0D7200E27074 /* MotivationFeedViewController.swift */,
 				B42E42851C81DE720095B9BF /* FavouritesViewController.swift */,
 				B41BF34D1C7D124600E27074 /* ChallengeViewController.swift */,
@@ -196,8 +207,7 @@
 		B41BF34F1C7D12A600E27074 /* Models */ = {
 			isa = PBXGroup;
 			children = (
-				B423BDD61C96110700CD7224 /* Motivation Hunt.entitlements */,
-				B41BF3501C7D12C800E27074 /* MotivationHuntModel.xcdatamodeld */,
+				B41BF3501C7D12C800E27074 /* MotivationHunt.xcdatamodeld */,
 				B41BF3531C7D149500E27074 /* CoreDataStackManager.swift */,
 				B41BF3551C7D153300E27074 /* Challenge.swift */,
 				B42E42801C81CB6C0095B9BF /* MotivationFeedItem.swift */,
@@ -209,16 +219,9 @@
 		B42280081C9D720D0017D5AB /* Shared */ = {
 			isa = PBXGroup;
 			children = (
-				B4B17E261CE4789300C36F9E /* GoogleService-Info.plist */,
+				B4E3B0621D27D28600D538D8 /* Helpers */,
+				B4E3B0611D27D27100D538D8 /* Networking */,
 				B41BF34F1C7D12A600E27074 /* Models */,
-				B4F721031C96142700D07A4D /* CloudKitHelper.swift */,
-				B4EA3A8F1CD5559500AE117F /* SyncManager.swift */,
-				B439763C1C8DDE5300864949 /* Reachability.swift */,
-				B4DC95511C88CD620041AB31 /* MHClient.swift */,
-				B44ACBC71C89ECEC00C5FF96 /* ImageCache.swift */,
-				B4DC95531C88CE8E0041AB31 /* MHConstant.swift */,
-				B40741F61C89A3AA00AFC870 /* Key.plist */,
-				B42F85421CDF27840016F9B2 /* Extensions.swift */,
 			);
 			name = Shared;
 			sourceTree = "<group>";
@@ -261,12 +264,14 @@
 		B49730EB1CCAEE430086F61D /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				B40D683B1D5ED28600B424D0 /* CloudKit.framework */,
+				B46A76C01D58F03F00ADBF43 /* Ensembles.bundle */,
+				B46A76BD1D58F02D00ADBF43 /* Ensembles.framework */,
 				B4B17E241CE477D800C36F9E /* GoogleAnalytics.framework */,
 				B4EA3A8D1CD5152B00AE117F /* Alamofire.framework */,
 				B42EC2391CCE47E000367B83 /* TBEmptyDataSet.framework */,
 				B4DC90D01CCD2CD100CA1C46 /* YouTubePlayer.framework */,
 				B4A3E8AC1CC589F000D2749B /* CloudKit.framework */,
-				B4A3E8AA1CC5883400D2749B /* CloudKit.framework */,
 				B471CC0B1CC7A66500A65D01 /* Toucan.framework */,
 				B4ABAA471CA0042100EFEBBA /* Advance.framework */,
 				B423E3481CC6257D0020D39D /* Async.framework */,
@@ -278,6 +283,32 @@
 				B47684831CBD3E8C005AB738 /* Log.framework */,
 			);
 			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		B4E3B0611D27D27100D538D8 /* Networking */ = {
+			isa = PBXGroup;
+			children = (
+				B4F721031C96142700D07A4D /* CloudKitHelper.swift */,
+				B439763C1C8DDE5300864949 /* Reachability.swift */,
+				B4DC95511C88CD620041AB31 /* MHClient.swift */,
+			);
+			name = Networking;
+			sourceTree = "<group>";
+		};
+		B4E3B0621D27D28600D538D8 /* Helpers */ = {
+			isa = PBXGroup;
+			children = (
+				B46A76C61D58F7F000ADBF43 /* CDECloudKitFileSystem.h */,
+				B46A76C71D58F7F000ADBF43 /* CDECloudKitFileSystem.m */,
+				B46A76C41D58F7EF00ADBF43 /* Motivation Hunt-Bridging-Header.h */,
+				B46A76C51D58F7F000ADBF43 /* Motivation Hunt TV-Bridging-Header.h */,
+				B4B17E261CE4789300C36F9E /* GoogleService-Info.plist */,
+				B44ACBC71C89ECEC00C5FF96 /* ImageCache.swift */,
+				B4DC95531C88CE8E0041AB31 /* MHConstant.swift */,
+				B40741F61C89A3AA00AFC870 /* Key.plist */,
+				B42F85421CDF27840016F9B2 /* Extensions.swift */,
+			);
+			name = Helpers;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -333,6 +364,9 @@
 						CreatedOnToolsVersion = 7.2.1;
 						DevelopmentTeam = DXXE2BH2EU;
 						SystemCapabilities = {
+							com.apple.BackgroundModes = {
+								enabled = 1;
+							};
 							com.apple.Push = {
 								enabled = 1;
 							};
@@ -376,8 +410,10 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				B46A76CB1D590F2C00ADBF43 /* Ensembles.framework in Resources */,
 				B40741F71C89A3AA00AFC870 /* Key.plist in Resources */,
 				B41BF3451C7D0D7200E27074 /* LaunchScreen.storyboard in Resources */,
+				B46A76C11D58F03F00ADBF43 /* Ensembles.bundle in Resources */,
 				B4B17E271CE4789300C36F9E /* GoogleService-Info.plist in Resources */,
 				B41BF3421C7D0D7200E27074 /* Assets.xcassets in Resources */,
 				B41BF33D1C7D0D7200E27074 /* Main.storyboard in Resources */,
@@ -390,6 +426,7 @@
 			files = (
 				B42A4ED91CBD20CC00D9593D /* Assets.xcassets in Resources */,
 				B42A4ED71CBD20CC00D9593D /* Main.storyboard in Resources */,
+				B46A76C21D58F03F00ADBF43 /* Ensembles.bundle in Resources */,
 				B4B17E281CE4789300C36F9E /* GoogleService-Info.plist in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -443,10 +480,9 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				B4EA3A901CD5559500AE117F /* SyncManager.swift in Sources */,
-				B49E0E9C1C998666008C5B62 /* LoginViewController.swift in Sources */,
+				B46A76C81D58F7F000ADBF43 /* CDECloudKitFileSystem.m in Sources */,
 				B41A9E271C7DAADB001635C2 /* MotivationFeedViewController.swift in Sources */,
-				B41BF3521C7D12C800E27074 /* MotivationHuntModel.xcdatamodeld in Sources */,
+				B41BF3521C7D12C800E27074 /* MotivationHunt.xcdatamodeld in Sources */,
 				B42E42861C81DE720095B9BF /* FavouritesViewController.swift in Sources */,
 				B41BF34E1C7D124600E27074 /* ChallengeViewController.swift in Sources */,
 				B41BF3561C7D153300E27074 /* Challenge.swift in Sources */,
@@ -473,12 +509,13 @@
 				B48E1ED01CC5A15E00482581 /* MotivationFeedItem.swift in Sources */,
 				B423E34C1CC627DD0020D39D /* motivationCollectionViewCell.swift in Sources */,
 				B48E1ECF1CC5A15600482581 /* Challenge.swift in Sources */,
-				B48E1ECE1CC5A15300482581 /* MotivationHuntModel.xcdatamodeld in Sources */,
+				B48E1ECE1CC5A15300482581 /* MotivationHunt.xcdatamodeld in Sources */,
 				B42A4ED41CBD20CC00D9593D /* SecondViewController.swift in Sources */,
 				B48E1ED31CC5A1E600482581 /* MHConstant.swift in Sources */,
 				B42A4ED01CBD20CC00D9593D /* AppDelegate.swift in Sources */,
 				B48E1ED11CC5A18100482581 /* MHClient.swift in Sources */,
 				B43403FB1CBD6BDF00F9793E /* CloudKitHelper.swift in Sources */,
+				B46A76C91D58F7F000ADBF43 /* CDECloudKitFileSystem.m in Sources */,
 				B48E1ECD1CC5A14F00482581 /* CoreDataStackManager.swift in Sources */,
 				B42A4ED21CBD20CC00D9593D /* MotivationFeedViewController.swift in Sources */,
 			);
@@ -603,23 +640,34 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_ENTITLEMENTS = "Motivation Hunt/Motivation Hunt.entitlements";
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				CURRENT_PROJECT_VERSION = 0.6.3;
+				ENABLE_BITCODE = NO;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)/Carthage/Build/iOS",
 					"$(PROJECT_DIR)",
 					"$(PROJECT_DIR)/Carthage/Build/tvOS",
+					"$(USER_LIBRARY_DIR)/Mobile",
+					"Documents/com~apple~CloudDocs/Ensembles",
+					Basic,
+					Support/Ensembles,
+					2.4.1/Binaries/iOS/Static,
+					Framework,
 				);
 				INFOPLIST_FILE = "Motivation Hunt/Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 9.1;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				OTHER_LDFLAGS = "-ObjC";
 				OTHER_SWIFT_FLAGS = "-DDEBUG";
 				PRODUCT_BUNDLE_IDENTIFIER = com.jeffersonbonnaire.motivationhunt;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "";
+				SWIFT_OBJC_BRIDGING_HEADER = "Motivation Hunt-Bridging-Header.h";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				TARGETED_DEVICE_FAMILY = "1,2";
 				VERSIONING_SYSTEM = "apple-generic";
 			};
@@ -629,23 +677,33 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_ENTITLEMENTS = "Motivation Hunt/Motivation Hunt.entitlements";
 				CODE_SIGN_IDENTITY = "iPhone Distribution";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution";
 				CURRENT_PROJECT_VERSION = 0.6.3;
+				ENABLE_BITCODE = NO;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)/Carthage/Build/iOS",
 					"$(PROJECT_DIR)",
 					"$(PROJECT_DIR)/Carthage/Build/tvOS",
+					"$(USER_LIBRARY_DIR)/Mobile",
+					"Documents/com~apple~CloudDocs/Ensembles",
+					Basic,
+					Support/Ensembles,
+					2.4.1/Binaries/iOS/Static,
+					Framework,
 				);
 				INFOPLIST_FILE = "Motivation Hunt/Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 9.1;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				OTHER_LDFLAGS = "-ObjC";
 				OTHER_SWIFT_FLAGS = "-DRELEASE";
 				PRODUCT_BUNDLE_IDENTIFIER = com.jeffersonbonnaire.motivationhunt;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "cba361b0-0726-4842-b151-294cbfc2f9f1";
+				SWIFT_OBJC_BRIDGING_HEADER = "Motivation Hunt-Bridging-Header.h";
 				TARGETED_DEVICE_FAMILY = "1,2";
 				VERSIONING_SYSTEM = "apple-generic";
 			};
@@ -657,18 +715,29 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = "App Icon & Top Shelf Image";
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_ENTITLEMENTS = "Motivation Hunt TV/Motivation Hunt TV.entitlements";
 				CURRENT_PROJECT_VERSION = 0.6.3;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)/Carthage/Build/tvOS",
 					"$(PROJECT_DIR)/Carthage/Build/iOS",
+					"$(PROJECT_DIR)",
+					"$(USER_LIBRARY_DIR)/Mobile",
+					"Documents/com~apple~CloudDocs/Ensembles",
+					Basic,
+					Support/Ensembles,
+					2.4.1/Binaries/iOS/Static,
+					Framework,
 				);
 				INFOPLIST_FILE = "Motivation Hunt TV/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				OTHER_LDFLAGS = "-ObjC";
 				PRODUCT_BUNDLE_IDENTIFIER = com.jeffersonbonnaire.motivationhunttv;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = appletvos;
+				SWIFT_OBJC_BRIDGING_HEADER = "Motivation Hunt TV-Bridging-Header.h";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				TARGETED_DEVICE_FAMILY = 3;
 				TVOS_DEPLOYMENT_TARGET = 9.2;
 				VERSIONING_SYSTEM = "apple-generic";
@@ -681,18 +750,28 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = "App Icon & Top Shelf Image";
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_ENTITLEMENTS = "Motivation Hunt TV/Motivation Hunt TV.entitlements";
 				CURRENT_PROJECT_VERSION = 0.6.3;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)/Carthage/Build/tvOS",
 					"$(PROJECT_DIR)/Carthage/Build/iOS",
+					"$(PROJECT_DIR)",
+					"$(USER_LIBRARY_DIR)/Mobile",
+					"Documents/com~apple~CloudDocs/Ensembles",
+					Basic,
+					Support/Ensembles,
+					2.4.1/Binaries/iOS/Static,
+					Framework,
 				);
 				INFOPLIST_FILE = "Motivation Hunt TV/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				OTHER_LDFLAGS = "-ObjC";
 				PRODUCT_BUNDLE_IDENTIFIER = com.jeffersonbonnaire.motivationhunttv;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = appletvos;
+				SWIFT_OBJC_BRIDGING_HEADER = "Motivation Hunt TV-Bridging-Header.h";
 				TARGETED_DEVICE_FAMILY = 3;
 				TVOS_DEPLOYMENT_TARGET = 9.2;
 				VERSIONING_SYSTEM = "apple-generic";
@@ -732,13 +811,13 @@
 /* End XCConfigurationList section */
 
 /* Begin XCVersionGroup section */
-		B41BF3501C7D12C800E27074 /* MotivationHuntModel.xcdatamodeld */ = {
+		B41BF3501C7D12C800E27074 /* MotivationHunt.xcdatamodeld */ = {
 			isa = XCVersionGroup;
 			children = (
-				B41BF3511C7D12C800E27074 /* MotivationHuntModel.xcdatamodel */,
+				B41BF3511C7D12C800E27074 /* MotivationHunt.xcdatamodel */,
 			);
-			currentVersion = B41BF3511C7D12C800E27074 /* MotivationHuntModel.xcdatamodel */;
-			path = MotivationHuntModel.xcdatamodeld;
+			currentVersion = B41BF3511C7D12C800E27074 /* MotivationHunt.xcdatamodel */;
+			path = MotivationHunt.xcdatamodeld;
 			sourceTree = "<group>";
 			versionGroupType = wrapper.xcdatamodel;
 		};

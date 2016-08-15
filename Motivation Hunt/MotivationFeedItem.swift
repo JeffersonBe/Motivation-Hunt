@@ -11,7 +11,7 @@ import CoreData
 
 class MotivationFeedItem: NSManagedObject {
 
-    @NSManaged var itemRecordID: String
+    @NSManaged var uniqueIdentifier: String
     @NSManaged var itemVideoID: String
     @NSManaged var itemTitle: String
     @NSManaged var itemDescription: String
@@ -24,10 +24,9 @@ class MotivationFeedItem: NSManagedObject {
         super.init(entity: entity, insertIntoManagedObjectContext: context)
     }
 
-    init(itemRecordID: String, itemVideoID: String, itemTitle: String, itemDescription: String, itemThumbnailsUrl: String, saved: Bool, addedDate: NSDate, theme: String, context: NSManagedObjectContext) {
+    init(itemVideoID: String, itemTitle: String, itemDescription: String, itemThumbnailsUrl: String, saved: Bool, addedDate: NSDate, theme: String, context: NSManagedObjectContext) {
         let entity =  NSEntityDescription.entityForName("MotivationFeedItem", inManagedObjectContext: context)!
         super.init(entity: entity, insertIntoManagedObjectContext: context)
-        self.itemRecordID = itemRecordID
         self.itemVideoID = itemVideoID
         self.itemTitle = itemTitle
         self.itemDescription = itemDescription

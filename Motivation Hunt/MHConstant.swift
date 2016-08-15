@@ -13,6 +13,8 @@ extension MHClient {
     struct Constants {
         static let ApiKey = NSDictionary(contentsOfFile: NSBundle.mainBundle().pathForResource("Key", ofType: "plist")!)?.valueForKey("API_KEY")
         static let BaseUrl = "https://developers.google.com/apis-explorer/#p/youtube/v3/youtube"
+        static let CKBaseUrl = "iCloud.com.jeffersonbonnaire.motivationhunt"
+        static let StoreName = "MotivationHunt"
     }
 
     struct Resources {

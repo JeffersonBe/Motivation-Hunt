@@ -39,30 +39,29 @@ class ChallengeViewController: UIViewController {
         tableView.emptyDataSetDataSource = self
         tableView.emptyDataSetDelegate = self
 
-        CloudKitHelper.sharedInstance.subscribeToChallengeCreation()
-        CloudKitHelper.sharedInstance.fetchNotificationChanges()
+//        CloudKitHelper.sharedInstance.subscribeToChallengeCreation()
+//        CloudKitHelper.sharedInstance.fetchNotificationChanges()
 
         do {
             try fetchedResultsController.performFetch()
         } catch let error as NSError {
             Log.error("Error: \(error.localizedDescription)")
         }
-
-        if self.fetchedResultsController.fetchedObjects?.count == 0 {
-            CloudKitHelper.sharedInstance.fetchChallenge { (success, record, error) in
-                guard error == nil else {
-                    return
-                }
-                Async.main() {
-                    CoreDataStackManager.sharedInstance.managedObjectContext.performBlock({
-                        for item in record! {
-                            let _ = Challenge(challengeDescription: item["challengeDescription"] as! String, completed: item["completed"] as! Bool, endDate: item["endDate"] as! NSDate, challengeRecordID: item.recordID.recordName, context: self.sharedContext)
-                            CoreDataStackManager.sharedInstance.saveContext()
-                        }
-                    })
-                }
-            }
-        }
+//        if self.fetchedResultsController.fetchedObjects?.count == 0 {
+//            CloudKitHelper.sharedInstance.fetchChallenge { (success, record, error) in
+//                guard error == nil else {
+//                    return
+//                }
+//                Async.main() {
+//                    CoreDataStackManager.sharedInstance.managedObjectContext.performBlock({
+//                        for item in record! {
+//                            let _ = Challenge(challengeDescription: item["challengeDescription"] as! String, completed: item["completed"] as! Bool, endDate: item["endDate"] as! NSDate, challengeRecordID: item.recordID.recordName, context: self.sharedContext)
+//                            CoreDataStackManager.sharedInstance.saveContext()
+//                        }
+//                    })
+//                }
+//            }
+//        }
     }
 
     override func viewWillAppear(animated: Bool) {
@@ -222,26 +221,41 @@ extension ChallengeViewController {
         // Modify Challenge based on Edit mode
 
         guard currentChallengeToEdit == nil else {
+            Async.main {
+                self.currentChallengeToEdit.challengeDescription = self.challengeTextField.text!
+                self.currentChallengeToEdit.endDate = self.challengeDatePicker.date
+                CoreDataStackManager.sharedInstance.saveContext()
+            }
 
-            CloudKitHelper.sharedInstance.updateChallenge(challengeDictionary, completionHandler: { (success, record, error) in
-                guard error == nil else {
-                    return
-                }
-                Async.main {
-                    self.currentChallengeToEdit.challengeDescription = self.challengeTextField.text!
-                    self.currentChallengeToEdit.endDate = self.challengeDatePicker.date
-                    CoreDataStackManager.sharedInstance.saveContext()
-                }
-            })
+//            CloudKitHelper.sharedInstance.updateChallenge(challengeDictionary, completionHandler: { (success, record, error) in
+//                guard error == nil else {
+//                    return
+//                }
+//                Async.main {
+//                    self.currentChallengeToEdit.challengeDescription = self.challengeTextField.text!
+//                    self.currentChallengeToEdit.endDate = self.challengeDatePicker.date
+//                    CoreDataStackManager.sharedInstance.saveContext()
+//                }
+//            })
             showOrHideChallengeView()
             return
         }
 
-        CloudKitHelper.sharedInstance.saveChallenge(challengeDictionary, completionHandler: { (result, record, error) in
-            if result {
-                self.addChallengeToCoreData(challengeDictionary, challengeRecordID: record.recordID.recordName)
-            }
-        })
+        Async.main {
+            let test = Challenge(
+                challengeDescription: challengeDictionary["challengeDescription"] as! String,
+                completed: challengeDictionary["completed"] as! Bool,
+                endDate: challengeDictionary["endDate"] as! NSDate,
+                context: self.sharedContext)
+            test.uniqueIdentifier = NSUUID().UUIDString
+            CoreDataStackManager.sharedInstance.saveContext()
+        }
+
+//        CloudKitHelper.sharedInstance.saveChallenge(challengeDictionary, completionHandler: { (result, record, error) in
+//            if result {
+//                self.addChallengeToCoreData(challengeDictionary, challengeRecordID: record.recordID.recordName)
+//            }
+//        })
         showOrHideChallengeView()
     }
 
@@ -417,34 +431,41 @@ extension ChallengeViewController: UITableViewDataSource, UITableViewDelegate {
                 challengeDescription: challengeDictionary["challengeDescription"] as! String,
                 completed: challengeDictionary["completed"] as! Bool,
                 endDate: challengeDictionary["endDate"] as! NSDate,
-                challengeRecordID: challengeRecordID,
                 context: self.sharedContext)
             CoreDataStackManager.sharedInstance.saveContext()
         }
     }
 
     func deleteChallenge(challenge: Challenge) {
-        CloudKitHelper.sharedInstance.deleteChallenge(CKRecordID(recordName: challenge.challengeRecordID), completionHandler: { (success, record, error) in
-            guard success else {
-                return
-            }
-            Async.main {
-                self.sharedContext.deleteObject(challenge)
-                CoreDataStackManager.sharedInstance.saveContext()
-            }
-        })
+        Async.main {
+            self.sharedContext.deleteObject(challenge)
+            CoreDataStackManager.sharedInstance.saveContext()
+        }
+//        CloudKitHelper.sharedInstance.deleteChallenge(CKRecordID(recordName: challenge.challengeRecordID), completionHandler: { (success, record, error) in
+//            guard success else {
+//                return
+//            }
+//            Async.main {
+//                self.sharedContext.deleteObject(challenge)
+//                CoreDataStackManager.sharedInstance.saveContext()
+//            }
+//        })
     }
 
     func updateCompleteStatusChallenge(challenge: Challenge) {
-        CloudKitHelper.sharedInstance.updateCompletedStatusChallenge(CKRecordID(recordName: challenge.challengeRecordID), completionHandler: { (success, record, error) in
-            guard success else {
-                return
-            }
-            Async.main {
-                challenge.completed = challenge.completed ? false : true
-                CoreDataStackManager.sharedInstance.saveContext()
-            }
-        })
+        Async.main {
+            challenge.completed = challenge.completed ? false : true
+            CoreDataStackManager.sharedInstance.saveContext()
+        }
+//        CloudKitHelper.sharedInstance.updateCompletedStatusChallenge(CKRecordID(recordName: challenge.challengeRecordID), completionHandler: { (success, record, error) in
+//            guard success else {
+//                return
+//            }
+//            Async.main {
+//                challenge.completed = challenge.completed ? false : true
+//                CoreDataStackManager.sharedInstance.saveContext()
+//            }
+//        })
     }
 }
 

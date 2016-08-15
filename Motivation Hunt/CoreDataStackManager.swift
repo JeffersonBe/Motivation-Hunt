@@ -8,12 +8,41 @@
 
 import Foundation
 import CoreData
+import Ensembles
 
-private let SQLITE_FILE_NAME = "Motivation_Hunt.sqlite"
-
-class CoreDataStackManager {
+class CoreDataStackManager: NSObject, CDEPersistentStoreEnsembleDelegate {
 
     static let sharedInstance = CoreDataStackManager()
+    var ensemble : CDEPersistentStoreEnsemble?
+    var cloudFileSystem : CDECloudKitFileSystem?
+
+    lazy var storeName : String = {
+        return MHClient.Constants.StoreName
+    }()
+
+    lazy var sqlName : String = {
+        return self.storeName + ".sqlite"
+    }()
+
+    lazy var modelURL : NSURL = {
+        return NSBundle.mainBundle().URLForResource(self.storeName, withExtension: "momd")!
+    }()
+
+    lazy var storeDirectoryURL : NSURL = {
+        var directoryURL : NSURL? = nil
+        do {
+            try directoryURL = NSFileManager.defaultManager().URLForDirectory(NSSearchPathDirectory.ApplicationSupportDirectory, inDomain: .UserDomainMask, appropriateForURL: nil, create: true)
+            directoryURL = directoryURL!.URLByAppendingPathComponent(NSBundle.mainBundle().bundleIdentifier!, isDirectory: true)
+        } catch {
+            NSLog("Unresolved error: Application's document directory is unreachable")
+            abort()
+        }
+        return directoryURL!
+    }()
+
+    lazy var storeURL : NSURL = {
+        return self.storeDirectoryURL.URLByAppendingPathComponent(self.sqlName)
+    }()
 
     // MARK: - Core Data stack
 
@@ -25,18 +54,31 @@ class CoreDataStackManager {
 
     lazy var managedObjectModel: NSManagedObjectModel = {
         // The managed object model for the application. This property is not optional. It is a fatal error for the application not to be able to find and load its model.
-        let modelURL = NSBundle.mainBundle().URLForResource("MotivationHuntModel", withExtension: "momd")!
-        return NSManagedObjectModel(contentsOfURL: modelURL)!
+        return NSManagedObjectModel(contentsOfURL: self.modelURL)!
     }()
 
     lazy var persistentStoreCoordinator: NSPersistentStoreCoordinator = {
         // The persistent store coordinator for the application. This implementation creates and returns a coordinator, having added the store for the application to it. This property is optional since there are legitimate error conditions that could cause the creation of the store to fail.
         // Create the coordinator and store
         let coordinator = NSPersistentStoreCoordinator(managedObjectModel: self.managedObjectModel)
-        let url = self.applicationDocumentsDirectory.URLByAppendingPathComponent(SQLITE_FILE_NAME)
+        var options = [NSObject: AnyObject]()
+        options[NSMigratePersistentStoresAutomaticallyOption] = NSNumber(bool: true)
+        options[NSInferMappingModelAutomaticallyOption] = NSNumber(bool: true)
+
         var failureReason = "There was an error creating or loading the application's saved data."
+
         do {
-            try coordinator.addPersistentStoreWithType(NSSQLiteStoreType, configuration: nil, URL: url, options: nil)
+            try NSFileManager.defaultManager().createDirectoryAtURL(self.storeDirectoryURL, withIntermediateDirectories: true, attributes: nil)
+        } catch {
+            NSLog("Unresolved error: local database storage position is unavailable.")
+            abort()
+        }
+
+        do {
+            try coordinator.addPersistentStoreWithType(NSSQLiteStoreType,
+                                                       configuration: nil,
+                                                       URL: self.storeURL,
+                                                       options: options)
         } catch {
             // Report any error we got.
             var dict = [String: AnyObject]()
@@ -59,6 +101,7 @@ class CoreDataStackManager {
         let coordinator = self.persistentStoreCoordinator
         var managedObjectContext = NSManagedObjectContext(concurrencyType: .MainQueueConcurrencyType)
         managedObjectContext.persistentStoreCoordinator = coordinator
+        managedObjectContext.mergePolicy = NSMergeByPropertyStoreTrumpMergePolicy
         return managedObjectContext
     }()
 
@@ -76,5 +119,103 @@ class CoreDataStackManager {
                 abort()
             }
         }
+    }
+
+    func enableEnsemble() {
+        #if DEBUG
+            CDESetCurrentLoggingLevel(4)
+        #else
+            CDESetCurrentLoggingLevel(0)
+        #endif
+
+        cloudFileSystem = CDECloudKitFileSystem(
+            ubiquityContainerIdentifier: MHClient.Constants.CKBaseUrl,
+            rootDirectory: nil,
+            usePublicDatabase: true,
+            schemaVersion: CDECloudKitSchemaVersion.Version1)
+
+        cloudFileSystem?.subscribeForPushNotificationsWithCompletion({ (error) in
+            guard error == nil else {
+                Log.error("subscribeForPushNotificationsWithCompletion: ", error)
+                return
+            }
+        })
+
+        ensemble = CDEPersistentStoreEnsemble(
+            ensembleIdentifier: MHClient.Constants.CKBaseUrl,
+            persistentStoreURL: storeURL,
+            managedObjectModelURL: modelURL,
+            cloudFileSystem: cloudFileSystem!)
+
+        CoreDataStackManager.sharedInstance.ensemble!.delegate = CoreDataStackManager.sharedInstance
+        
+        ensemble?.leechPersistentStoreWithSeedPolicy(CDESeedPolicy.MergeAllData, completion: { (NSError) in
+            Log.info("leechPersistentStoreWithSeedPolicy")
+        })
+    }
+
+    func persistentStoreEnsemble(ensemble: CDEPersistentStoreEnsemble, didSaveMergeChangesWithNotification notification: NSNotification) {
+        CoreDataStackManager.sharedInstance.managedObjectContext.performBlockAndWait({ () -> Void in
+            CoreDataStackManager.sharedInstance.managedObjectContext.mergeChangesFromContextDidSaveNotification(notification)
+        })
+
+        if notification == true {
+            dispatch_after(dispatch_time(DISPATCH_TIME_NOW, Int64(0.02 * Double(NSEC_PER_MSEC))), dispatch_get_main_queue(), {
+                Log.info("Database was updated from iCloud")
+                CoreDataStackManager.sharedInstance.saveContext()
+                NSNotificationCenter.defaultCenter().postNotificationName("DB_UPDATED", object: nil)
+            })
+        }
+    }
+
+    func persistentStoreEnsemble(ensemble: CDEPersistentStoreEnsemble, globalIdentifiersForManagedObjects objects: [NSManagedObject]) -> [NSObject] {
+        return (objects as NSArray).valueForKeyPath("uniqueIdentifier") as! [NSObject]
+    }
+
+    func syncWithCompletion(completion: (() -> Void)!) {
+
+        guard ensemble?.leeched == true else {
+            ensemble!.leechPersistentStoreWithCompletion({ (error:NSError?) -> Void in
+                if let error = error {
+                    switch (error.code) {
+                    case 103:
+                        self.performSelector(
+                            #selector(
+                                CoreDataStackManager.sharedInstance.syncWithCompletion(_:)),
+                            withObject: nil,
+                            afterDelay: 1.0)
+                        return
+                    default:
+                        Log.error("Error in leechPersistentStoreWithCompletion:", error)
+                        return
+                    }
+                }
+
+                self.performSelector(#selector(CoreDataStackManager.sharedInstance.syncWithCompletion(_:)), withObject: nil, afterDelay: 1.0)
+
+                if let c = completion {
+                    c()
+                }
+            })
+            return
+        }
+
+        ensemble!.mergeWithCompletion({ (error:NSError?) -> Void in
+            if let error = error {
+                switch (error.code) {
+                case 103:
+                        self.performSelector(#selector(CoreDataStackManager.sharedInstance.syncWithCompletion(_:)), withObject: nil, afterDelay: 1.0)
+                        Log.error("Error case 103:", error)
+                        return
+                default:
+                        Log.error("Error in mergeWithCompletion:", error)
+                        return
+                }
+            }
+
+            if let c = completion {
+                c()
+            }
+        })
     }
 }

@@ -144,15 +144,9 @@ extension FavouritesViewController {
         let indexPath = collectionView.indexPathForItemAtPoint(tapPoint)
         let objet = fetchedResultsController.objectAtIndexPath(indexPath!) as! MotivationFeedItem
 
-        CloudKitHelper.sharedInstance.updateFavorites(CKRecordID(recordName: objet.itemRecordID)) { (success, record, error) in
-            guard error == nil else {
-                return
-            }
-
-            Async.main {
-                objet.saved = objet.saved ? false : true
-                CoreDataStackManager.sharedInstance.saveContext()
-            }
+        Async.main {
+            objet.saved = objet.saved ? false : true
+            CoreDataStackManager.sharedInstance.saveContext()
         }
     }
 

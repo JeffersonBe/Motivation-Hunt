@@ -45,16 +45,16 @@ class MotivationFeedViewController: UIViewController {
             print("Error: \(error.localizedDescription)")
         }
 
-        if fetchedResultsController.fetchedObjects?.count == 0 {
-            fetchUserData({ (success) in
-                guard success == true else {
-                    Async.main {
-                        self.addNewMotivationItem()
-                    }
-                    return
-                }
-            })
-        }
+//        if fetchedResultsController.fetchedObjects?.count == 0 {
+//            fetchUserData({ (success) in
+//                guard success == true else {
+//                    Async.main {
+//                        self.addNewMotivationItem()
+//                    }
+//                    return
+//                }
+//            })
+//        }
     }
 
     override func viewWillAppear(animated: Bool) {
@@ -179,12 +179,6 @@ extension MotivationFeedViewController {
             objet.saved = objet.saved ? false : true
             CoreDataStackManager.sharedInstance.saveContext()
         }
-
-        CloudKitHelper.sharedInstance.updateFavorites(CKRecordID(recordName: objet.itemRecordID)) { (success, record, error) in
-            guard error == nil else {
-                return
-            }
-        }
     }
 
     func playVideo(gestureRecognizer: UIGestureRecognizer) {
@@ -240,7 +234,6 @@ extension MotivationFeedViewController {
                 Async.main {
                     CoreDataStackManager.sharedInstance.managedObjectContext.performBlock({
                         let _ = MotivationFeedItem(
-                            itemRecordID: record.recordID.recordName,
                             itemVideoID: record.valueForKey("itemVideoID") as! String,
                             itemTitle: record.valueForKey("itemTitle") as! String,
                             itemDescription: record.valueForKey("itemDescription") as! String,
@@ -254,7 +247,6 @@ extension MotivationFeedViewController {
                     CoreDataStackManager.sharedInstance.saveContext()
                 }
             })
-            Log.info("Here")
             completionHandler(success: true)
         }
         self.indicator.stopActivity()
@@ -323,18 +315,11 @@ extension MotivationFeedViewController {
                             return
                     }
 
-                    CloudKitHelper.sharedInstance.savedMotivationItem(videoID, itemTitle: title, itemDescription: description, itemThumbnailsUrl: thumbnailsUrl, saved: false, addedDate: NSDate(), theme: theme) { (success, record, error) in
-                        guard success else {
-                            Log.error(error)
-                            return
-                        }
-
-                        Async.main {
-                            let _ = MotivationFeedItem(itemRecordID: record.recordID.recordName, itemVideoID: videoID, itemTitle: title, itemDescription: description, itemThumbnailsUrl: thumbnailsUrl, saved: false, addedDate: NSDate(), theme: theme, context: self.sharedContext)
-                            CoreDataStackManager.sharedInstance.saveContext()
-                            self.indicator.stopActivity()
-                            self.indicator.removeFromSuperview()
-                        }
+                    Async.main {
+                        let _ = MotivationFeedItem(itemVideoID: videoID, itemTitle: title, itemDescription: description, itemThumbnailsUrl: thumbnailsUrl, saved: false, addedDate: NSDate(), theme: theme, context: self.sharedContext)
+                        CoreDataStackManager.sharedInstance.saveContext()
+                        self.indicator.stopActivity()
+                        self.indicator.removeFromSuperview()
                     }
                 }
         }
