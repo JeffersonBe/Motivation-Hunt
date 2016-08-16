@@ -1,5 +1,5 @@
 //
-//  MotivationFeedItem.swift
+//  VideoItem.swift
 //  Motivation Hunt
 //
 //  Created by Jefferson Bonnaire on 27/02/2016.
@@ -9,7 +9,7 @@
 import UIKit
 import CoreData
 
-class MotivationFeedItem: NSManagedObject {
+class VideoItem: NSManagedObject {
 
     @NSManaged var uniqueIdentifier: String
     @NSManaged var itemVideoID: String
@@ -24,16 +24,20 @@ class MotivationFeedItem: NSManagedObject {
         super.init(entity: entity, insertIntoManagedObjectContext: context)
     }
 
-    init(itemVideoID: String, itemTitle: String, itemDescription: String, itemThumbnailsUrl: String, saved: Bool, addedDate: NSDate, theme: String, context: NSManagedObjectContext) {
-        let entity =  NSEntityDescription.entityForName("MotivationFeedItem", inManagedObjectContext: context)!
+    init(itemVideoID: String, itemTitle: String, itemDescription: String, itemThumbnailsUrl: String, saved: Bool, theme: Theme.themeName, context: NSManagedObjectContext) {
+        let entity =  NSEntityDescription.entityForName("VideoItem", inManagedObjectContext: context)!
         super.init(entity: entity, insertIntoManagedObjectContext: context)
         self.itemVideoID = itemVideoID
         self.itemTitle = itemTitle
         self.itemDescription = itemDescription
         self.itemThumbnailsUrl = itemThumbnailsUrl
         self.saved = saved
-        self.addedDate = addedDate
-        self.theme = theme
+        self.theme = theme.rawValue
+    }
+
+    override func awakeFromInsert()  {
+        self.uniqueIdentifier = NSUUID().UUIDString
+        self.addedDate = NSDate()
     }
 
     var image: UIImage? {

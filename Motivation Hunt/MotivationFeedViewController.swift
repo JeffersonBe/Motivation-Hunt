@@ -44,17 +44,6 @@ class MotivationFeedViewController: UIViewController {
         } catch let error as NSError {
             print("Error: \(error.localizedDescription)")
         }
-
-//        if fetchedResultsController.fetchedObjects?.count == 0 {
-//            fetchUserData({ (success) in
-//                guard success == true else {
-//                    Async.main {
-//                        self.addNewMotivationItem()
-//                    }
-//                    return
-//                }
-//            })
-//        }
     }
 
     override func viewWillAppear(animated: Bool) {
@@ -74,7 +63,7 @@ class MotivationFeedViewController: UIViewController {
     }
 
     lazy var fetchedResultsController: NSFetchedResultsController = {
-        let fetchRequest = NSFetchRequest(entityName: "MotivationFeedItem")
+        let fetchRequest = NSFetchRequest(entityName: "VideoItem")
         fetchRequest.sortDescriptors = [NSSortDescriptor(key: "addedDate", ascending: false)]
 
         let fetchedResultsController = NSFetchedResultsController(
@@ -173,7 +162,7 @@ extension MotivationFeedViewController {
     func savedItem(gestureRecognizer: UIGestureRecognizer) {
         let tapPoint: CGPoint = gestureRecognizer.locationInView(collectionView)
         let indexPath = collectionView.indexPathForItemAtPoint(tapPoint)
-        let objet = fetchedResultsController.objectAtIndexPath(indexPath!) as! MotivationFeedItem
+        let objet = fetchedResultsController.objectAtIndexPath(indexPath!) as! VideoItem
 
         Async.main {
             objet.saved = objet.saved ? false : true
@@ -207,7 +196,7 @@ extension MotivationFeedViewController {
         let tapPoint: CGPoint = gestureRecognizer.locationInView(collectionView)
         let indexPath = collectionView.indexPathForItemAtPoint(tapPoint)
         let cell = collectionView.cellForItemAtIndexPath(indexPath!) as! motivationCollectionViewCell
-        let motivation = fetchedResultsController.objectAtIndexPath(indexPath!) as! MotivationFeedItem
+        let motivation = fetchedResultsController.objectAtIndexPath(indexPath!) as! VideoItem
         let motivationToShare = [motivation.itemTitle, motivation.itemDescription, "\(MHClient.Resources.youtubeBaseUrl)\(motivation.itemVideoID)"]
         let activityViewController = UIActivityViewController(activityItems: motivationToShare, applicationActivities: nil)
         activityViewController.excludedActivityTypes = [UIActivityTypeAirDrop, UIActivityTypeAddToReadingList]
@@ -216,41 +205,6 @@ extension MotivationFeedViewController {
         activityViewController.popoverPresentationController?.sourceRect = cell.imageView.bounds
 
         self.presentViewController(activityViewController, animated: true, completion: nil)
-    }
-
-    func fetchUserData(completionHandler: (success: Bool?) -> Void) {
-        indicator.startActivity()
-        view.addSubview(indicator)
-
-        CloudKitHelper.sharedInstance.fetchAllMotivationFeedItem { (success, record, error) in
-            guard success == true else {
-                self.indicator.stopActivity()
-                self.indicator.removeFromSuperview()
-                completionHandler(success: false)
-                return
-            }
-
-            record?.forEach({ (record) in
-                Async.main {
-                    CoreDataStackManager.sharedInstance.managedObjectContext.performBlock({
-                        let _ = MotivationFeedItem(
-                            itemVideoID: record.valueForKey("itemVideoID") as! String,
-                            itemTitle: record.valueForKey("itemTitle") as! String,
-                            itemDescription: record.valueForKey("itemDescription") as! String,
-                            itemThumbnailsUrl: record.valueForKey("itemThumbnailsUrl") as! String,
-                            saved: record.valueForKey("saved") as! Bool,
-                            addedDate: record.valueForKey("addedDate") as! NSDate,
-                            theme: record.valueForKey("theme") as! String,
-                            context: self.sharedContext
-                        )
-                    })
-                    CoreDataStackManager.sharedInstance.saveContext()
-                }
-            })
-            completionHandler(success: true)
-        }
-        self.indicator.stopActivity()
-        self.indicator.removeFromSuperview()
     }
 
     func addNewMotivationItem() {
@@ -316,7 +270,8 @@ extension MotivationFeedViewController {
                     }
 
                     Async.main {
-                        let _ = MotivationFeedItem(itemVideoID: videoID, itemTitle: title, itemDescription: description, itemThumbnailsUrl: thumbnailsUrl, saved: false, addedDate: NSDate(), theme: theme, context: self.sharedContext)
+                        let _ = VideoItem(itemVideoID: videoID, itemTitle: title, itemDescription: description, itemThumbnailsUrl: thumbnailsUrl, saved: false, theme: Theme.themeName.Motivation, context: self.sharedContext)
+                        // let _ = Item(item: videoItem as AnyObject, theme: Theme.themeName.Motivation, context: self.sharedContext)
                         CoreDataStackManager.sharedInstance.saveContext()
                         self.indicator.stopActivity()
                         self.indicator.removeFromSuperview()
@@ -339,13 +294,13 @@ extension MotivationFeedViewController: UICollectionViewDelegate, UICollectionVi
     }
 
     func collectionView(collectionView: UICollectionView, cellForItemAtIndexPath indexPath: NSIndexPath) -> UICollectionViewCell {
-        let motivationItem = fetchedResultsController.objectAtIndexPath(indexPath) as! MotivationFeedItem
+        let motivationItem = fetchedResultsController.objectAtIndexPath(indexPath) as! VideoItem
         let cell = collectionView.dequeueReusableCellWithReuseIdentifier(MHClient.CellIdentifier.cellWithReuseIdentifier, forIndexPath: indexPath) as! motivationCollectionViewCell
         configureCell(cell, withItem: motivationItem)
         return cell
     }
 
-    func configureCell(cell: motivationCollectionViewCell, withItem motivationItem: MotivationFeedItem) {
+    func configureCell(cell: motivationCollectionViewCell, withItem motivationItem: VideoItem) {
         cell.videoPlayer.delegate = self
         cell.textLabel.text = motivationItem.itemTitle
 
@@ -388,7 +343,7 @@ extension MotivationFeedViewController: UICollectionViewDelegate, UICollectionVi
 
     func collectionView(collectionView: UICollectionView, willDisplayCell cell: UICollectionViewCell, forItemAtIndexPath indexPath: NSIndexPath) {
         if let cell = cell as? motivationCollectionViewCell {
-            let motivationItem = fetchedResultsController.objectAtIndexPath(indexPath) as! MotivationFeedItem
+            let motivationItem = fetchedResultsController.objectAtIndexPath(indexPath) as! VideoItem
             cell.videoPlayer.loadVideoID(motivationItem.itemVideoID)
             cell.imageView.alpha = 0
             cell.playButton.alpha = 0

@@ -60,7 +60,7 @@ class FavouritesViewController: UIViewController {
 
     lazy var fetchedResultsController: NSFetchedResultsController = {
 
-        let fetchRequest = NSFetchRequest(entityName: "MotivationFeedItem")
+        let fetchRequest = NSFetchRequest(entityName: "VideoItem")
         let predicate = NSPredicate(format: "saved == 1")
         fetchRequest.predicate = predicate
         fetchRequest.sortDescriptors = [NSSortDescriptor(
@@ -142,7 +142,7 @@ extension FavouritesViewController {
     func savedItem(gestureRecognizer: UIGestureRecognizer) {
         let tapPoint: CGPoint = gestureRecognizer.locationInView(collectionView)
         let indexPath = collectionView.indexPathForItemAtPoint(tapPoint)
-        let objet = fetchedResultsController.objectAtIndexPath(indexPath!) as! MotivationFeedItem
+        let objet = fetchedResultsController.objectAtIndexPath(indexPath!) as! VideoItem
 
         Async.main {
             objet.saved = objet.saved ? false : true
@@ -154,7 +154,7 @@ extension FavouritesViewController {
         let tapPoint: CGPoint = gestureRecognizer.locationInView(collectionView)
         let indexPath = collectionView.indexPathForItemAtPoint(tapPoint)
         let cell = collectionView.cellForItemAtIndexPath(indexPath!) as! motivationCollectionViewCell
-        let motivation = fetchedResultsController.objectAtIndexPath(indexPath!) as! MotivationFeedItem
+        let motivation = fetchedResultsController.objectAtIndexPath(indexPath!) as! VideoItem
         let motivationToShare = [motivation.itemTitle, motivation.itemDescription, "https://www.youtube.com/watch?v=\(motivation.itemVideoID)"]
         let activityViewController = UIActivityViewController(activityItems: motivationToShare, applicationActivities: nil)
         activityViewController.excludedActivityTypes = [UIActivityTypeAirDrop, UIActivityTypeAddToReadingList]
@@ -220,13 +220,13 @@ extension FavouritesViewController: UICollectionViewDelegate, UICollectionViewDa
     }
 
     func collectionView(collectionView: UICollectionView, cellForItemAtIndexPath indexPath: NSIndexPath) -> UICollectionViewCell {
-        let motivationItem = fetchedResultsController.objectAtIndexPath(indexPath) as! MotivationFeedItem
+        let motivationItem = fetchedResultsController.objectAtIndexPath(indexPath) as! VideoItem
         let cell = collectionView.dequeueReusableCellWithReuseIdentifier(MHClient.CellIdentifier.cellWithReuseIdentifier, forIndexPath: indexPath) as! motivationCollectionViewCell
         configureCell(cell, withItem: motivationItem)
         return cell
     }
 
-    func configureCell(cell: motivationCollectionViewCell, withItem motivationItem: MotivationFeedItem) {
+    func configureCell(cell: motivationCollectionViewCell, withItem motivationItem: VideoItem) {
         cell.videoPlayer.delegate = self
         cell.textLabel.text = motivationItem.itemTitle
 
@@ -270,7 +270,7 @@ extension FavouritesViewController: UICollectionViewDelegate, UICollectionViewDa
 
     func collectionView(collectionView: UICollectionView, willDisplayCell cell: UICollectionViewCell, forItemAtIndexPath indexPath: NSIndexPath) {
         if let cell = cell as? motivationCollectionViewCell {
-            let motivationItem = fetchedResultsController.objectAtIndexPath(indexPath) as! MotivationFeedItem
+            let motivationItem = fetchedResultsController.objectAtIndexPath(indexPath) as! VideoItem
             cell.videoPlayer.loadVideoID(motivationItem.itemVideoID)
             cell.imageView.alpha = 0
             cell.playButton.alpha = 0
