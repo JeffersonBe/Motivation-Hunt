@@ -11,13 +11,19 @@ import CoreData
 import Log
 import CloudKit
 import GoogleAnalytics
+import PinpointKit
 
 let Log = Logger()
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
 
-    var window: UIWindow?
+    // var window: UIWindow?
+    let pinPointKit = PinpointKit(configuration: Configuration(
+        feedbackRecipients: ["Jefferson.bonnaire+motivationHunt@gmail.com"],
+        appearance: InterfaceCustomization.Appearance.init(tintColor: UIColor.blueColor())
+        ))
+    lazy var window: UIWindow? = ShakeDetectingWindow(frame: UIScreen.mainScreen().bounds, delegate: self.pinPointKit)
 
     func application(application: UIApplication, didFinishLaunchingWithOptions launchOptions: [NSObject: AnyObject]?) -> Bool {
         // Override point for customization after application launch.
@@ -49,7 +55,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         let gai = GAI.sharedInstance()
         gai.trackerWithTrackingId("UA-77655829-1")
         gai.trackUncaughtExceptions = true  // report uncaught exceptions
-
 
         // Logging Mechanism
         #if DEBUG

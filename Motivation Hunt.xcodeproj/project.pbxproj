@@ -62,6 +62,7 @@
 		B4B17E281CE4789300C36F9E /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = B4B17E261CE4789300C36F9E /* GoogleService-Info.plist */; };
 		B4BB50771D638C2A00AE1560 /* Item.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4BB50761D638C2A00AE1560 /* Item.swift */; };
 		B4BB50791D638CB600AE1560 /* Theme.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4BB50781D638CB600AE1560 /* Theme.swift */; };
+		B4C8D04A1D666E7B00E32FEE /* PinpointKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B4C8D0491D666E7B00E32FEE /* PinpointKit.framework */; };
 		B4DC90D11CCD2CD100CA1C46 /* YouTubePlayer.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B4DC90D01CCD2CD100CA1C46 /* YouTubePlayer.framework */; };
 		B4DC95521C88CD620041AB31 /* MHClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4DC95511C88CD620041AB31 /* MHClient.swift */; };
 		B4DC95541C88CE8E0041AB31 /* MHConstant.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4DC95531C88CE8E0041AB31 /* MHConstant.swift */; };
@@ -122,6 +123,7 @@
 		B4B17E261CE4789300C36F9E /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		B4BB50761D638C2A00AE1560 /* Item.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Item.swift; sourceTree = "<group>"; };
 		B4BB50781D638CB600AE1560 /* Theme.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Theme.swift; sourceTree = "<group>"; };
+		B4C8D0491D666E7B00E32FEE /* PinpointKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = PinpointKit.framework; path = Carthage/Build/iOS/PinpointKit.framework; sourceTree = "<group>"; };
 		B4DC90D01CCD2CD100CA1C46 /* YouTubePlayer.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = YouTubePlayer.framework; path = Carthage/Build/iOS/YouTubePlayer.framework; sourceTree = "<group>"; };
 		B4DC95511C88CD620041AB31 /* MHClient.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = MHClient.swift; path = "Motivation Hunt/MHClient.swift"; sourceTree = "<group>"; };
 		B4DC95531C88CE8E0041AB31 /* MHConstant.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = MHConstant.swift; path = "Motivation Hunt/MHConstant.swift"; sourceTree = "<group>"; };
@@ -138,6 +140,7 @@
 				B4ABAA4D1CA0042100EFEBBA /* Advance.framework in Frameworks */,
 				B4ABAA4E1CA0042100EFEBBA /* Async.framework in Frameworks */,
 				B4EA3A8E1CD5152B00AE117F /* Alamofire.framework in Frameworks */,
+				B4C8D04A1D666E7B00E32FEE /* PinpointKit.framework in Frameworks */,
 				B4ABAA4F1CA0042100EFEBBA /* FontAwesome.framework in Frameworks */,
 				B4ABAA511CA0042100EFEBBA /* SnapKit.framework in Frameworks */,
 				B4B17E251CE477D800C36F9E /* GoogleAnalytics.framework in Frameworks */,
@@ -268,6 +271,7 @@
 		B49730EB1CCAEE430086F61D /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				B4C8D0491D666E7B00E32FEE /* PinpointKit.framework */,
 				B40D683B1D5ED28600B424D0 /* CloudKit.framework */,
 				B46A76C01D58F03F00ADBF43 /* Ensembles.bundle */,
 				B46A76BD1D58F02D00ADBF43 /* Ensembles.framework */,
@@ -470,6 +474,7 @@
 				"$(SRCROOT)/Carthage/Build/iOS/TBEmptyDataSet.framework",
 				"$(SRCROOT)/Carthage/Build/iOS/Alamofire.framework",
 				"$(SRCROOT)/Carthage/Build/iOS/GoogleAnalytics.framework",
+				"$(SRCROOT)/Carthage/Build/iOS/PinpointKit.framework",
 			);
 			outputPaths = (
 			);
