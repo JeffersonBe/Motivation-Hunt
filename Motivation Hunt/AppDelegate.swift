@@ -21,7 +21,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     // var window: UIWindow?
     let pinPointKit = PinpointKit(configuration: Configuration(
         feedbackRecipients: ["Jefferson.bonnaire+motivationHunt@gmail.com"],
-        appearance: InterfaceCustomization.Appearance.init(tintColor: UIColor.blueColor())
+        appearance: InterfaceCustomization.Appearance.init(tintColor: UIColor.blackColor())
         ))
     lazy var window: UIWindow? = ShakeDetectingWindow(frame: UIScreen.mainScreen().bounds, delegate: self.pinPointKit)
 
