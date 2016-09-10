@@ -16,6 +16,8 @@ import SnapKit
 import Alamofire
 import GoogleAnalytics
 import TBEmptyDataSet
+import Onboard
+import SwiftyUserDefaults
 
 let nextPageTokenConstant = "nextPageToken"
 
@@ -31,7 +33,6 @@ class MotivationFeedViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view, typically from a nib.
-
         setupUI()
 
         // Initialize delegate
@@ -44,6 +45,63 @@ class MotivationFeedViewController: UIViewController {
         } catch let error as NSError {
             print("Error: \(error.localizedDescription)")
         }
+    }
+
+    override func viewDidAppear(animated: Bool) {
+        if Defaults[.haveSeenOnBoarding] == nil || false {
+            onboarding()
+        }
+    }
+
+    func onboarding() {
+        // Initialize onboarding view controller
+        var onboardingVC = OnboardingViewController()
+
+        // Create slides
+        let firstPage = OnboardingContentViewController
+            .contentWithTitle("Welcome to Motivation Hunt!",
+                              body: "Swipe to begin",
+                              image: nil,
+                              buttonText: nil,
+                              action: nil)
+
+        let secondPage = OnboardingContentViewController
+            .contentWithTitle("Watch and be inspire",
+                              body: "Watch and be inspire by new daily motivational videos.",
+                              image: UIImage(named: "onboardingFeedIcon"),
+                              buttonText: nil,
+                              action: nil)
+
+        let thirdPage = OnboardingContentViewController
+            .contentWithTitle("Save your favorite",
+                              body: "Need a boost? Your favorites videos are easily accessible to you.",
+                              image: UIImage(named: "onboardingFeaturedIcon"),
+                              buttonText: nil,
+                              action: nil)
+
+        let fourthPage = OnboardingContentViewController
+            .contentWithTitle("Challenge yourself",
+                              body: "Define your challenge and then complete it!",
+                              image: UIImage(named: "onboardingChallengeIcon"),
+                              buttonText: nil,
+                              action: nil)
+
+        // Define onboarding view controller properties
+        onboardingVC = OnboardingViewController.onboardWithBackgroundImage(UIImage.fromColor(UIColor.blackColor()), contents: [firstPage, secondPage, thirdPage, fourthPage])
+        onboardingVC.pageControl.pageIndicatorTintColor = UIColor.darkGrayColor()
+        onboardingVC.pageControl.currentPageIndicatorTintColor = UIColor.whiteColor()
+        onboardingVC.allowSkipping = true
+        onboardingVC.skipButton.setTitleColor(UIColor.whiteColor(), forState: .Normal)
+        onboardingVC.skipButton.setTitle("Skip", forState: .Normal)
+        onboardingVC.skipHandler = {
+            self.dismissViewControllerAnimated(true, completion: nil)
+            Defaults[.haveSeenOnBoarding] = true
+        }
+        onboardingVC.fadePageControlOnLastPage = true
+        onboardingVC.fadeSkipButtonOnLastPage = true
+        
+        // Present presentation
+        parentViewController!.presentViewController(onboardingVC, animated: true, completion: nil)
     }
 
     override func viewWillAppear(animated: Bool) {
@@ -146,7 +204,6 @@ extension MotivationFeedViewController {
     }
 
     override func willRotateToInterfaceOrientation(toInterfaceOrientation: UIInterfaceOrientation, duration: NSTimeInterval) {
-        Log.info("willRotateToInterfaceOrientation")
         collectionView.collectionViewLayout.invalidateLayout()
     }
 

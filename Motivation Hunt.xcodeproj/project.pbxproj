@@ -20,6 +20,8 @@
 		B41BF3561C7D153300E27074 /* Challenge.swift in Sources */ = {isa = PBXBuildFile; fileRef = B41BF3551C7D153300E27074 /* Challenge.swift */; };
 		B41CE7EA1C8B5B54002FCBC2 /* challengeTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = B41CE7E91C8B5B54002FCBC2 /* challengeTableViewCell.swift */; };
 		B41CE7EC1C8B6F68002FCBC2 /* CustomUIActivityIndicatorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B41CE7EB1C8B6F68002FCBC2 /* CustomUIActivityIndicatorView.swift */; };
+		B41F472F1D7372E50075C2EA /* Onboard.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B41F472E1D7372E50075C2EA /* Onboard.framework */; };
+		B41F47311D737E170075C2EA /* SwiftyUserDefaults.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B41F47301D737E170075C2EA /* SwiftyUserDefaults.framework */; };
 		B423E3491CC6257D0020D39D /* Async.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B423E3481CC6257D0020D39D /* Async.framework */; };
 		B423E34C1CC627DD0020D39D /* motivationCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = B423E34B1CC627DD0020D39D /* motivationCollectionViewCell.swift */; };
 		B42A4ED01CBD20CC00D9593D /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = B42A4ECF1CBD20CC00D9593D /* AppDelegate.swift */; };
@@ -86,6 +88,8 @@
 		B41BF3551C7D153300E27074 /* Challenge.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Challenge.swift; sourceTree = "<group>"; };
 		B41CE7E91C8B5B54002FCBC2 /* challengeTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = challengeTableViewCell.swift; sourceTree = "<group>"; };
 		B41CE7EB1C8B6F68002FCBC2 /* CustomUIActivityIndicatorView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CustomUIActivityIndicatorView.swift; sourceTree = "<group>"; };
+		B41F472E1D7372E50075C2EA /* Onboard.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Onboard.framework; path = Carthage/Build/iOS/Onboard.framework; sourceTree = "<group>"; };
+		B41F47301D737E170075C2EA /* SwiftyUserDefaults.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SwiftyUserDefaults.framework; path = Carthage/Build/iOS/SwiftyUserDefaults.framework; sourceTree = "<group>"; };
 		B423BDD61C96110700CD7224 /* Motivation Hunt.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.xml; name = "Motivation Hunt.entitlements"; path = "Motivation Hunt/Motivation Hunt.entitlements"; sourceTree = "<group>"; };
 		B423E3481CC6257D0020D39D /* Async.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Async.framework; path = Carthage/Build/tvOS/Async.framework; sourceTree = "<group>"; };
 		B423E34B1CC627DD0020D39D /* motivationCollectionViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = motivationCollectionViewCell.swift; sourceTree = "<group>"; };
@@ -138,6 +142,8 @@
 			files = (
 				B46A76CA1D590E7A00ADBF43 /* Ensembles.framework in Frameworks */,
 				B4ABAA4D1CA0042100EFEBBA /* Advance.framework in Frameworks */,
+				B41F472F1D7372E50075C2EA /* Onboard.framework in Frameworks */,
+				B41F47311D737E170075C2EA /* SwiftyUserDefaults.framework in Frameworks */,
 				B4ABAA4E1CA0042100EFEBBA /* Async.framework in Frameworks */,
 				B4EA3A8E1CD5152B00AE117F /* Alamofire.framework in Frameworks */,
 				B4C8D04A1D666E7B00E32FEE /* PinpointKit.framework in Frameworks */,
@@ -271,6 +277,8 @@
 		B49730EB1CCAEE430086F61D /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				B41F47301D737E170075C2EA /* SwiftyUserDefaults.framework */,
+				B41F472E1D7372E50075C2EA /* Onboard.framework */,
 				B4C8D0491D666E7B00E32FEE /* PinpointKit.framework */,
 				B40D683B1D5ED28600B424D0 /* CloudKit.framework */,
 				B46A76C01D58F03F00ADBF43 /* Ensembles.bundle */,
@@ -365,6 +373,7 @@
 		B41BF32C1C7D0D7200E27074 /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
+				LastSwiftMigration = 0730;
 				LastSwiftUpdateCheck = 0730;
 				LastUpgradeCheck = 0730;
 				ORGANIZATIONNAME = "Jefferson Bonnaire";
@@ -475,6 +484,8 @@
 				"$(SRCROOT)/Carthage/Build/iOS/Alamofire.framework",
 				"$(SRCROOT)/Carthage/Build/iOS/GoogleAnalytics.framework",
 				"$(SRCROOT)/Carthage/Build/iOS/PinpointKit.framework",
+				"$(SRCROOT)/Carthage/Build/iOS/Onboard.framework",
+				"$(SRCROOT)/Carthage/Build/iOS/SwiftyUserDefaults.framework",
 			);
 			outputPaths = (
 			);

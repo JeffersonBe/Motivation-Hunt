@@ -43,7 +43,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="gEo-5W-5oB" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1190" y="1300"/>
+            <point key="canvasLocation" x="1190" y="1462"/>
         </scene>
         <!--Item-->
         <scene sceneID="Sj2-A3-QpV">
@@ -61,7 +61,7 @@
                 </navigationController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="aGd-hl-v36" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="434" y="-41"/>
+            <point key="canvasLocation" x="434" y="-277"/>
         </scene>
         <!--Item-->
         <scene sceneID="yvf-OE-4oL">
@@ -97,7 +97,7 @@
                 </navigationController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="CqM-L8-nLP" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="434" y="1300"/>
+            <point key="canvasLocation" x="434" y="1462"/>
         </scene>
         <!--Motivation Feed-->
         <scene sceneID="r1M-em-FTm">
@@ -117,7 +117,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="v91-9t-YqE" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1190" y="-41"/>
+            <point key="canvasLocation" x="1198" y="-277"/>
         </scene>
         <!--Tab Bar-->
         <scene sceneID="9p6-9d-MYJ">
@@ -138,7 +138,7 @@
                 </tabBarController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="sNW-UX-kP5" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-298" y="620"/>
+            <point key="canvasLocation" x="-422" y="620"/>
         </scene>
     </scenes>
     <resources>

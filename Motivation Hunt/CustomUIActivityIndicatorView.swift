@@ -17,7 +17,7 @@ class CustomUIActivityIndicatorView : UIView {
         super.init(frame : frame)
     }
 
-    required init(coder aDecoder: NSCoder) {
+    required init?(coder aDecoder: NSCoder) {
         fatalError("This class does not support NSCoding")
     }
 
