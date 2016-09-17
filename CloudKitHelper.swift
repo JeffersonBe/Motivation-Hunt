@@ -41,7 +41,7 @@ class CloudKitHelper {
     // MARK: - Shared Instance
     static var sharedInstance = CloudKitHelper()
 
-    typealias CompletionHander = (success: Bool, record: CKRecord!, error: NSError?) -> Void
+    typealias CompletionHander = (_ success: Bool, _ record: CKRecord?, _ error: NSError?) -> Void
 
     let Log = Logger()
 
@@ -54,55 +54,55 @@ class CloudKitHelper {
     // MARK: User
 
     func isIcloudAvailable() -> Bool {
-        guard NSFileManager.defaultManager().ubiquityIdentityToken != nil else {
+        guard FileManager.default.ubiquityIdentityToken != nil else {
             return false
         }
         return true
     }
 
-    func requestPermission(completionHandler: (granted: Bool, error: NSError?) -> ()) {
-        container.requestApplicationPermission(CKApplicationPermissions.UserDiscoverability, completionHandler: { applicationPermissionStatus, error in
+    func requestPermission(_ completionHandler: @escaping (_ granted: Bool, _ error: NSError?) -> ()) {
+        container.requestApplicationPermission(CKApplicationPermissions.userDiscoverability, completionHandler: { applicationPermissionStatus, error in
 
-            guard applicationPermissionStatus == CKApplicationPermissionStatus.Granted else {
+            guard applicationPermissionStatus == CKApplicationPermissionStatus.granted else {
                 self.Log.warning(error, applicationPermissionStatus)
-                completionHandler(granted: false, error: error)
+                completionHandler(false, error as NSError?)
                 return
             }
-            completionHandler(granted: true, error: nil)
+            completionHandler(true, nil)
         })
     }
 
-    func accountStatus(completionHandler: (accountStatus: CKAccountStatus, error: NSError?)-> ()) {
-        container.accountStatusWithCompletionHandler { (CKAccountStatus, error) in
+    func accountStatus(_ completionHandler: @escaping (_ accountStatus: CKAccountStatus, _ error: NSError?)-> ()) {
+        container.accountStatus { (CKAccountStatus, error) in
             guard error == nil else {
                 self.Log.warning(error, CKAccountStatus)
-                completionHandler(accountStatus: CKAccountStatus, error: error)
+                completionHandler(CKAccountStatus, error as NSError?)
                 return
             }
-            completionHandler(accountStatus: CKAccountStatus, error: error)
+            completionHandler(CKAccountStatus, error as NSError?)
         }
     }
 
-    func getUser(completionHandler: (success: Bool, userRecordID: String?, error: NSError?) -> ()) {
-        container.fetchUserRecordIDWithCompletionHandler { (recordID, error) in
+    func getUser(_ completionHandler: @escaping (_ success: Bool, _ userRecordID: String?, _ error: NSError?) -> ()) {
+        container.fetchUserRecordID { (recordID, error) in
             guard error == nil else {
                 self.Log.warning(error)
-                completionHandler(success: false, userRecordID: "", error: error)
+                completionHandler(false, "", error as NSError?)
                 return
             }
-            completionHandler(success: true, userRecordID: recordID?.recordName, error: nil)
+            completionHandler(true, recordID?.recordName, nil)
         }
     }
 
     // MARK: - General call
-    func fetchUserRecord(recordID: CKRecordID, completionHandler: CompletionHander) {
-        privateDB.fetchRecordWithID(recordID) { (record, error) -> Void in
+    func fetchUserRecord(_ recordID: CKRecordID, completionHandler: @escaping CompletionHander) {
+        privateDB.fetch(withRecordID: recordID) { (record, error) -> Void in
             guard record == record && error == nil else {
                 self.Log.warning(error)
-                completionHandler(success: false, record: nil, error: error)
+                completionHandler(false, nil, error as NSError?)
                 return
             }
-            completionHandler(success: true, record: record, error: nil)
+            completionHandler(true, record, nil)
         }
     }
 }
@@ -111,35 +111,35 @@ class CloudKitHelper {
 
 extension CloudKitHelper {
 
-    func fetchAllMotivationFeedItem(completionHandler: (success: Bool?, record: [CKRecord]?, error: NSError?) -> Void) {
+    func fetchAllMotivationFeedItem(_ completionHandler: @escaping (_ success: Bool?, _ record: [CKRecord]?, _ error: NSError?) -> Void) {
         let predicate = NSPredicate(value: true)
         let query = CKQuery(recordType: "\(RecordType.MotivationFeedItem)", predicate: predicate)
 
-        privateDB.performQuery(query, inZoneWithID: nil) { (record, error) in
+        privateDB.perform(query, inZoneWith: nil) { (record, error) in
             guard error == nil else {
                 self.Log.warning(error)
-                completionHandler(success: false, record: nil, error: error)
+                completionHandler(false, nil, error as NSError?)
                 return
             }
-            completionHandler(success: true, record: record!, error: nil)
+            completionHandler(true, record!, nil)
         }
     }
 
-    func fetchMotivationFeedItem(completionHandler: (success: Bool?, record: [CKRecord]?, error: NSError?) -> Void) {
+    func fetchMotivationFeedItem(_ completionHandler: @escaping (_ success: Bool?, _ record: [CKRecord]?, _ error: NSError?) -> Void) {
         let predicate = NSPredicate(value: true)
         let query = CKQuery(recordType: "\(RecordType.MotivationFeedItem)", predicate: predicate)
 
-        privateDB.performQuery(query, inZoneWithID: nil) { (record, error) in
+        privateDB.perform(query, inZoneWith: nil) { (record, error) in
             guard error == nil else {
                 self.Log.warning(error)
-                completionHandler(success: false, record: nil, error: error)
+                completionHandler(false, nil, error as NSError?)
                 return
             }
-            completionHandler(success: true, record: record!, error: nil)
+            completionHandler(true, record!, nil)
         }
     }
 
-    func savedMotivationItem(itemVideoID: String, itemTitle: String, itemDescription: String, itemThumbnailsUrl: String, saved: Bool, addedDate: NSDate, theme: String, completionHandler: CompletionHander) {
+    func savedMotivationItem(_ itemVideoID: String, itemTitle: String, itemDescription: String, itemThumbnailsUrl: String, saved: Bool, addedDate: Date, theme: String, completionHandler: @escaping CompletionHander) {
         let motivationItem = CKRecord(recordType: "\(RecordType.MotivationFeedItem)")
 
         motivationItem.setValue(itemVideoID,
@@ -157,14 +157,14 @@ extension CloudKitHelper {
         motivationItem.setValue(theme,
                                 forKey: "\(MotivationFeedItemKey.theme)")
 
-        privateDB.saveRecord(motivationItem) { (record, error) in
+        privateDB.save(motivationItem, completionHandler: { (record, error) in
             guard record == record && error == nil else {
                 self.Log.warning(error)
-                completionHandler(success: false, record: nil, error: error)
+                completionHandler(false, nil, error as NSError?)
                 return
             }
-            completionHandler(success: true, record: record, error: nil)
-        }
+            completionHandler(true, record, nil)
+        }) 
     }
 }
 
@@ -172,87 +172,87 @@ extension CloudKitHelper {
 
 extension CloudKitHelper {
 
-    func fetchFavorites(completionHandler: (success: Bool?, record: [CKRecord]?, error: NSError?) -> Void) {
+    func fetchFavorites(_ completionHandler: @escaping (_ success: Bool?, _ record: [CKRecord]?, _ error: NSError?) -> Void) {
         let predicate = NSPredicate(format: "\(MotivationFeedItemKey.saved) == 1")
         let query = CKQuery(recordType: "\(RecordType.MotivationFeedItem)", predicate: predicate)
 
-        privateDB.performQuery(query, inZoneWithID: nil) { (record, error) in
+        privateDB.perform(query, inZoneWith: nil) { (record, error) in
             guard error == nil else {
                 self.Log.warning(error)
-                completionHandler(success: false, record: nil, error: error)
+                completionHandler(false, nil, error as NSError?)
                 return
             }
-            completionHandler(success: true, record: record!, error: nil)
+            completionHandler(true, record!, nil)
         }
     }
 
-    func updateFavorites(favoritesID: CKRecordID, completionHandler: CompletionHander) {
-        privateDB.fetchRecordWithID(favoritesID) { (record, error) in
+    func updateFavorites(_ favoritesID: CKRecordID, completionHandler: @escaping CompletionHander) {
+        privateDB.fetch(withRecordID: favoritesID) { (record, error) in
             guard error == nil else {
                 self.Log.warning(error)
-                completionHandler(success: false, record: nil, error: error)
+                completionHandler(false, nil, error as NSError?)
                 return
             }
 
             let favorites = record
 
-            if favorites!.valueForKey("\(MotivationFeedItemKey.saved)") as! Int == 0 {
+            if favorites!.value(forKey: "\(MotivationFeedItemKey.saved)") as! Int == 0 {
                 favorites!.setValue(1, forKey: "\(MotivationFeedItemKey.saved)")
             } else {
                 favorites!.setValue(0, forKey: "\(MotivationFeedItemKey.saved)")
             }
 
-            self.privateDB.saveRecord(favorites!) { (record, error) in
+            self.privateDB.save(favorites!, completionHandler: { (record, error) in
                 guard error == nil else {
                     self.Log.warning(error)
-                    completionHandler(success: false, record: nil, error: error)
+                    completionHandler(false, nil, error as NSError?)
                     return
                 }
-                completionHandler(success: true, record: record, error: error)
-            }
+                completionHandler(true, record, error as NSError?)
+            }) 
         }
     }
 }
 extension CloudKitHelper {
 
-    func fetchChallenge(completionHandler: (success: Bool?, record: [CKRecord]?, error: NSError?) -> Void) {
+    func fetchChallenge(_ completionHandler: @escaping (_ success: Bool?, _ record: [CKRecord]?, _ error: NSError?) -> Void) {
         let predicate = NSPredicate(value: true)
         let query = CKQuery(recordType: "\(RecordType.Challenge)", predicate: predicate)
         
-        privateDB.performQuery(query, inZoneWithID: nil) { (record, error) in
+        privateDB.perform(query, inZoneWith: nil) { (record, error) in
             guard error == nil else {
                 self.Log.warning(error)
-                completionHandler(success: false, record: nil, error: error)
+                completionHandler(false, nil, error as NSError?)
                 return
             }
-            completionHandler(success: true, record: record!, error: nil)
+            completionHandler(true, record!, nil)
         }
     }
 
     // MARK: - Challenge
-    func saveChallenge(challengeDictionary: [String:AnyObject], completionHandler: CompletionHander) {
+    func saveChallenge(_ challengeDictionary: [String:AnyObject], completionHandler: @escaping CompletionHander) {
         let challenge = CKRecord(recordType: "\(RecordType.Challenge)")
 
         challenge.setValue(challengeDictionary["\(ChallengeKey.challengeDescription)"] as! String,
                            forKey: "\(ChallengeKey.challengeDescription)")
         challenge.setValue(challengeDictionary["\(ChallengeKey.completed)"] as! Bool,
                            forKey: "\(ChallengeKey.completed)")
-        challenge.setValue(challengeDictionary["\(ChallengeKey.endDate)"] as! NSDate,
+        challenge.setValue(challengeDictionary["\(ChallengeKey.endDate)"] as! Date,
                            forKey: "\(ChallengeKey.endDate)")
 
-        privateDB.saveRecord(challenge) { (record, error) in
+        privateDB.save(challenge, completionHandler: { (record, error) in
             guard error == nil else {
                 self.Log.warning(error)
-                completionHandler(success: false, record: nil, error: error)
+                completionHandler(false, nil, error as NSError?)
                 return
             }
-            completionHandler(success: true, record: record, error: nil)
-        }
+            completionHandler(true, record, nil)
+        }) 
     }
 
-    func updateChallenge(challengeDictionary: [String:AnyObject], completionHandler: CompletionHander) {
+    func updateChallenge(_ challengeDictionary: [String:AnyObject], completionHandler: @escaping CompletionHander) {
 
-        privateDB.fetchRecordWithID(CKRecordID(recordName: challengeDictionary["challengeRecordID"] as! String)) { (record, error) in
+        privateDB.fetch(withRecordID: CKRecordID(recordName: challengeDictionary["challengeRecordID"] as! String)) { (record, error) in
             guard error == nil else {
                 self.Log.warning(error)
                 return
@@ -263,49 +263,49 @@ extension CloudKitHelper {
             record!.setValue(challengeDictionary["endDate"],
                          forKey: "\(ChallengeKey.endDate)")
 
-        self.privateDB.saveRecord(record!) { (record, error) in
+        self.privateDB.save(record!, completionHandler: { (record, error) in
             guard error == nil else {
                 self.Log.warning(error)
-                completionHandler(success: false, record: nil, error: error)
+                completionHandler(false, nil, error as NSError?)
                 return
             }
-            completionHandler(success: true, record: record, error: nil)
-        }
+            completionHandler(true, record, nil)
+        }) 
         }
     }
 
-    func updateCompletedStatusChallenge(challengeID: CKRecordID, completionHandler: CompletionHander) {
-        privateDB.fetchRecordWithID(challengeID) { (record, error) in
+    func updateCompletedStatusChallenge(_ challengeID: CKRecordID, completionHandler: @escaping CompletionHander) {
+        privateDB.fetch(withRecordID: challengeID) { (record, error) in
             guard error == nil else {
                 self.Log.warning(error)
                 return
             }
 
-            if record!.valueForKey("\(ChallengeKey.completed)") as! Int == 0 {
+            if record!.value(forKey: "\(ChallengeKey.completed)") as! Int == 0 {
                 record!.setValue(true, forKey: "\(ChallengeKey.completed)")
             } else {
                 record!.setValue(false, forKey: "\(ChallengeKey.completed)")
             }
 
-            self.privateDB.saveRecord(record!) { (record, error) in
+            self.privateDB.save(record!, completionHandler: { (record, error) in
                 guard record == record && error == nil else {
                     self.Log.warning(error)
-                    completionHandler(success: false, record: nil, error: error)
+                    completionHandler(false, nil, error as NSError?)
                     return
                 }
-                completionHandler(success: true, record: record, error: nil)
-            }
+                completionHandler(true, record, nil)
+            }) 
         }
     }
 
-    func deleteChallenge(challengeRecordID: CKRecordID, completionHandler: (success: Bool, recordID: CKRecordID!, error: NSError?) -> Void) {
-        privateDB.deleteRecordWithID(challengeRecordID) { (recordID, error) in
+    func deleteChallenge(_ challengeRecordID: CKRecordID, completionHandler: @escaping (_ success: Bool, _ recordID: CKRecordID?, _ error: NSError?) -> Void) {
+        privateDB.delete(withRecordID: challengeRecordID) { (recordID, error) in
             guard recordID == recordID && error == nil else {
                 self.Log.warning(error)
-                completionHandler(success: false, recordID: nil, error: error)
+                completionHandler(false, nil, error as NSError?)
                 return
             }
-            completionHandler(success: true, recordID: recordID, error: nil)
+            completionHandler(true, recordID, nil)
         }
     }
 
@@ -316,9 +316,9 @@ extension CloudKitHelper {
 
         var notificationIDsToMarkRead = [CKNotificationID]()
 
-        operation.notificationChangedBlock = { (notification: CKNotification) -> Void in
+        operation.notificationChangedBlock = { (notification) -> Void in
             // Process each notification received
-            if notification.notificationType == .Query {
+            if notification.notificationType == .query {
                 let queryNotification = notification as! CKQueryNotification
 //                let reason = queryNotification.queryNotificationReason
 //                let recordID = queryNotification.recordID
@@ -330,26 +330,28 @@ extension CloudKitHelper {
             }
         }
 
-        operation.fetchNotificationChangesCompletionBlock = { (serverChangeToken: CKServerChangeToken?, operationError: NSError?) -> Void in
-            guard operationError == nil else {
+        operation.fetchNotificationChangesCompletionBlock = { (newToken, error) -> Void in
+            
+            guard error == nil else {
                 // Handle the error here
                 return
             }
 
             // Mark the notifications as read to avoid processing them again
             let markOperation = CKMarkNotificationsReadOperation(notificationIDsToMarkRead: notificationIDsToMarkRead)
-            markOperation.markNotificationsReadCompletionBlock = { (notificationIDsMarkedRead: [CKNotificationID]?, operationError: NSError?) -> Void in
+            
+            markOperation.markNotificationsReadCompletionBlock = { (notificationIDsMarkedRead, operationError) -> Void in
                 guard operationError == nil else {
                     // Handle the error here
                     return
                 }
             }
 
-            let operationQueue = NSOperationQueue()
+            let operationQueue = OperationQueue()
             operationQueue.addOperation(markOperation)
         }
         
-        let operationQueue = NSOperationQueue()
+        let operationQueue = OperationQueue()
         operationQueue.addOperation(operation)
     }
 }
@@ -358,16 +360,16 @@ extension CloudKitHelper {
     // MARK: Subscription
     func subscribeToChallengeCreation() {
         let predicate = NSPredicate(format: "TRUEPREDICATE")
-        let subscription = CKSubscription(recordType: "\(RecordType.Challenge)",
+        let subscription = CKQuerySubscription(recordType: "\(RecordType.Challenge)",
                                           predicate: predicate,
-                                          options: [.FiresOnRecordCreation, .FiresOnRecordUpdate, .FiresOnRecordDeletion])
+                                          options: [.firesOnRecordCreation, .firesOnRecordUpdate, .firesOnRecordDeletion])
 
-        privateDB.saveSubscription(subscription) { (subscription: CKSubscription?, error: NSError?) -> Void in
+        privateDB.save(subscription, completionHandler: { (subscription: CKSubscription?, error: NSError?) -> Void in
             guard error == nil else {
                 // Handle the error here
                 return
             }
             // Save that we have subscribed successfully to keep track and avoid trying to subscribe again
-        }
+        } as! (CKSubscription?, Error?) -> Void) 
     }
 }

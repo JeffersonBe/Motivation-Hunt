@@ -14,12 +14,12 @@ class MHClient: NSObject {
     // MARK: - Shared Instance
     static var sharedInstance = MHClient()
 
-    typealias CompletionHander = (result: AnyObject!, error: NSError?) -> Void
+    typealias CompletionHander = (_ result: AnyObject?, _ error: NSError?) -> Void
 
-    var session: NSURLSession
+    var session: URLSession
 
     override init() {
-        session = NSURLSession.sharedSession()
+        session = URLSession.shared
         super.init()
     }
 
@@ -31,41 +31,41 @@ class MHClient: NSObject {
 
     // MARK: - All purpose task method for data
 
-    func taskForResource(parameters: [String : AnyObject], completionHandler: CompletionHander) -> NSURLSessionDataTask {
+    func taskForResource(_ parameters: [String : AnyObject], completionHandler: @escaping CompletionHander) -> URLSessionDataTask {
 
         let urlString = Resources.searchVideos + MHClient.escapedParameters(parameters)
-        let url = NSURL(string: urlString)!
-        let request = NSURLRequest(URL: url)
+        let url = URL(string: urlString)!
+        let request = URLRequest(url: url)
 
-        let task = session.dataTaskWithRequest(request) {data, response, downloadError in
+        let task = session.dataTask(with: request, completionHandler: {data, response, downloadError in
 
             if let error = downloadError {
-                let newError = MHClient.errorForData(data, response: response, error: error)
-                completionHandler(result: nil, error: newError)
+                let newError = MHClient.errorForData(data, response: response, error: error as NSError)
+                completionHandler(nil, newError)
             } else {
                 MHClient.parseJSONWithCompletionHandler(data!, completionHandler: completionHandler)
             }
-        }
+        }) 
 
         task.resume()
 
         return task
     }
 
-    func taskForImage(filePath: String, completionHandler: (imageData: NSData?, error: NSError?) ->  Void) -> NSURLSessionTask {
+    func taskForImage(_ filePath: String, completionHandler: @escaping (_ imageData: Data?, _ error: NSError?) ->  Void) -> URLSessionTask {
 
-        let url = NSURL(string: filePath)!
-        let request = NSURLRequest(URL: url)
+        let url = URL(string: filePath)!
+        let request = URLRequest(url: url)
 
-        let task = session.dataTaskWithRequest(request) {data, response, downloadError in
+        let task = session.dataTask(with: request, completionHandler: {data, response, downloadError in
 
             if let error = downloadError {
-                let newError = MHClient.errorForData(data, response: response, error: error)
-                completionHandler(imageData: nil, error: newError)
+                let newError = MHClient.errorForData(data, response: response, error: error as NSError)
+                completionHandler(nil, newError)
             } else {
-                completionHandler(imageData: data, error: nil)
+                completionHandler(data, nil)
             }
-        }
+        }) 
 
         task.resume()
         
@@ -76,16 +76,16 @@ class MHClient: NSObject {
 
     // Try to make a better error, based on the status_message from Youtube. If we cant then return the previous error
 
-    class func errorForData(data: NSData?, response: NSURLResponse?, error: NSError) -> NSError {
+    class func errorForData(_ data: Data?, response: URLResponse?, error: NSError) -> NSError {
 
         if data == nil {
             return error
         }
 
         do {
-            let parsedResult = try NSJSONSerialization.JSONObjectWithData(data!, options: NSJSONReadingOptions.AllowFragments)
+            let parsedResult = try JSONSerialization.jsonObject(with: data!, options: JSONSerialization.ReadingOptions.allowFragments)
 
-            if let parsedResult = parsedResult as? [String : AnyObject], errorMessage = parsedResult[MHClient.Keys.ErrorStatusMessage] as? String {
+            if let parsedResult = parsedResult as? [String : AnyObject], let errorMessage = parsedResult[MHClient.Keys.ErrorStatusMessage] as? String {
                 let userInfo = [NSLocalizedDescriptionKey : errorMessage]
                 return NSError(domain: "Youtube Error", code: 1, userInfo: userInfo)
             }
@@ -97,27 +97,27 @@ class MHClient: NSObject {
 
     // Parsing the JSON
 
-    class func parseJSONWithCompletionHandler(data: NSData, completionHandler: CompletionHander) {
+    class func parseJSONWithCompletionHandler(_ data: Data, completionHandler: CompletionHander) {
         var parsingError: NSError? = nil
 
         let parsedResult: AnyObject?
         do {
-            parsedResult = try NSJSONSerialization.JSONObjectWithData(data, options: NSJSONReadingOptions.AllowFragments)
+            parsedResult = try JSONSerialization.jsonObject(with: data, options: JSONSerialization.ReadingOptions.allowFragments) as AnyObject
         } catch let error as NSError {
             parsingError = error
             parsedResult = nil
         }
 
         if let error = parsingError {
-            completionHandler(result: nil, error: error)
+            completionHandler(nil, error)
         } else {
-            completionHandler(result: parsedResult, error: nil)
+            completionHandler(parsedResult, nil)
         }
     }
 
     // URL Encoding a dictionary into a parameter string
 
-    class func escapedParameters(parameters: [String : AnyObject]) -> String {
+    class func escapedParameters(_ parameters: [String : AnyObject]) -> String {
 
         var urlVars = [String]()
 
@@ -127,7 +127,7 @@ class MHClient: NSObject {
             let stringValue = "\(value)"
 
             // Escape it
-            let escapedValue = stringValue.stringByAddingPercentEncodingWithAllowedCharacters(NSCharacterSet.URLQueryAllowedCharacterSet())
+            let escapedValue = stringValue.addingPercentEncoding(withAllowedCharacters: CharacterSet.urlQueryAllowed)
 
             // Append it
 
@@ -138,6 +138,6 @@ class MHClient: NSObject {
             }
         }
 
-        return (!urlVars.isEmpty ? "?" : "") + urlVars.joinWithSeparator("&")
+        return (!urlVars.isEmpty ? "?" : "") + urlVars.joined(separator: "&")
     }
 }

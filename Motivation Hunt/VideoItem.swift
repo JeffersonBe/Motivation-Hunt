@@ -17,16 +17,16 @@ class VideoItem: NSManagedObject {
     @NSManaged var itemDescription: String
     @NSManaged var itemThumbnailsUrl: String
     @NSManaged var saved: Bool
-    @NSManaged var addedDate: NSDate
+    @NSManaged var addedDate: Date
     @NSManaged var theme: String
 
-    override init(entity: NSEntityDescription, insertIntoManagedObjectContext context: NSManagedObjectContext?) {
-        super.init(entity: entity, insertIntoManagedObjectContext: context)
+    override init(entity: NSEntityDescription, insertInto context: NSManagedObjectContext?) {
+        super.init(entity: entity, insertInto: context)
     }
 
     init(itemVideoID: String, itemTitle: String, itemDescription: String, itemThumbnailsUrl: String, saved: Bool, theme: Theme.themeName, context: NSManagedObjectContext) {
-        let entity =  NSEntityDescription.entityForName("VideoItem", inManagedObjectContext: context)!
-        super.init(entity: entity, insertIntoManagedObjectContext: context)
+        let entity =  NSEntityDescription.entity(forEntityName: "VideoItem", in: context)!
+        super.init(entity: entity, insertInto: context)
         self.itemVideoID = itemVideoID
         self.itemTitle = itemTitle
         self.itemDescription = itemDescription
@@ -36,8 +36,8 @@ class VideoItem: NSManagedObject {
     }
 
     override func awakeFromInsert()  {
-        self.uniqueIdentifier = NSUUID().UUIDString
-        self.addedDate = NSDate()
+        self.uniqueIdentifier = UUID().uuidString
+        self.addedDate = Date()
     }
 
     var image: UIImage? {

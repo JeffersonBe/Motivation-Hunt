@@ -11,7 +11,6 @@ import CoreData
 import YouTubePlayer
 import CloudKit
 import Toucan
-import Async
 import TBEmptyDataSet
 import GoogleAnalytics
 
@@ -21,7 +20,7 @@ class FavouritesViewController: UIViewController {
     var indicator = CustomUIActivityIndicatorView()
     var shouldReloadCollectionView = false
     let layer = CAGradientLayer()
-    var blockOperations: [NSBlockOperation] = []
+    var blockOperations: [BlockOperation] = []
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -42,14 +41,14 @@ class FavouritesViewController: UIViewController {
         }
     }
 
-    override func viewWillAppear(animated: Bool) {
+    override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(true)
 
         let tracker = GAI.sharedInstance().defaultTracker
-        tracker.set(kGAIScreenName, value: "FavouritesViewController")
+        tracker?.set(kGAIScreenName, value: "FavouritesViewController")
 
         let builder: NSObject = GAIDictionaryBuilder.createScreenView().build()
-        tracker.send(builder as! [NSObject : AnyObject])
+        tracker?.send(builder as! [AnyHashable: Any])
     }
 
     // Initialize CoreData and NSFetchedResultsController
@@ -57,16 +56,13 @@ class FavouritesViewController: UIViewController {
     var sharedContext: NSManagedObjectContext {
         return CoreDataStackManager.sharedInstance.managedObjectContext
     }
-
-    lazy var fetchedResultsController: NSFetchedResultsController = {
-
-        let fetchRequest = NSFetchRequest(entityName: "VideoItem")
+    
+    lazy var fetchedResultsController: NSFetchedResultsController<VideoItem> = {
+        let fetchRequest: NSFetchRequest<VideoItem> = VideoItem.fetchRequest() as! NSFetchRequest<VideoItem>
         let predicate = NSPredicate(format: "saved == 1")
         fetchRequest.predicate = predicate
-        fetchRequest.sortDescriptors = [NSSortDescriptor(
-            key: "itemVideoID",
-            ascending: true)]
-
+        fetchRequest.sortDescriptors = [NSSortDescriptor(key: "addedDate", ascending: false)]
+        
         let fetchedResultsController = NSFetchedResultsController(
             fetchRequest: fetchRequest,
             managedObjectContext: self.sharedContext,
@@ -79,11 +75,11 @@ class FavouritesViewController: UIViewController {
 
     deinit {
         // Cancel all block operations when VC deallocates
-        for operation: NSBlockOperation in blockOperations {
+        for operation: BlockOperation in blockOperations {
             operation.cancel()
         }
 
-        blockOperations.removeAll(keepCapacity: false)
+        blockOperations.removeAll(keepingCapacity: false)
     }
 }
 
@@ -102,21 +98,21 @@ extension FavouritesViewController {
         view.backgroundColor = UIColor(red: 0, green: 0, blue: 0, alpha: 1.0) /* #000000 */
         // Configure CollectionView
         collectionView = UICollectionView(frame: view.frame, collectionViewLayout: UICollectionViewFlowLayout())
-        collectionView.registerClass(motivationCollectionViewCell.self, forCellWithReuseIdentifier: MHClient.CellIdentifier.cellWithReuseIdentifier)
-        collectionView.backgroundColor = UIColor.clearColor()
+        collectionView.register(motivationCollectionViewCell.self, forCellWithReuseIdentifier: MHClient.CellIdentifier.cellWithReuseIdentifier)
+        collectionView.backgroundColor = UIColor.clear
         collectionView.allowsMultipleSelection = false
         view.addSubview(collectionView)
-        collectionView.snp_makeConstraints { (make) in
+        collectionView.snp.makeConstraints { (make) in
             make.top.equalTo(view)
             make.width.equalTo(view)
-            make.bottom.equalTo(view.snp_bottom)
+            make.bottom.equalTo(view.snp.bottom)
             make.center.equalTo(view)
         }
 
         // Set background View
         layer.frame = view.frame
-        let color1 = UIColor(red: 0, green: 0, blue: 0, alpha: 1.0).CGColor /* #000000 */
-        let color2 = UIColor(red: 0.1294, green: 0.1294, blue: 0.1294, alpha: 1.0).CGColor /* #212121 */
+        let color1 = UIColor(red: 0, green: 0, blue: 0, alpha: 1.0).cgColor /* #000000 */
+        let color2 = UIColor(red: 0.1294, green: 0.1294, blue: 0.1294, alpha: 1.0).cgColor /* #212121 */
         layer.colors = [color1, color2]
         layer.locations = [0.0, 1.0]
         layer.masksToBounds = true
@@ -127,37 +123,37 @@ extension FavouritesViewController {
         setNeedsStatusBarAppearanceUpdate()
     }
 
-    override func willRotateToInterfaceOrientation(toInterfaceOrientation: UIInterfaceOrientation, duration: NSTimeInterval) {
+    override func willRotate(to toInterfaceOrientation: UIInterfaceOrientation, duration: TimeInterval) {
         collectionView.collectionViewLayout.invalidateLayout()
     }
 
-    override func viewWillTransitionToSize(size: CGSize, withTransitionCoordinator coordinator: UIViewControllerTransitionCoordinator) {}
+    override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {}
 
-    override func preferredStatusBarStyle() -> UIStatusBarStyle {
-        return .LightContent
+    override var preferredStatusBarStyle : UIStatusBarStyle {
+        return .lightContent
     }
 }
 
 extension FavouritesViewController {
-    func savedItem(gestureRecognizer: UIGestureRecognizer) {
-        let tapPoint: CGPoint = gestureRecognizer.locationInView(collectionView)
-        let indexPath = collectionView.indexPathForItemAtPoint(tapPoint)
-        let objet = fetchedResultsController.objectAtIndexPath(indexPath!) as! VideoItem
+    func savedItem(_ gestureRecognizer: UIGestureRecognizer) {
+        let tapPoint: CGPoint = gestureRecognizer.location(in: collectionView)
+        let indexPath = collectionView.indexPathForItem(at: tapPoint)
+        let objet = fetchedResultsController.object(at: indexPath!)
 
-        Async.main {
+        DispatchQueue.main.async {
             objet.saved = objet.saved ? false : true
             CoreDataStackManager.sharedInstance.saveContext()
         }
     }
 
-    func shareMotivation(gestureRecognizer: UIGestureRecognizer) {
-        let tapPoint: CGPoint = gestureRecognizer.locationInView(collectionView)
-        let indexPath = collectionView.indexPathForItemAtPoint(tapPoint)
-        let cell = collectionView.cellForItemAtIndexPath(indexPath!) as! motivationCollectionViewCell
-        let motivation = fetchedResultsController.objectAtIndexPath(indexPath!) as! VideoItem
+    func shareMotivation(_ gestureRecognizer: UIGestureRecognizer) {
+        let tapPoint: CGPoint = gestureRecognizer.location(in: collectionView)
+        let indexPath = collectionView.indexPathForItem(at: tapPoint)
+        let cell = collectionView.cellForItem(at: indexPath!) as! motivationCollectionViewCell
+        let motivation = fetchedResultsController.object(at: indexPath!) 
         let motivationToShare = [motivation.itemTitle, motivation.itemDescription, "https://www.youtube.com/watch?v=\(motivation.itemVideoID)"]
         let activityViewController = UIActivityViewController(activityItems: motivationToShare, applicationActivities: nil)
-        activityViewController.excludedActivityTypes = [UIActivityTypeAirDrop, UIActivityTypeAddToReadingList]
+        activityViewController.excludedActivityTypes = [UIActivityType.airDrop, UIActivityType.addToReadingList]
 
         activityViewController
             .popoverPresentationController?
@@ -166,15 +162,15 @@ extension FavouritesViewController {
             .popoverPresentationController?
             .sourceRect = cell.imageView.bounds
 
-        self.presentViewController(activityViewController, animated: true, completion: nil)
+        self.present(activityViewController, animated: true, completion: nil)
     }
 
-    func playVideo(gestureRecognizer: UIGestureRecognizer) {
-        let tapPoint: CGPoint = gestureRecognizer.locationInView(collectionView)
-        let indexPath = collectionView.indexPathForItemAtPoint(tapPoint)
-        let cell = collectionView.cellForItemAtIndexPath(indexPath!) as! motivationCollectionViewCell
+    func playVideo(_ gestureRecognizer: UIGestureRecognizer) {
+        let tapPoint: CGPoint = gestureRecognizer.location(in: collectionView)
+        let indexPath = collectionView.indexPathForItem(at: tapPoint)
+        let cell = collectionView.cellForItem(at: indexPath!) as! motivationCollectionViewCell
         cell.videoPlayer.play()
-        UIView.animateWithDuration(0.5, delay: 0.0, options: UIViewAnimationOptions.CurveEaseOut, animations: {
+        UIView.animate(withDuration: 0.5, delay: 0.0, options: UIViewAnimationOptions.curveEaseOut, animations: {
             cell.videoPlayer.alpha = 1
             cell.playButton.alpha = 0
             cell.imageView.alpha = 0
@@ -183,24 +179,24 @@ extension FavouritesViewController {
 }
 
 extension FavouritesViewController: TBEmptyDataSetDataSource, TBEmptyDataSetDelegate {
-    func titleForEmptyDataSet(scrollView: UIScrollView!) -> NSAttributedString? {
+    func titleForEmptyDataSet(_ scrollView: UIScrollView!) -> NSAttributedString? {
         let title = "You don't have any favourites"
-        let attributes = [NSFontAttributeName: UIFont.systemFontOfSize(24.0), NSForegroundColorAttributeName: UIColor.grayColor()]
+        let attributes = [NSFontAttributeName: UIFont.systemFont(ofSize: 24.0), NSForegroundColorAttributeName: UIColor.gray]
         return NSAttributedString(string: title, attributes: attributes)
     }
 
-    func imageForEmptyDataSet(scrollView: UIScrollView!) -> UIImage? {
+    func imageForEmptyDataSet(_ scrollView: UIScrollView!) -> UIImage? {
         let image = UIImage(named: "iconFeatured")
         return image
     }
 
-    func descriptionForEmptyDataSet(scrollView: UIScrollView!) -> NSAttributedString? {
+    func descriptionForEmptyDataSet(_ scrollView: UIScrollView!) -> NSAttributedString? {
         let title = "Add a favourites to watch later!"
-        let attributes = [NSFontAttributeName: UIFont.systemFontOfSize(18.00), NSForegroundColorAttributeName: UIColor.grayColor()]
+        let attributes = [NSFontAttributeName: UIFont.systemFont(ofSize: 18.00), NSForegroundColorAttributeName: UIColor.gray]
         return NSAttributedString(string: title, attributes: attributes)
     }
 
-    func emptyDataSetShouldDisplay(scrollView: UIScrollView!) -> Bool {
+    func emptyDataSetShouldDisplay(_ scrollView: UIScrollView!) -> Bool {
         guard fetchedResultsController.fetchedObjects?.count == 0 else {
             return false
         }
@@ -210,23 +206,23 @@ extension FavouritesViewController: TBEmptyDataSetDataSource, TBEmptyDataSetDele
 
 extension FavouritesViewController: UICollectionViewDelegate, UICollectionViewDataSource {
 
-    func collectionView(collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         let sectionInfo = fetchedResultsController.sections![section] as NSFetchedResultsSectionInfo
-        if fetchedResultsController.sections?[section].numberOfObjects < 10 {
+        if (fetchedResultsController.sections?[section].numberOfObjects)! < 10 {
             navigationController?.hidesBarsOnSwipe = false
             setNeedsStatusBarAppearanceUpdate()
         }
         return sectionInfo.numberOfObjects
     }
 
-    func collectionView(collectionView: UICollectionView, cellForItemAtIndexPath indexPath: NSIndexPath) -> UICollectionViewCell {
-        let motivationItem = fetchedResultsController.objectAtIndexPath(indexPath) as! VideoItem
-        let cell = collectionView.dequeueReusableCellWithReuseIdentifier(MHClient.CellIdentifier.cellWithReuseIdentifier, forIndexPath: indexPath) as! motivationCollectionViewCell
+    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+        let motivationItem = fetchedResultsController.object(at: indexPath) 
+        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: MHClient.CellIdentifier.cellWithReuseIdentifier, for: indexPath) as! motivationCollectionViewCell
         configureCell(cell, withItem: motivationItem)
         return cell
     }
 
-    func configureCell(cell: motivationCollectionViewCell, withItem motivationItem: VideoItem) {
+    func configureCell(_ cell: motivationCollectionViewCell, withItem motivationItem: VideoItem) {
         cell.videoPlayer.delegate = self
         cell.textLabel.text = motivationItem.itemTitle
 
@@ -247,70 +243,70 @@ extension FavouritesViewController: UICollectionViewDelegate, UICollectionViewDa
         cell.shareBarButton.addGestureRecognizer(shareOnTapshareBarButton)
 
         if motivationItem.saved {
-            cell.favoriteBarButton.setTitle(String.fontAwesomeIconWithName(.Heart), forState: .Normal)
+            cell.favoriteBarButton.setTitle(String.fontAwesomeIconWithName(.Heart), for: .normal)
         } else {
-            cell.favoriteBarButton.setTitle(String.fontAwesomeIconWithName(.HeartO), forState: .Normal)
+            cell.favoriteBarButton.setTitle(String.fontAwesomeIconWithName(.HeartO), for: .normal)
         }
 
         guard motivationItem.image != nil else {
-            MHClient.sharedInstance.taskForImage(motivationItem.itemThumbnailsUrl) { imageData, error in
+            _ = MHClient.sharedInstance.taskForImage(motivationItem.itemThumbnailsUrl) { imageData, error in
                 guard error == nil else {
                     return
                 }
-                Async.main {
+                DispatchQueue.main.async {
                     motivationItem.image = UIImage(data: imageData!)
-                    cell.imageView.image = Toucan(image: motivationItem.image!).resize(CGSize(width: cell.frame.width - 10, height: cell.frame.width / 1.8), fitMode: Toucan.Resize.FitMode.Crop).maskWithRoundedRect(cornerRadius: 10).image
+                    cell.imageView.image = Toucan(image: motivationItem.image!).resize(CGSize(width: cell.frame.width - 10, height: cell.frame.width / 1.8), fitMode: Toucan.Resize.FitMode.crop).maskWithRoundedRect(cornerRadius: 10).image
                 }
             }
 
             return
         }
-        cell.imageView.image = Toucan(image: motivationItem.image!).resize(CGSize(width: cell.frame.width - 10, height: cell.frame.width / 1.8), fitMode: Toucan.Resize.FitMode.Crop).maskWithRoundedRect(cornerRadius: 10).image
+        cell.imageView.image = Toucan(image: motivationItem.image!).resize(CGSize(width: cell.frame.width - 10, height: cell.frame.width / 1.8), fitMode: Toucan.Resize.FitMode.crop).maskWithRoundedRect(cornerRadius: 10).image
     }
 
-    func collectionView(collectionView: UICollectionView, willDisplayCell cell: UICollectionViewCell, forItemAtIndexPath indexPath: NSIndexPath) {
+    func collectionView(_ collectionView: UICollectionView, willDisplay cell: UICollectionViewCell, forItemAt indexPath: IndexPath) {
         if let cell = cell as? motivationCollectionViewCell {
-            let motivationItem = fetchedResultsController.objectAtIndexPath(indexPath) as! VideoItem
+            let motivationItem = fetchedResultsController.object(at: indexPath)
             cell.videoPlayer.loadVideoID(motivationItem.itemVideoID)
             cell.imageView.alpha = 0
             cell.playButton.alpha = 0
             cell.videoPlayer.alpha = 0
 
             if motivationItem.image != nil {
-                Async.main {
-                    cell.imageView.image = Toucan(image: motivationItem.image!).resize(CGSize(width: cell.frame.width - 10, height: cell.frame.width / 1.8), fitMode: Toucan.Resize.FitMode.Crop).maskWithRoundedRect(cornerRadius: 10).image
+                DispatchQueue.main.async {
+                    cell.imageView.image = Toucan(image: motivationItem.image!).resize(CGSize(width: cell.frame.width - 10, height: cell.frame.width / 1.8), fitMode: Toucan.Resize.FitMode.crop).maskWithRoundedRect(cornerRadius: 10).image
                 }
             }
 
-            UIView.animateWithDuration(0.5, delay: 0.0, options: UIViewAnimationOptions.CurveEaseOut, animations: {
+            UIView.animate(withDuration: 0.5, delay: 0.0, options: UIViewAnimationOptions.curveEaseOut, animations: {
                 cell.imageView.alpha = 1
                 cell.playButton.alpha = 0.7
                 }, completion: nil)
         }
     }
 
-    func collectionView(collectionView: UICollectionView, didEndDisplayingCell cell: UICollectionViewCell, forItemAtIndexPath indexPath: NSIndexPath) {
+    func collectionView(_ collectionView: UICollectionView, didEndDisplaying cell: UICollectionViewCell, forItemAt indexPath: IndexPath) {
         if let cell = cell as? motivationCollectionViewCell {
             cell.videoPlayer.stop()
         }
     }
 
-    func collectionView(collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAtIndexPath indexPath: NSIndexPath) -> CGSize {
-        let device = UIDevice.currentDevice().model
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAtIndexPath indexPath: IndexPath) -> CGSize {
+        let device = UIDevice.current.model
         let dimensioniPhone = view.frame.width
-        var cellSize: CGSize = CGSizeMake(dimensioniPhone, dimensioniPhone * 0.8)
+        var cellSize: CGSize = CGSize(width: dimensioniPhone, height: dimensioniPhone * 0.8)
         let dimensioniPad = (view.frame.width / 2) - 15
 
         if (device == "iPad" || device == "iPad Simulator") {
-            cellSize = CGSizeMake(dimensioniPad, dimensioniPad * 0.8)
+            cellSize = CGSize(width: dimensioniPad, height: dimensioniPad * 0.8)
         }
         return cellSize
     }
 
-    func collectionView(collectionView: UICollectionView,
+    func collectionView(_ collectionView: UICollectionView,
                         layout collectionViewLayout: UICollectionViewLayout,
                                insetForSectionAtIndex section: Int) -> UIEdgeInsets {
-        let device = UIDevice.currentDevice().model
+        let device = UIDevice.current.model
         var edgeInsets = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 0)
 
         if (device == "iPad" || device == "iPad Simulator") {
@@ -322,90 +318,101 @@ extension FavouritesViewController: UICollectionViewDelegate, UICollectionViewDa
 }
 
 extension FavouritesViewController: YouTubePlayerDelegate {
-    func playerStateChanged(videoPlayer: YouTubePlayerView, playerState: YouTubePlayerState) {
-        if playerState == .Buffering {
-            indicator.startActivity()
-            view.addSubview(indicator)
-        }
-
-        if playerState == .Playing {
-            indicator.stopActivity()
-            indicator.removeFromSuperview()
+    func playerStateChanged(_ videoPlayer: YouTubePlayerView, playerState: YouTubePlayerState) {
+        switch (playerState) {
+        case .Queued: break
+        case .Ended: break
+        case .Buffering:
+            DispatchQueue.main.async {
+                self.indicator.startActivity()
+                self.view.addSubview(self.indicator)
+            }
+        case .Playing:
+            DispatchQueue.main.async {
+                self.indicator.stopActivity()
+                self.indicator.removeFromSuperview()
+            }
+        case .Paused:
+            DispatchQueue.main.async {
+                self.indicator.stopActivity()
+                self.indicator.removeFromSuperview()
+            }
+        case .Unstarted:
+            DispatchQueue.main.async {
+                self.indicator.stopActivity()
+                self.indicator.removeFromSuperview()
+            }
         }
     }
-
-    func playerQualityChanged(videoPlayer: YouTubePlayerView, playbackQuality: YouTubePlaybackQuality) {}
-    func playerReady(videoPlayer: YouTubePlayerView) {}
 }
 
-
 extension FavouritesViewController: NSFetchedResultsControllerDelegate {
-    func controller(controller: NSFetchedResultsController, didChangeObject anObject: AnyObject, atIndexPath indexPath: NSIndexPath?, forChangeType type: NSFetchedResultsChangeType, newIndexPath: NSIndexPath?) {
+    func controller(_ controller: NSFetchedResultsController<NSFetchRequestResult>, didChange anObject: Any, at indexPath: IndexPath?, for type: NSFetchedResultsChangeType, newIndexPath: IndexPath?) {
         switch (type) {
-        case .Insert:
+        case .insert:
             blockOperations.append(
-                NSBlockOperation(block: { [weak self] in
+                BlockOperation(block: { [weak self] in
                     if let this = self {
-                        this.collectionView!.insertItemsAtIndexPaths([newIndexPath!])
+                        this.collectionView!.insertItems(at: [newIndexPath!])
                     }
                     })
             )
-        case .Update:
+        case .update:
             blockOperations.append(
-                NSBlockOperation(block: { [weak self] in
+                BlockOperation(block: { [weak self] in
                     if let this = self {
-                        this.collectionView!.reloadItemsAtIndexPaths([indexPath!])
+                        this.collectionView!.reloadItems(at: [indexPath!])
                     }
                     })
             )
-        case .Move:
+        case .move:
             blockOperations.append(
-                NSBlockOperation(block: { [weak self] in
+                BlockOperation(block: { [weak self] in
                     if let this = self {
-                        this.collectionView!.moveItemAtIndexPath(indexPath!, toIndexPath: newIndexPath!)
+                        this.collectionView!.moveItem(at: indexPath!, to: newIndexPath!)
                     }
                     })
             )
-        case .Delete:
+        case .delete:
             blockOperations.append(
-                NSBlockOperation(block: { [weak self] in
+                BlockOperation(block: { [weak self] in
                     if let this = self {
-                        this.collectionView!.deleteItemsAtIndexPaths([indexPath!])
+                        this.collectionView!.deleteItems(at: [indexPath!])
                     }
                     })
             )
         }
     }
 
-    func controller(controller: NSFetchedResultsController, didChangeSection sectionInfo: NSFetchedResultsSectionInfo, atIndex sectionIndex: Int, forChangeType type: NSFetchedResultsChangeType) {
+    func controller(_ controller: NSFetchedResultsController<NSFetchRequestResult>, didChange sectionInfo: NSFetchedResultsSectionInfo, atSectionIndex sectionIndex: Int, for type: NSFetchedResultsChangeType) {
         switch (type) {
-        case .Insert:
+        case .insert:
             blockOperations.append(
-                NSBlockOperation(block: { [weak self] in
+                BlockOperation(block: { [weak self] in
                     if let this = self {
-                        this.collectionView!.insertSections(NSIndexSet(index: sectionIndex))
+                        this.collectionView!.insertSections(IndexSet(integer: sectionIndex))
                     }
                     })
             )
-        case .Update:
+        case .update:
             blockOperations.append(
-                NSBlockOperation(block: { [weak self] in
+                BlockOperation(block: { [weak self] in
                     if let this = self {
-                        this.collectionView!.reloadSections(NSIndexSet(index: sectionIndex))
+                        this.collectionView!.reloadSections(IndexSet(integer: sectionIndex))
                     }
                     })
             )
-        case .Delete:
+        case .delete:
             blockOperations.append(
-                NSBlockOperation(block: { [weak self] in
+                BlockOperation(block: { [weak self] in
                     if let this = self {
-                        this.collectionView!.deleteSections(NSIndexSet(index: sectionIndex))
+                        this.collectionView!.deleteSections(IndexSet(integer: sectionIndex))
                     }
                     })
             )
-        case .Move:
+        case .move:
             blockOperations.append(
-                NSBlockOperation(block: { [weak self] in
+                BlockOperation(block: { [weak self] in
                     if let this = self {
                         this.collectionView!.moveSection(sectionIndex, toSection: sectionIndex)
                     }
@@ -414,13 +421,13 @@ extension FavouritesViewController: NSFetchedResultsControllerDelegate {
         }
     }
 
-    func controllerDidChangeContent(controller: NSFetchedResultsController) {
+    func controllerDidChangeContent(_ controller: NSFetchedResultsController<NSFetchRequestResult>) {
         collectionView!.performBatchUpdates({ () -> Void in
-            for operation: NSBlockOperation in self.blockOperations {
+            for operation: BlockOperation in self.blockOperations {
                 operation.start()
             }
             }, completion: { (finished) -> Void in
-                self.blockOperations.removeAll(keepCapacity: false)
+                self.blockOperations.removeAll(keepingCapacity: false)
         })
         collectionView.reloadData()
     }

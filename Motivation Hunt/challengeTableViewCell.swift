@@ -15,19 +15,19 @@ class challengeTableViewCell: UITableViewCell {
     override init(style: UITableViewCellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         challengeDescriptionTextLabel = UILabel()
-        challengeDescriptionTextLabel.textColor = UIColor.blackColor()
+        challengeDescriptionTextLabel.textColor = UIColor.black
         contentView.addSubview(challengeDescriptionTextLabel)
-        challengeDescriptionTextLabel.snp_makeConstraints { (make) in
+        challengeDescriptionTextLabel.snp.makeConstraints { (make) in
             make.top.equalTo(10)
             make.left.equalTo(15)
             make.height.equalTo(20)
         }
 
         challengeDateTextLabel = UILabel()
-        challengeDateTextLabel.textColor = UIColor.blackColor()
+        challengeDateTextLabel.textColor = UIColor.black
         contentView.addSubview(challengeDateTextLabel)
-        challengeDateTextLabel.snp_makeConstraints { (make) in
-            make.top.equalTo(challengeDescriptionTextLabel.snp_bottom).offset(5)
+        challengeDateTextLabel.snp.makeConstraints { (make) in
+            make.top.equalTo(challengeDescriptionTextLabel.snp.bottom).offset(5)
             make.left.equalTo(15)
             make.height.equalTo(20)
         }

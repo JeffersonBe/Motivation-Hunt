@@ -13,22 +13,22 @@ class Challenge: NSManagedObject {
 
     @NSManaged var challengeDescription: String
     @NSManaged var completed: Bool
-    @NSManaged var endDate: NSDate
+    @NSManaged var endDate: Date
     @NSManaged var uniqueIdentifier: String
 
-    override init(entity: NSEntityDescription, insertIntoManagedObjectContext context: NSManagedObjectContext?) {
-        super.init(entity: entity, insertIntoManagedObjectContext: context)
+    override init(entity: NSEntityDescription, insertInto context: NSManagedObjectContext?) {
+        super.init(entity: entity, insertInto: context)
     }
 
-    init(challengeDescription: String, completed: Bool, endDate: NSDate, context: NSManagedObjectContext) {
-        let entity =  NSEntityDescription.entityForName("Challenge", inManagedObjectContext: context)!
-        super.init(entity: entity, insertIntoManagedObjectContext: context)
+    init(challengeDescription: String, completed: Bool, endDate: Date, context: NSManagedObjectContext) {
+        let entity =  NSEntityDescription.entity(forEntityName: "Challenge", in: context)!
+        super.init(entity: entity, insertInto: context)
         self.challengeDescription = challengeDescription
         self.completed = completed
         self.endDate = endDate
     }
 
     override func awakeFromInsert()  {
-        self.uniqueIdentifier = NSUUID().UUIDString
+        self.uniqueIdentifier = UUID().uuidString
     }
 }

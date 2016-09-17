@@ -31,34 +31,34 @@ class motivationCollectionViewCell: UICollectionViewCell {
     override init(frame: CGRect) {
         super.init(frame: frame)
 
-        barButtonColor = UIColor.grayColor()
+        barButtonColor = UIColor.gray
         barButtonSize = 25.00
 
         titleBarView = UIView()
-        titleBarView.backgroundColor = UIColor.clearColor()
+        titleBarView.backgroundColor = UIColor.clear
         contentView.addSubview(titleBarView)
-        titleBarView.snp_makeConstraints { (make) in
-            make.top.equalTo(contentView.snp_top)
+        titleBarView.snp.makeConstraints { (make) in
+            make.top.equalTo(contentView.snp.top)
             make.width.equalTo(contentView.frame.width - 20)
             make.height.equalTo(44)
             make.centerX.equalTo(contentView)
         }
 
         textLabel = UILabel()
-        textLabel.textColor = UIColor.whiteColor()
-        textLabel.textAlignment = .Center
+        textLabel.textColor = UIColor.white
+        textLabel.textAlignment = .center
         titleBarView.addSubview(textLabel)
-        textLabel.snp_makeConstraints { (make) in
+        textLabel.snp.makeConstraints { (make) in
             make.width.equalTo(titleBarView)
             make.center.equalTo(titleBarView)
         }
 
         imageView = UIImageView()
-        imageView.contentMode = UIViewContentMode.ScaleAspectFit
+        imageView.contentMode = UIViewContentMode.scaleAspectFit
         contentView.addSubview(imageView)
         addParallaxToView(imageView)
-        imageView.snp_makeConstraints { (make) in
-            make.top.equalTo(titleBarView.snp_bottom)
+        imageView.snp.makeConstraints { (make) in
+            make.top.equalTo(titleBarView.snp.bottom)
             make.width.equalTo(contentView.frame.width - 20)
             make.height.equalTo(contentView.frame.width / 1.8)
             make.centerX.equalTo(contentView)
@@ -66,34 +66,34 @@ class motivationCollectionViewCell: UICollectionViewCell {
 
         playButton = UIButton()
         playButton.titleLabel?.font = UIFont.fontAwesomeOfSize(75)
-        playButton.setTitle(String.fontAwesomeIconWithName(.PlayCircle), forState: .Normal)
+        playButton.setTitle(String.fontAwesomeIconWithName(.PlayCircle), for: .normal)
         contentView.addSubview(playButton)
-        playButton.snp_makeConstraints { (make) in
+        playButton.snp.makeConstraints { (make) in
             make.center.equalTo(imageView)
         }
 
         videoPlayer = YouTubePlayerView()
         videoPlayer.playerVars = [
-            "controls": "1",
-            "autoplay": "1",
-            "showinfo": "0",
-            "autohide":"2",
-            "modestbranding":"0",
-            "rel":1
+            "controls": "1" as AnyObject,
+            "autoplay": "1" as AnyObject,
+            "showinfo": "0" as AnyObject,
+            "autohide":"2" as AnyObject,
+            "modestbranding":"0" as AnyObject,
+            "rel":1 as AnyObject
         ]
-        videoPlayer.contentMode = UIViewContentMode.ScaleAspectFill
+        videoPlayer.contentMode = UIViewContentMode.scaleAspectFill
         contentView.insertSubview(videoPlayer, belowSubview: imageView)
-        videoPlayer.snp_makeConstraints { (make) in
+        videoPlayer.snp.makeConstraints { (make) in
             make.width.equalTo(contentView.frame.width - 40)
             make.height.equalTo(contentView.frame.width / 2)
             make.center.equalTo(imageView)
         }
 
         barActionView = UIView()
-        barActionView.backgroundColor = UIColor.clearColor()
+        barActionView.backgroundColor = UIColor.clear
         contentView.addSubview(barActionView)
-        barActionView.snp_makeConstraints { (make) in
-            make.top.equalTo(imageView.snp_bottom)
+        barActionView.snp.makeConstraints { (make) in
+            make.top.equalTo(imageView.snp.bottom)
             make.width.equalTo(contentView.frame.width - 40)
             make.height.equalTo(44.0)
             make.centerX.equalTo(contentView)
@@ -101,22 +101,22 @@ class motivationCollectionViewCell: UICollectionViewCell {
 
         favoriteBarButton = UIButton()
         favoriteBarButton.titleLabel?.font = UIFont.fontAwesomeOfSize(barButtonSize)
-        favoriteBarButton.setTitle(String.fontAwesomeIconWithName(.HeartO), forState: .Normal)
-        favoriteBarButton.setTitleColor(UIColor.whiteColor(), forState: .Normal)
+        favoriteBarButton.setTitle(String.fontAwesomeIconWithName(.HeartO), for: .normal)
+        favoriteBarButton.setTitleColor(UIColor.white, for: UIControlState())
         barActionView.addSubview(favoriteBarButton)
-        favoriteBarButton.snp_makeConstraints { (make) in
+        favoriteBarButton.snp.makeConstraints { (make) in
             make.centerY.equalTo(barActionView)
-            make.left.equalTo(barActionView.leftAnchor)
+            make.left.equalTo(barActionView.snp.left)
         }
 
         shareBarButton = UIButton()
         shareBarButton.titleLabel?.font = UIFont.fontAwesomeOfSize(barButtonSize)
-        shareBarButton.setTitle(String.fontAwesomeIconWithName(.Share), forState: .Normal)
-        shareBarButton.setTitleColor(barButtonColor, forState: .Normal)
+        shareBarButton.setTitle(String.fontAwesomeIconWithName(.Share), for: .normal)
+        shareBarButton.setTitleColor(barButtonColor, for: UIControlState())
         barActionView.addSubview(shareBarButton)
-        shareBarButton.snp_makeConstraints { (make) in
+        shareBarButton.snp.makeConstraints { (make) in
             make.centerY.equalTo(barActionView)
-            make.left.equalTo(favoriteBarButton.snp_right).offset(20)
+            make.left.equalTo(favoriteBarButton.snp.right).offset(20)
         }
     }
 
@@ -128,14 +128,14 @@ class motivationCollectionViewCell: UICollectionViewCell {
         super.prepareForReuse()
     }
 
-    func addParallaxToView(vw: UIView) {
+    func addParallaxToView(_ vw: UIView) {
         let amount = 15
 
-        let horizontal = UIInterpolatingMotionEffect(keyPath: "center.x", type: .TiltAlongHorizontalAxis)
+        let horizontal = UIInterpolatingMotionEffect(keyPath: "center.x", type: .tiltAlongHorizontalAxis)
         horizontal.minimumRelativeValue = -amount
         horizontal.maximumRelativeValue = amount
 
-        let vertical = UIInterpolatingMotionEffect(keyPath: "center.y", type: .TiltAlongVerticalAxis)
+        let vertical = UIInterpolatingMotionEffect(keyPath: "center.y", type: .tiltAlongVerticalAxis)
         vertical.minimumRelativeValue = -amount
         vertical.maximumRelativeValue = amount
 

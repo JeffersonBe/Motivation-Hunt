@@ -14,18 +14,18 @@ class Item: NSManagedObject {
     @NSManaged var item: AnyObject
     @NSManaged var theme: String
 
-    override init(entity: NSEntityDescription, insertIntoManagedObjectContext context: NSManagedObjectContext?) {
-        super.init(entity: entity, insertIntoManagedObjectContext: context)
+    override init(entity: NSEntityDescription, insertInto context: NSManagedObjectContext?) {
+        super.init(entity: entity, insertInto: context)
     }
 
     init(item: AnyObject, theme: Theme.themeName, context: NSManagedObjectContext) {
-        let entity =  NSEntityDescription.entityForName("Item", inManagedObjectContext: context)!
-        super.init(entity: entity, insertIntoManagedObjectContext: context)
+        let entity =  NSEntityDescription.entity(forEntityName: "Item", in: context)!
+        super.init(entity: entity, insertInto: context)
         self.item = item
         self.theme = theme.rawValue
     }
 
     override func awakeFromInsert()  {
-        self.uniqueIdentifier = NSUUID().UUIDString
+        self.uniqueIdentifier = UUID().uuidString
     }
 }
