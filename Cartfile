@@ -1,6 +1,5 @@
 github "jeffersonBe/Swift-YouTube-Player" "master"
 github "delba/Log" "swift-3.0"
-github "duemunk/Async" "feature/Swift_3.0"
 github "SnapKit/SnapKit" "master"
 github "thii/FontAwesome.swift" "0.11.1"
 github "vinzen/Toucan" "swift3.0"
