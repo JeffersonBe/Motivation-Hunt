@@ -119,7 +119,6 @@ extension FavouritesViewController {
         layer.contentsGravity = kCAGravityResize
         view.layer.insertSublayer(layer, below: collectionView.layer)
 
-        navigationController?.hidesBarsOnSwipe = true
         setNeedsStatusBarAppearanceUpdate()
     }
 
@@ -208,7 +207,7 @@ extension FavouritesViewController: UICollectionViewDelegate, UICollectionViewDa
 
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         let sectionInfo = fetchedResultsController.sections![section] as NSFetchedResultsSectionInfo
-        if (fetchedResultsController.sections?[section].numberOfObjects)! < 10 {
+        if sectionInfo.numberOfObjects < 15 {
             navigationController?.hidesBarsOnSwipe = false
             setNeedsStatusBarAppearanceUpdate()
         }

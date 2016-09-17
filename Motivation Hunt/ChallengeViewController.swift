@@ -150,8 +150,6 @@ class ChallengeViewController: UIViewController {
         let longTapToEditChallenge: UILongPressGestureRecognizer = UILongPressGestureRecognizer(target: self, action: #selector(ChallengeViewController.editChallenge(_:)))
         longTapToEditChallenge.minimumPressDuration = 1.5
         tableView.addGestureRecognizer(longTapToEditChallenge)
-        navigationController?.hidesBarsOnSwipe = true
-        setNeedsStatusBarAppearanceUpdate()
     }
 
     override var preferredStatusBarStyle : UIStatusBarStyle {
@@ -314,13 +312,14 @@ extension ChallengeViewController: TBEmptyDataSetDataSource, TBEmptyDataSetDeleg
 
 extension ChallengeViewController: UITableViewDataSource, UITableViewDelegate {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        let sectionInfo = fetchedResultsController.sections?[section]
+        let sectionInfo = fetchedResultsController.sections![section] as NSFetchedResultsSectionInfo
         
-        if sectionInfo!.numberOfObjects < 10 {
+        if sectionInfo.numberOfObjects < 15 {
             navigationController?.hidesBarsOnSwipe = false
             setNeedsStatusBarAppearanceUpdate()
         }
-        return sectionInfo!.numberOfObjects
+        
+        return sectionInfo.numberOfObjects
     }
 
     func tableView(_ tableView: UITableView,

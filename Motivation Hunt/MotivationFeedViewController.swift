@@ -155,7 +155,6 @@ extension MotivationFeedViewController {
     }
 
     func setupUI() {
-
         view.backgroundColor = UIColor(red: 0, green: 0, blue: 0, alpha: 1.0) /* #000000 */
         // Configure CollectionView
         collectionView = UICollectionView(frame: view.frame, collectionViewLayout: UICollectionViewFlowLayout())
@@ -184,7 +183,6 @@ extension MotivationFeedViewController {
         layer.contentsGravity = kCAGravityResize
         view.layer.insertSublayer(layer, below: collectionView.layer)
 
-        navigationController?.hidesBarsOnSwipe = true
         setNeedsStatusBarAppearanceUpdate()
     }
 
@@ -330,6 +328,10 @@ extension MotivationFeedViewController: UICollectionViewDelegate, UICollectionVi
 
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         let sectionInfo = fetchedResultsController.sections![section] as NSFetchedResultsSectionInfo
+        if sectionInfo.numberOfObjects < 15 {
+            navigationController?.hidesBarsOnSwipe = false
+            setNeedsStatusBarAppearanceUpdate()
+        }
         return sectionInfo.numberOfObjects
     }
 
