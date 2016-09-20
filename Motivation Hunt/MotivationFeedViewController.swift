@@ -189,12 +189,6 @@ extension MotivationFeedViewController {
     override func willRotate(to toInterfaceOrientation: UIInterfaceOrientation, duration: TimeInterval) {
         collectionView.collectionViewLayout.invalidateLayout()
     }
-
-    override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {}
-
-    override var preferredStatusBarStyle : UIStatusBarStyle {
-        return .lightContent
-    }
 }
 
 extension MotivationFeedViewController {
@@ -328,10 +322,15 @@ extension MotivationFeedViewController: UICollectionViewDelegate, UICollectionVi
 
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         let sectionInfo = fetchedResultsController.sections![section] as NSFetchedResultsSectionInfo
-        if sectionInfo.numberOfObjects < 15 {
+        
+        if sectionInfo.numberOfObjects > 10 {
+            navigationController?.hidesBarsOnSwipe = true
+            setNeedsStatusBarAppearanceUpdate()
+        } else {
             navigationController?.hidesBarsOnSwipe = false
             setNeedsStatusBarAppearanceUpdate()
         }
+        
         return sectionInfo.numberOfObjects
     }
 

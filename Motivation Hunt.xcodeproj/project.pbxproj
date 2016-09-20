@@ -53,7 +53,6 @@
 		B4B17E251CE477D800C36F9E /* GoogleAnalytics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B4B17E241CE477D800C36F9E /* GoogleAnalytics.framework */; };
 		B4B17E271CE4789300C36F9E /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = B4B17E261CE4789300C36F9E /* GoogleService-Info.plist */; };
 		B4B17E281CE4789300C36F9E /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = B4B17E261CE4789300C36F9E /* GoogleService-Info.plist */; };
-		B4BB50771D638C2A00AE1560 /* Item.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4BB50761D638C2A00AE1560 /* Item.swift */; };
 		B4BB50791D638CB600AE1560 /* Theme.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4BB50781D638CB600AE1560 /* Theme.swift */; };
 		B4C8D04A1D666E7B00E32FEE /* PinpointKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B4C8D0491D666E7B00E32FEE /* PinpointKit.framework */; };
 		B4DC90D11CCD2CD100CA1C46 /* YouTubePlayer.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B4DC90D01CCD2CD100CA1C46 /* YouTubePlayer.framework */; };
@@ -109,7 +108,6 @@
 		B4ABAA491CA0042100EFEBBA /* FontAwesome.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = FontAwesome.framework; path = Carthage/Build/iOS/FontAwesome.framework; sourceTree = "<group>"; };
 		B4B17E241CE477D800C36F9E /* GoogleAnalytics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = GoogleAnalytics.framework; path = Carthage/Build/iOS/GoogleAnalytics.framework; sourceTree = "<group>"; };
 		B4B17E261CE4789300C36F9E /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
-		B4BB50761D638C2A00AE1560 /* Item.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Item.swift; sourceTree = "<group>"; };
 		B4BB50781D638CB600AE1560 /* Theme.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Theme.swift; sourceTree = "<group>"; };
 		B4C8D0491D666E7B00E32FEE /* PinpointKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = PinpointKit.framework; path = Carthage/Build/iOS/PinpointKit.framework; sourceTree = "<group>"; };
 		B4DC90D01CCD2CD100CA1C46 /* YouTubePlayer.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = YouTubePlayer.framework; path = Carthage/Build/iOS/YouTubePlayer.framework; sourceTree = "<group>"; };
@@ -201,7 +199,6 @@
 				B41BF3531C7D149500E27074 /* CoreDataStackManager.swift */,
 				B41BF3551C7D153300E27074 /* Challenge.swift */,
 				B42E42801C81CB6C0095B9BF /* VideoItem.swift */,
-				B4BB50761D638C2A00AE1560 /* Item.swift */,
 				B4BB50781D638CB600AE1560 /* Theme.swift */,
 			);
 			name = Models;
@@ -483,7 +480,6 @@
 				B42F85431CDF27840016F9B2 /* Extensions.swift in Sources */,
 				B42E42841C81D1350095B9BF /* motivationCollectionViewCell.swift in Sources */,
 				B41CE7EA1C8B5B54002FCBC2 /* challengeTableViewCell.swift in Sources */,
-				B4BB50771D638C2A00AE1560 /* Item.swift in Sources */,
 				B41BF3541C7D149500E27074 /* CoreDataStackManager.swift in Sources */,
 				B4BB50791D638CB600AE1560 /* Theme.swift in Sources */,
 				B4F721041C96142700D07A4D /* CloudKitHelper.swift in Sources */,

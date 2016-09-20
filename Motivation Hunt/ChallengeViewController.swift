@@ -152,10 +152,6 @@ class ChallengeViewController: UIViewController {
         tableView.addGestureRecognizer(longTapToEditChallenge)
     }
 
-    override var preferredStatusBarStyle : UIStatusBarStyle {
-        return .lightContent
-    }
-
     // Initialize CoreData and NSFetchedResultsController
 
     var sharedContext: NSManagedObjectContext {
@@ -314,7 +310,10 @@ extension ChallengeViewController: UITableViewDataSource, UITableViewDelegate {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         let sectionInfo = fetchedResultsController.sections![section] as NSFetchedResultsSectionInfo
         
-        if sectionInfo.numberOfObjects < 15 {
+        if sectionInfo.numberOfObjects > 10 {
+            navigationController?.hidesBarsOnSwipe = true
+            setNeedsStatusBarAppearanceUpdate()
+        } else {
             navigationController?.hidesBarsOnSwipe = false
             setNeedsStatusBarAppearanceUpdate()
         }
