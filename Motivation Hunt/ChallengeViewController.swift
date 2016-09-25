@@ -367,16 +367,20 @@ extension ChallengeViewController: UITableViewDataSource, UITableViewDelegate {
 
             let unComplete = UITableViewRowAction(style: .normal, title: MHClient.AppCopy.unComplete) { action, index in
                 self.updateCompleteStatusChallenge(challenge)
-                cell.backgroundColor = UIColor.white
-                tableView.setEditing(false, animated: true)
+                DispatchQueue.main.async {
+                    cell.backgroundColor = UIColor.white
+                    tableView.setEditing(false, animated: true)
+                }
             }
             unComplete.backgroundColor = UIColor.gray
             return [delete, unComplete]
         } else {
             let complete = UITableViewRowAction(style: .normal, title: MHClient.AppCopy.complete) { action, index in
                 self.updateCompleteStatusChallenge(challenge)
-                cell.backgroundColor = UIColor(red:0.52, green:0.86, blue:0.09, alpha:1.0)
-                tableView.setEditing(false, animated: true)
+                DispatchQueue.main.async {
+                    cell.backgroundColor = UIColor(red:0.52, green:0.86, blue:0.09, alpha:1.0)
+                    tableView.setEditing(false, animated: true)
+                }
             }
             complete.backgroundColor = UIColor(red:0.52, green:0.86, blue:0.09, alpha:1.0)
 

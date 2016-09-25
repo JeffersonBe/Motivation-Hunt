@@ -21,6 +21,7 @@ class challengeTableViewCell: UITableViewCell {
             make.top.equalTo(10)
             make.left.equalTo(15)
             make.height.equalTo(20)
+            make.width.equalTo(self).inset(15)
         }
 
         challengeDateTextLabel = UILabel()
@@ -30,6 +31,7 @@ class challengeTableViewCell: UITableViewCell {
             make.top.equalTo(challengeDescriptionTextLabel.snp.bottom).offset(5)
             make.left.equalTo(15)
             make.height.equalTo(20)
+            make.width.equalTo(self).inset(15)
         }
     }
 
