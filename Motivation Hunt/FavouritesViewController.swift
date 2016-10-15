@@ -11,7 +11,7 @@ import CoreData
 import YouTubePlayer
 import CloudKit
 import Toucan
-import TBEmptyDataSet
+import DZNEmptyDataSet
 import GoogleAnalytics
 
 class FavouritesViewController: UIViewController {
@@ -30,7 +30,7 @@ class FavouritesViewController: UIViewController {
         // Initialize delegate
         collectionView.delegate = self
         collectionView.dataSource = self
-        collectionView.emptyDataSetDataSource = self
+        collectionView.emptyDataSetSource = self
         collectionView.emptyDataSetDelegate = self
         fetchedResultsController.delegate = self
 
@@ -57,8 +57,8 @@ class FavouritesViewController: UIViewController {
         return CoreDataStackManager.sharedInstance.managedObjectContext
     }
     
-    lazy var fetchedResultsController: NSFetchedResultsController<VideoItem> = {
-        let fetchRequest: NSFetchRequest<VideoItem> = VideoItem.fetchRequest() as! NSFetchRequest<VideoItem>
+    lazy var fetchedResultsController: NSFetchedResultsController<NSFetchRequestResult> = {
+        let fetchRequest = NSFetchRequest<NSFetchRequestResult>(entityName: "VideoItem")
         let predicate = NSPredicate(format: "saved == 1")
         fetchRequest.predicate = predicate
         fetchRequest.sortDescriptors = [NSSortDescriptor(key: "addedDate", ascending: false)]
@@ -118,8 +118,6 @@ extension FavouritesViewController {
         layer.masksToBounds = true
         layer.contentsGravity = kCAGravityResize
         view.layer.insertSublayer(layer, below: collectionView.layer)
-
-        setNeedsStatusBarAppearanceUpdate()
     }
 
     override func willRotate(to toInterfaceOrientation: UIInterfaceOrientation, duration: TimeInterval) {
@@ -131,7 +129,7 @@ extension FavouritesViewController {
     func savedItem(_ gestureRecognizer: UIGestureRecognizer) {
         let tapPoint: CGPoint = gestureRecognizer.location(in: collectionView)
         let indexPath = collectionView.indexPathForItem(at: tapPoint)
-        let objet = fetchedResultsController.object(at: indexPath!)
+        let objet = fetchedResultsController.object(at: indexPath!) as! VideoItem
 
         DispatchQueue.main.async {
             objet.saved = objet.saved ? false : true
@@ -143,7 +141,7 @@ extension FavouritesViewController {
         let tapPoint: CGPoint = gestureRecognizer.location(in: collectionView)
         let indexPath = collectionView.indexPathForItem(at: tapPoint)
         let cell = collectionView.cellForItem(at: indexPath!) as! motivationCollectionViewCell
-        let motivation = fetchedResultsController.object(at: indexPath!) 
+        let motivation = fetchedResultsController.object(at: indexPath!) as! VideoItem
         let motivationToShare = [motivation.itemTitle, motivation.itemDescription, "https://www.youtube.com/watch?v=\(motivation.itemVideoID)"]
         let activityViewController = UIActivityViewController(activityItems: motivationToShare, applicationActivities: nil)
         activityViewController.excludedActivityTypes = [UIActivityType.airDrop, UIActivityType.addToReadingList]
@@ -171,29 +169,21 @@ extension FavouritesViewController {
     }
 }
 
-extension FavouritesViewController: TBEmptyDataSetDataSource, TBEmptyDataSetDelegate {
-    func titleForEmptyDataSet(_ scrollView: UIScrollView!) -> NSAttributedString? {
+extension FavouritesViewController: DZNEmptyDataSetSource, DZNEmptyDataSetDelegate {
+    func title(forEmptyDataSet scrollView: UIScrollView) -> NSAttributedString? {
         let title = "You don't have any favourites"
-        let attributes = [NSFontAttributeName: UIFont.systemFont(ofSize: 24.0), NSForegroundColorAttributeName: UIColor.gray]
-        return NSAttributedString(string: title, attributes: attributes)
+        let attrs = [NSFontAttributeName: UIFont.preferredFont(forTextStyle: UIFontTextStyle.headline)]
+        return NSAttributedString(string: title, attributes: attrs)
     }
-
-    func imageForEmptyDataSet(_ scrollView: UIScrollView!) -> UIImage? {
-        let image = UIImage(named: "iconFeatured")
-        return image
+    
+    func description(forEmptyDataSet scrollView: UIScrollView) -> NSAttributedString? {
+        let description = "Add a favourites to watch later!"
+        let attrs = [NSFontAttributeName: UIFont.preferredFont(forTextStyle: UIFontTextStyle.body)]
+        return NSAttributedString(string: description, attributes: attrs)
     }
-
-    func descriptionForEmptyDataSet(_ scrollView: UIScrollView!) -> NSAttributedString? {
-        let title = "Add a favourites to watch later!"
-        let attributes = [NSFontAttributeName: UIFont.systemFont(ofSize: 18.00), NSForegroundColorAttributeName: UIColor.gray]
-        return NSAttributedString(string: title, attributes: attributes)
-    }
-
-    func emptyDataSetShouldDisplay(_ scrollView: UIScrollView!) -> Bool {
-        guard fetchedResultsController.fetchedObjects?.count == 0 else {
-            return false
-        }
-        return true
+    
+    func image(forEmptyDataSet scrollView: UIScrollView) -> UIImage? {
+        return UIImage(named: "iconFeatured")
     }
 }
 
@@ -202,21 +192,13 @@ extension FavouritesViewController: UICollectionViewDelegate, UICollectionViewDa
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         let sectionInfo = fetchedResultsController.sections![section] as NSFetchedResultsSectionInfo
         
-        if sectionInfo.numberOfObjects > 10 {
-            navigationController?.hidesBarsOnSwipe = true
-            setNeedsStatusBarAppearanceUpdate()
-        } else {
-            navigationController?.hidesBarsOnSwipe = false
-            setNeedsStatusBarAppearanceUpdate()
-        }
-        
         return sectionInfo.numberOfObjects
     }
 
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let motivationItem = fetchedResultsController.object(at: indexPath) 
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: MHClient.CellIdentifier.cellWithReuseIdentifier, for: indexPath) as! motivationCollectionViewCell
-        configureCell(cell, withItem: motivationItem)
+        configureCell(cell, withItem: motivationItem as! VideoItem)
         return cell
     }
 
@@ -264,7 +246,7 @@ extension FavouritesViewController: UICollectionViewDelegate, UICollectionViewDa
 
     func collectionView(_ collectionView: UICollectionView, willDisplay cell: UICollectionViewCell, forItemAt indexPath: IndexPath) {
         if let cell = cell as? motivationCollectionViewCell {
-            let motivationItem = fetchedResultsController.object(at: indexPath)
+            let motivationItem = fetchedResultsController.object(at: indexPath) as! VideoItem
             cell.videoPlayer.loadVideoID(motivationItem.itemVideoID)
             cell.imageView.alpha = 0
             cell.playButton.alpha = 0

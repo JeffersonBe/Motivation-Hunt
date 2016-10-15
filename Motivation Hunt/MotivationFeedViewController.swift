@@ -14,7 +14,7 @@ import Toucan
 import SnapKit
 import Alamofire
 import GoogleAnalytics
-import TBEmptyDataSet
+import DZNEmptyDataSet
 import Onboard
 import SwiftyUserDefaults
 
@@ -31,9 +31,8 @@ class MotivationFeedViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        // Do any additional setup after loading the view, typically from a nib.
         setupUI()
-
+        
         // Initialize delegate
         collectionView.delegate = self
         collectionView.dataSource = self
@@ -156,6 +155,7 @@ extension MotivationFeedViewController {
 
     func setupUI() {
         view.backgroundColor = UIColor(red: 0, green: 0, blue: 0, alpha: 1.0) /* #000000 */
+        
         // Configure CollectionView
         collectionView = UICollectionView(frame: view.frame, collectionViewLayout: UICollectionViewFlowLayout())
         collectionView.register(motivationCollectionViewCell.self, forCellWithReuseIdentifier: MHClient.CellIdentifier.cellWithReuseIdentifier)
@@ -322,14 +322,6 @@ extension MotivationFeedViewController: UICollectionViewDelegate, UICollectionVi
 
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         let sectionInfo = fetchedResultsController.sections![section] as NSFetchedResultsSectionInfo
-        
-        if sectionInfo.numberOfObjects > 10 {
-            navigationController?.hidesBarsOnSwipe = true
-            setNeedsStatusBarAppearanceUpdate()
-        } else {
-            navigationController?.hidesBarsOnSwipe = false
-            setNeedsStatusBarAppearanceUpdate()
-        }
         
         return sectionInfo.numberOfObjects
     }

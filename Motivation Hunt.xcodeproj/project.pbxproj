@@ -10,6 +10,7 @@
 		447300F81D8DCD1500D8011F /* SnapKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 447300F71D8DCD1500D8011F /* SnapKit.framework */; };
 		447BDE791D93DF3C0034CA93 /* Motivation_HuntTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 447BDE781D93DF3C0034CA93 /* Motivation_HuntTests.swift */; };
 		447BDE821D93E72E0034CA93 /* CDECloudKitFileSystem.m in Sources */ = {isa = PBXBuildFile; fileRef = 447BDE811D93E72E0034CA93 /* CDECloudKitFileSystem.m */; };
+		44A1E9B71D987998000948A6 /* DZNEmptyDataSet.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 44A1E9B61D987998000948A6 /* DZNEmptyDataSet.framework */; };
 		44EBD8471D8B1985006DE96F /* Ensembles.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 44EBD8451D8B1985006DE96F /* Ensembles.framework */; };
 		B40741F71C89A3AA00AFC870 /* Key.plist in Resources */ = {isa = PBXBuildFile; fileRef = B40741F61C89A3AA00AFC870 /* Key.plist */; };
 		B40D683C1D5ED28600B424D0 /* CloudKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B40D683B1D5ED28600B424D0 /* CloudKit.framework */; };
@@ -35,7 +36,6 @@
 		B42E42811C81CB6C0095B9BF /* VideoItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = B42E42801C81CB6C0095B9BF /* VideoItem.swift */; };
 		B42E42841C81D1350095B9BF /* motivationCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = B42E42831C81D1350095B9BF /* motivationCollectionViewCell.swift */; };
 		B42E42861C81DE720095B9BF /* FavouritesViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B42E42851C81DE720095B9BF /* FavouritesViewController.swift */; };
-		B42EC23A1CCE47E000367B83 /* TBEmptyDataSet.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B42EC2391CCE47E000367B83 /* TBEmptyDataSet.framework */; };
 		B42F85431CDF27840016F9B2 /* Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = B42F85421CDF27840016F9B2 /* Extensions.swift */; };
 		B43403FB1CBD6BDF00F9793E /* CloudKitHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4F721031C96142700D07A4D /* CloudKitHelper.swift */; };
 		B44ACBC81C89ECEC00C5FF96 /* ImageCache.swift in Sources */ = {isa = PBXBuildFile; fileRef = B44ACBC71C89ECEC00C5FF96 /* ImageCache.swift */; };
@@ -80,6 +80,7 @@
 		447BDE7A1D93DF3C0034CA93 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		447BDE801D93E72E0034CA93 /* CDECloudKitFileSystem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CDECloudKitFileSystem.h; sourceTree = "<group>"; };
 		447BDE811D93E72E0034CA93 /* CDECloudKitFileSystem.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CDECloudKitFileSystem.m; sourceTree = "<group>"; };
+		44A1E9B61D987998000948A6 /* DZNEmptyDataSet.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = DZNEmptyDataSet.framework; path = Carthage/Build/iOS/DZNEmptyDataSet.framework; sourceTree = "<group>"; };
 		44EBD8451D8B1985006DE96F /* Ensembles.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Ensembles.framework; sourceTree = "<group>"; };
 		B40741F61C89A3AA00AFC870 /* Key.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = Key.plist; path = "Motivation Hunt/Key.plist"; sourceTree = "<group>"; };
 		B40D683B1D5ED28600B424D0 /* CloudKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CloudKit.framework; path = System/Library/Frameworks/CloudKit.framework; sourceTree = SDKROOT; };
@@ -110,7 +111,6 @@
 		B42E42801C81CB6C0095B9BF /* VideoItem.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = VideoItem.swift; sourceTree = "<group>"; };
 		B42E42831C81D1350095B9BF /* motivationCollectionViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = motivationCollectionViewCell.swift; sourceTree = "<group>"; };
 		B42E42851C81DE720095B9BF /* FavouritesViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FavouritesViewController.swift; sourceTree = "<group>"; };
-		B42EC2391CCE47E000367B83 /* TBEmptyDataSet.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = TBEmptyDataSet.framework; path = Carthage/Build/iOS/TBEmptyDataSet.framework; sourceTree = "<group>"; };
 		B42F85421CDF27840016F9B2 /* Extensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Extensions.swift; sourceTree = "<group>"; };
 		B43403FC1CBD6CE500F9793E /* Motivation Hunt TV.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = "Motivation Hunt TV.entitlements"; sourceTree = "<group>"; };
 		B44ACBC71C89ECEC00C5FF96 /* ImageCache.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ImageCache.swift; path = "Motivation Hunt/ImageCache.swift"; sourceTree = "<group>"; };
@@ -151,10 +151,10 @@
 				447300F81D8DCD1500D8011F /* SnapKit.framework in Frameworks */,
 				B4B17E251CE477D800C36F9E /* GoogleAnalytics.framework in Frameworks */,
 				B4DC90D11CCD2CD100CA1C46 /* YouTubePlayer.framework in Frameworks */,
-				B42EC23A1CCE47E000367B83 /* TBEmptyDataSet.framework in Frameworks */,
 				B40D683C1D5ED28600B424D0 /* CloudKit.framework in Frameworks */,
 				44EBD8471D8B1985006DE96F /* Ensembles.framework in Frameworks */,
 				B471CC0C1CC7A66500A65D01 /* Toucan.framework in Frameworks */,
+				44A1E9B71D987998000948A6 /* DZNEmptyDataSet.framework in Frameworks */,
 				B47684841CBD3E8C005AB738 /* Log.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -285,6 +285,7 @@
 		B49730EB1CCAEE430086F61D /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				44A1E9B61D987998000948A6 /* DZNEmptyDataSet.framework */,
 				447300F71D8DCD1500D8011F /* SnapKit.framework */,
 				B41F47301D737E170075C2EA /* SwiftyUserDefaults.framework */,
 				B41F472E1D7372E50075C2EA /* Onboard.framework */,
@@ -294,7 +295,6 @@
 				B46A76C01D58F03F00ADBF43 /* Ensembles.bundle */,
 				B4B17E241CE477D800C36F9E /* GoogleAnalytics.framework */,
 				B4EA3A8D1CD5152B00AE117F /* Alamofire.framework */,
-				B42EC2391CCE47E000367B83 /* TBEmptyDataSet.framework */,
 				B4DC90D01CCD2CD100CA1C46 /* YouTubePlayer.framework */,
 				B471CC0B1CC7A66500A65D01 /* Toucan.framework */,
 				B4ABAA491CA0042100EFEBBA /* FontAwesome.framework */,
@@ -511,12 +511,12 @@
 				"$(SRCROOT)/Carthage/Build/iOS/FontAwesome.framework",
 				"$(SRCROOT)/Carthage/Build/iOS/Log.framework",
 				"$(SRCROOT)/Carthage/Build/iOS/Toucan.framework",
-				"$(SRCROOT)/Carthage/Build/iOS/TBEmptyDataSet.framework",
 				"$(SRCROOT)/Carthage/Build/iOS/Alamofire.framework",
 				"$(SRCROOT)/Carthage/Build/iOS/GoogleAnalytics.framework",
 				"$(SRCROOT)/Carthage/Build/iOS/PinpointKit.framework",
 				"$(SRCROOT)/Carthage/Build/iOS/Onboard.framework",
 				"$(SRCROOT)/Carthage/Build/iOS/SwiftyUserDefaults.framework",
+				"$(SRCROOT)/Carthage/Build/iOS/DZNEmptyDataSet.framework",
 			);
 			outputPaths = (
 			);
@@ -885,6 +885,7 @@
 				447BDE7E1D93DF3C0034CA93 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		B41BF32F1C7D0D7200E27074 /* Build configuration list for PBXProject "Motivation Hunt" */ = {
 			isa = XCConfigurationList;

@@ -63,6 +63,7 @@ extension MHClient {
         static let completeBy = "Complete by:"
         static let completedBy = "Completed by:"
         static let delete = "Delete"
+        static let modify = "Modify"
         static let unComplete = "Uncompleted"
         static let complete = "Complete"
         static let addChallenge = "Add a challenge"

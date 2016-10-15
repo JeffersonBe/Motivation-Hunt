@@ -9,7 +9,7 @@
 import UIKit
 import CoreData
 import CloudKit
-import TBEmptyDataSet
+import DZNEmptyDataSet
 import SnapKit
 import GoogleAnalytics
 
@@ -35,7 +35,7 @@ class ChallengeViewController: UIViewController {
         tableView.dataSource = self
         fetchedResultsController.delegate = self
         challengeTextField.delegate = self
-        tableView.emptyDataSetDataSource = self
+        tableView.emptyDataSetSource = self
         tableView.emptyDataSetDelegate = self
 
         do {
@@ -58,6 +58,8 @@ class ChallengeViewController: UIViewController {
     }
 
     override func viewDidLayoutSubviews() {
+        Log.info("viewDidLayoutSubviews")
+        setNeedsStatusBarAppearanceUpdate()
         layer.frame = view.frame
         if !editMode {
             addChallengeView.center.y -= view.bounds.width
@@ -242,7 +244,6 @@ extension ChallengeViewController {
             self.addChallengeView.center.y += self.view.bounds.width
             self.dimView.alpha = 0.3
             }, completion: { finished in
-                self.navigationController?.hidesBarsOnSwipe = false
                 self.navigationItem.rightBarButtonItem = UIBarButtonItem(
                     barButtonSystemItem: UIBarButtonSystemItem.cancel,
                     target: self,
@@ -256,7 +257,6 @@ extension ChallengeViewController {
             self.addChallengeView.center.y -= self.view.bounds.width
             self.dimView.alpha = 0
             }, completion: { finished in
-                self.navigationController?.hidesBarsOnSwipe = true
                 self.navigationItem.rightBarButtonItem = UIBarButtonItem(
                     barButtonSystemItem: UIBarButtonSystemItem.add,
                     target: self,
@@ -274,50 +274,41 @@ extension ChallengeViewController: UITextFieldDelegate {
     }
 }
 
-extension ChallengeViewController: TBEmptyDataSetDataSource, TBEmptyDataSetDelegate {
-    func titleForEmptyDataSet(_ scrollView: UIScrollView!) -> NSAttributedString? {
-        // return the description for EmptyDataSet
+extension ChallengeViewController: DZNEmptyDataSetSource, DZNEmptyDataSetDelegate {
+    //
+    
+    func title(forEmptyDataSet scrollView: UIScrollView) -> NSAttributedString? {
         let title = "You don't have any challenge"
-        let attributes = [NSFontAttributeName: UIFont.systemFont(ofSize: 24.0), NSForegroundColorAttributeName: UIColor.gray]
-        return NSAttributedString(string: title, attributes: attributes)
+        let attrs = [NSFontAttributeName: UIFont.preferredFont(forTextStyle: UIFontTextStyle.headline)]
+        return NSAttributedString(string: title, attributes: attrs)
     }
-
-    func imageForEmptyDataSet(_ scrollView: UIScrollView!) -> UIImage? {
-        let image = UIImage(named: "iconChallenge")
-        return image
+    
+    func description(forEmptyDataSet scrollView: UIScrollView) -> NSAttributedString? {
+        let description = "Challenge yourself!"
+        let attrs = [NSFontAttributeName: UIFont.preferredFont(forTextStyle: UIFontTextStyle.body)]
+        return NSAttributedString(string: description, attributes: attrs)
     }
-
-    func descriptionForEmptyDataSet(_ scrollView: UIScrollView!) -> NSAttributedString? {
-        let title = "Challenge yourself!"
-        let attributes = [NSFontAttributeName: UIFont.systemFont(ofSize: 18.00), NSForegroundColorAttributeName: UIColor.gray]
-        return NSAttributedString(string: title, attributes: attributes)
+    
+    func image(forEmptyDataSet scrollView: UIScrollView) -> UIImage? {
+        return UIImage(named: "iconChallenge")
     }
-
-    func emptyDataSetDidTapView(_ scrollView: UIScrollView!) {
+    
+    func buttonTitle(forEmptyDataSet scrollView: UIScrollView, for state: UIControlState) -> NSAttributedString? {
+        let addChallengeButton = "Add a Challenge"
+        let attrs = [NSFontAttributeName: UIFont.preferredFont(forTextStyle: UIFontTextStyle.callout), NSForegroundColorAttributeName: UIColor.white]
+        return NSAttributedString(string: addChallengeButton, attributes: attrs)
+    }
+    
+    func emptyDataSet(_ scrollView: UIScrollView, didTap button: UIButton) {
         showOrHideChallengeView()
     }
-
-    func emptyDataSetShouldDisplay(_ scrollView: UIScrollView!) -> Bool {
-        guard fetchedResultsController.fetchedObjects?.count == 0 else {
-            return false
-        }
-
-        return true
-    }
 }
+
 
 extension ChallengeViewController: UITableViewDataSource, UITableViewDelegate {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         let sectionInfo = fetchedResultsController.sections![section] as NSFetchedResultsSectionInfo
-        
-        if sectionInfo.numberOfObjects > 10 {
-            navigationController?.hidesBarsOnSwipe = true
-            setNeedsStatusBarAppearanceUpdate()
-        } else {
-            navigationController?.hidesBarsOnSwipe = false
-            setNeedsStatusBarAppearanceUpdate()
-        }
-        
+
         return sectionInfo.numberOfObjects
     }
 
@@ -329,7 +320,7 @@ extension ChallengeViewController: UITableViewDataSource, UITableViewDelegate {
     }
 
     func configureCell(_ cell: challengeTableViewCell, atIndexPath indexPath: IndexPath) {
-        let challenge = fetchedResultsController.object(at: indexPath) 
+        let challenge = fetchedResultsController.object(at: indexPath)
         cell.selectionStyle = UITableViewCellSelectionStyle.none
 
         if challenge.completed {
@@ -358,6 +349,12 @@ extension ChallengeViewController: UITableViewDataSource, UITableViewDelegate {
     func tableView(_ tableView: UITableView, editActionsForRowAt indexPath: IndexPath) -> [UITableViewRowAction]? {
         let challenge = fetchedResultsController.object(at: indexPath) 
         let cell = tableView.dequeueReusableCell(withIdentifier: MHClient.CellIdentifier.cellWithReuseIdentifier, for: indexPath)
+        
+        let modify = UITableViewRowAction(style: .normal, title: MHClient.AppCopy.modify) { action, index in
+            self.currentChallengeToEdit = self.fetchedResultsController.object(at: indexPath)
+            self.showOrHideChallengeView()
+            self.tableView.deselectRow(at: indexPath, animated: true)
+        }
 
         if challenge.completed {
             let delete = UITableViewRowAction(style: .normal, title: MHClient.AppCopy.delete) { action, index in
@@ -373,7 +370,7 @@ extension ChallengeViewController: UITableViewDataSource, UITableViewDelegate {
                 }
             }
             unComplete.backgroundColor = UIColor.gray
-            return [delete, unComplete]
+            return [delete, unComplete, modify]
         } else {
             let complete = UITableViewRowAction(style: .normal, title: MHClient.AppCopy.complete) { action, index in
                 self.updateCompleteStatusChallenge(challenge)
@@ -388,7 +385,7 @@ extension ChallengeViewController: UITableViewDataSource, UITableViewDelegate {
                 self.deleteChallenge(challenge)
             }
             delete.backgroundColor = UIColor.red
-            return [delete, complete]
+            return [delete, complete, modify]
         }
     }
 
