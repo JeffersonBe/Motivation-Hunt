@@ -17,15 +17,11 @@ let Log = Logger()
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
-
-//    let pinPointKit = PinpointKit(configuration: Configuration(
-//        feedbackRecipients: ["Jefferson.bonnaire+motivationHunt@gmail.com"],
-//        appearance: InterfaceCustomization.Appearance.init(tintColor: UIColor.blackColor())
-//        ))
-
-//    internal lazy var window: UIWindow? = ShakeDetectingWindow(frame: UIScreen.mainScreen.bounds, delegate: self.pinPointKit)
     
-    var window: UIWindow?
+    private static let pinPointKit = PinpointKit(configuration: Configuration(appearance: InterfaceCustomization.Appearance.init(tintColor: UIColor.black), feedbackConfiguration: FeedbackConfiguration(recipients: ["jefferson.bonnaire+motivationHunt@gmail.com"]))
+    )
+
+    var window: UIWindow? = ShakeDetectingWindow(frame: UIScreen.main.bounds, delegate: AppDelegate.pinPointKit)
     
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
         // Override point for customization after application launch.
