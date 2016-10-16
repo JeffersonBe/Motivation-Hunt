@@ -32,7 +32,7 @@ class motivationCollectionViewCell: UICollectionViewCell {
         super.init(frame: frame)
 
         barButtonColor = UIColor.gray
-        barButtonSize = 45.00
+        barButtonSize = 35
 
         titleBarView = UIView()
         contentView.addSubview(titleBarView)
@@ -98,7 +98,7 @@ class motivationCollectionViewCell: UICollectionViewCell {
         }
 
         favoriteBarButton = UIButton()
-        favoriteBarButton.titleLabel?.font = UIFont.fontAwesomeOfSize(30.00)
+        favoriteBarButton.titleLabel?.font = UIFont.fontAwesomeOfSize(27)
         favoriteBarButton.setTitle(String.fontAwesomeIconWithName(.HeartO), for: .normal)
         favoriteBarButton.setTitleColor(#colorLiteral(red: 1, green: 1, blue: 1, alpha: 1), for: UIControlState())
         barActionView.addSubview(favoriteBarButton)
@@ -108,18 +108,15 @@ class motivationCollectionViewCell: UICollectionViewCell {
         }
 
         shareBarButton = UIButton()
-        //        shareBarButton.titleLabel?.font = UIFont.fontAwesomeOfSize(barButtonSize)
-        //        shareBarButton.setTitle(String.fontAwesomeIconWithName(.Share), for: .normal)
-        //        shareBarButton.setTitleColor(barButtonColor, for: .normal)
-        let shareImage = imageFromSystemBarButton(systemItem: UIBarButtonSystemItem.action).imageWithSize(size: CGSize(width: 22, height: 30))
+        let shareImage = imageFromSystemBarButton(systemItem: UIBarButtonSystemItem.action).imageWithSize(size: CGSize(width: 18, height: 27))
         shareBarButton.imageView?.contentMode = .scaleAspectFit
         shareBarButton.setImage(shareImage, for: .normal)
         shareBarButton.tintColor = #colorLiteral(red: 1, green: 1, blue: 1, alpha: 1)
         barActionView.addSubview(shareBarButton)
         shareBarButton.snp.makeConstraints { (make) in
             make.centerY.equalTo(barActionView)
-            make.width.equalTo(22)
-            make.height.equalTo(30)
+            make.width.equalTo(18)
+            make.height.equalTo(27)
             make.left.equalTo(favoriteBarButton.snp.right).offset(15)
         }
     }
