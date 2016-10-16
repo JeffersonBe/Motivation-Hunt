@@ -13,16 +13,13 @@ import CloudKit
 import GoogleAnalytics
 import PinpointKit
 
-let Log = Logger()
+let Log = Logger(formatter: .detailed, theme: .tomorrowNight)
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
     
-    private static let pinPointKit = PinpointKit(configuration: Configuration(appearance: InterfaceCustomization.Appearance.init(tintColor: UIColor.black), feedbackConfiguration: FeedbackConfiguration(recipients: ["jefferson.bonnaire+motivationHunt@gmail.com"]))
+    static let pinPointKit = PinpointKit(configuration: Configuration(appearance: InterfaceCustomization.Appearance.init(tintColor: UIColor.black), feedbackConfiguration: FeedbackConfiguration(recipients: ["jefferson.bonnaire+motivationHunt@gmail.com"]))
     )
-
-    var window: UIWindow? = ShakeDetectingWindow(frame: UIScreen.main.bounds,
-                                                 delegate: AppDelegate.pinPointKit)
     
     enum ShortcutIdentifier: String {
         case OpenFavorites
@@ -36,17 +33,33 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         }
     }
     
+    // Saved shortcut item used as a result of an app launch, used later when app is activated.
+    var launchedShortcutItem: UIApplicationShortcutItem?
+    static let applicationShortcutUserInfoIconKey = "applicationShortcutUserInfoIconKey"
+
+    var window: UIWindow? = ShakeDetectingWindow(frame: UIScreen.main.bounds,
+                                                 delegate: AppDelegate.pinPointKit)
+    
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
+        
         // Override point for customization after application launch.
+        var shouldPerformAdditionalDelegateHandling = true
 
         let _ : CoreDataStackManager = CoreDataStackManager.sharedInstance
         CoreDataStackManager.sharedInstance.saveContext()
         CoreDataStackManager.sharedInstance.enableEnsemble()
         
+        Log.info(UIApplicationLaunchOptionsKey.shortcutItem)
+        
         if let shortcutItem = launchOptions?[UIApplicationLaunchOptionsKey.shortcutItem] as? UIApplicationShortcutItem {
+            Log.info("shortcutItem")
+            
+            launchedShortcutItem = shortcutItem
             
             _ = handleShortcut(shortcutItem: shortcutItem)
-            return false
+            
+            // This will block "performActionForShortcutItem:completionHandler" from being called.
+            shouldPerformAdditionalDelegateHandling = false
         }
 
         // Listen for local saves, and trigger merges
@@ -75,7 +88,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             gai?.logger.logLevel = GAILogLevel.none
         #endif
 
-        return true
+        return shouldPerformAdditionalDelegateHandling
     }
 
     func applicationDidEnterBackground(_ application: UIApplication) {
@@ -87,7 +100,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         CoreDataStackManager.sharedInstance.syncWithCompletion( { () -> Void in
             UIApplication.shared.endBackgroundTask(identifier)
         })
-
     }
 
     func applicationWillEnterForeground(_ application: UIApplication) {
@@ -98,6 +110,12 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     func applicationDidBecomeActive(_ application: UIApplication) {
         // Restart any tasks that were paused (or not yet started) while the application was inactive. If the application was previously in the background, optionally refresh the user interface.
         CoreDataStackManager.sharedInstance.syncWithCompletion(nil)
+        
+        guard let shortcut = launchedShortcutItem else { return }
+        
+        _ = handleShortcut(shortcutItem: shortcut)
+        
+        launchedShortcutItem = nil
     }
 
     func applicationWillTerminate(_ application: UIApplication) {
@@ -130,22 +148,22 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         })
     }
     
-    private func application(application: UIApplication,
-                     performActionForShortcutItem shortcutItem: UIApplicationShortcutItem,
-                     completionHandler: (Bool) -> Void) {
-        
+    func application(_ application: UIApplication, performActionFor shortcutItem: UIApplicationShortcutItem, completionHandler: @escaping (Bool) -> Void) {
         completionHandler(handleShortcut(shortcutItem: shortcutItem))
     }
     
-    private func handleShortcut(shortcutItem: UIApplicationShortcutItem) -> Bool {
+    
+    func handleShortcut(shortcutItem: UIApplicationShortcutItem) -> Bool {
         let shortcutType = shortcutItem.type
+        
         guard let shortcutIdentifier = ShortcutIdentifier(fullIdentifier: shortcutType) else {
             return false
         }
+        
         return selectTabBarItemForIdentifier(identifier: shortcutIdentifier)
     }
     
-    private func selectTabBarItemForIdentifier(identifier: ShortcutIdentifier) -> Bool {
+    func selectTabBarItemForIdentifier(identifier: ShortcutIdentifier) -> Bool {
         
         guard let tabBarController = self.window?.rootViewController as? UITabBarController else {
             return false
@@ -153,10 +171,19 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         
         switch (identifier) {
         case .OpenFavorites:
+            Log.info(identifier)
             tabBarController.selectedIndex = 1
             return true
         case .OpenChallenge:
+            Log.info(identifier)
             tabBarController.selectedIndex = 2
+            if let topController = window?.visibleViewController() {
+                if topController.isKind(of: ChallengeViewController.self) {
+                   let challengeViewController = topController as! ChallengeViewController
+                    challengeViewController.viewDidLoad()
+                    challengeViewController.showOrHideChallengeView()
+                }
+            }
             return true
         }
     }
