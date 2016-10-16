@@ -27,6 +27,28 @@ extension UIImage {
         UIGraphicsEndImageContext()
         return img!
     }
+    
+    func imageWithSize(size:CGSize) -> UIImage {
+        var scaledImageRect = CGRect.zero
+        
+        let aspectWidth:CGFloat = size.width / size.width
+        let aspectHeight:CGFloat = size.height / size.height
+        let aspectRatio:CGFloat = min(aspectWidth, aspectHeight)
+        
+        scaledImageRect.size.width = size.width * aspectRatio
+        scaledImageRect.size.height = size.height * aspectRatio
+        scaledImageRect.origin.x = (size.width - scaledImageRect.size.width) / 2.0
+        scaledImageRect.origin.y = (size.height - scaledImageRect.size.height) / 2.0
+        
+        UIGraphicsBeginImageContextWithOptions(size, false, 0)
+        
+        draw(in: scaledImageRect)
+        
+        let scaledImage = UIGraphicsGetImageFromCurrentImageContext()?.withRenderingMode(.alwaysTemplate)
+        UIGraphicsEndImageContext()
+        
+        return scaledImage!
+    }
 }
 
 // NSUserDefaults

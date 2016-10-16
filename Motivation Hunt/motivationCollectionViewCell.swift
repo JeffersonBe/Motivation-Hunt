@@ -32,10 +32,9 @@ class motivationCollectionViewCell: UICollectionViewCell {
         super.init(frame: frame)
 
         barButtonColor = UIColor.gray
-        barButtonSize = 25.00
+        barButtonSize = 45.00
 
         titleBarView = UIView()
-        titleBarView.backgroundColor = UIColor.clear
         contentView.addSubview(titleBarView)
         titleBarView.snp.makeConstraints { (make) in
             make.top.equalTo(contentView.snp.top)
@@ -45,7 +44,7 @@ class motivationCollectionViewCell: UICollectionViewCell {
         }
 
         textLabel = UILabel()
-        textLabel.textColor = UIColor.white
+        textLabel.textColor = #colorLiteral(red: 1, green: 1, blue: 1, alpha: 1)
         textLabel.textAlignment = .center
         titleBarView.addSubview(textLabel)
         textLabel.snp.makeConstraints { (make) in
@@ -90,7 +89,6 @@ class motivationCollectionViewCell: UICollectionViewCell {
         }
 
         barActionView = UIView()
-        barActionView.backgroundColor = UIColor.clear
         contentView.addSubview(barActionView)
         barActionView.snp.makeConstraints { (make) in
             make.top.equalTo(imageView.snp.bottom)
@@ -100,9 +98,9 @@ class motivationCollectionViewCell: UICollectionViewCell {
         }
 
         favoriteBarButton = UIButton()
-        favoriteBarButton.titleLabel?.font = UIFont.fontAwesomeOfSize(barButtonSize)
+        favoriteBarButton.titleLabel?.font = UIFont.fontAwesomeOfSize(30.00)
         favoriteBarButton.setTitle(String.fontAwesomeIconWithName(.HeartO), for: .normal)
-        favoriteBarButton.setTitleColor(UIColor.white, for: UIControlState())
+        favoriteBarButton.setTitleColor(#colorLiteral(red: 1, green: 1, blue: 1, alpha: 1), for: UIControlState())
         barActionView.addSubview(favoriteBarButton)
         favoriteBarButton.snp.makeConstraints { (make) in
             make.centerY.equalTo(barActionView)
@@ -110,13 +108,19 @@ class motivationCollectionViewCell: UICollectionViewCell {
         }
 
         shareBarButton = UIButton()
-        shareBarButton.titleLabel?.font = UIFont.fontAwesomeOfSize(barButtonSize)
-        shareBarButton.setTitle(String.fontAwesomeIconWithName(.Share), for: .normal)
-        shareBarButton.setTitleColor(barButtonColor, for: UIControlState())
+        //        shareBarButton.titleLabel?.font = UIFont.fontAwesomeOfSize(barButtonSize)
+        //        shareBarButton.setTitle(String.fontAwesomeIconWithName(.Share), for: .normal)
+        //        shareBarButton.setTitleColor(barButtonColor, for: .normal)
+        let shareImage = imageFromSystemBarButton(systemItem: UIBarButtonSystemItem.action).imageWithSize(size: CGSize(width: 22, height: 30))
+        shareBarButton.imageView?.contentMode = .scaleAspectFit
+        shareBarButton.setImage(shareImage, for: .normal)
+        shareBarButton.tintColor = #colorLiteral(red: 1, green: 1, blue: 1, alpha: 1)
         barActionView.addSubview(shareBarButton)
         shareBarButton.snp.makeConstraints { (make) in
             make.centerY.equalTo(barActionView)
-            make.left.equalTo(favoriteBarButton.snp.right).offset(20)
+            make.width.equalTo(22)
+            make.height.equalTo(30)
+            make.left.equalTo(favoriteBarButton.snp.right).offset(15)
         }
     }
 
@@ -142,5 +146,23 @@ class motivationCollectionViewCell: UICollectionViewCell {
         let group = UIMotionEffectGroup()
         group.motionEffects = [horizontal, vertical]
         vw.addMotionEffect(group)
+    }
+    
+    func imageFromSystemBarButton(systemItem: UIBarButtonSystemItem)-> UIImage {
+        let tempItem = UIBarButtonItem(barButtonSystemItem: systemItem, target: nil, action: nil)
+        
+        // add to toolbar and render it
+        UIToolbar().setItems([tempItem], animated: false)
+        
+        // got image from real uibutton
+        let itemView = tempItem.value(forKey: "view") as! UIView
+        for view in itemView.subviews {
+            if view.isKind(of: UIButton.self){
+                let button = view as! UIButton
+                return button.imageView!.image!.withRenderingMode(.alwaysTemplate)
+            }
+        }
+        
+        return UIImage()
     }
 }

@@ -9,6 +9,7 @@
 import UIKit
 import SnapKit
 import FontAwesome
+import YouTubePlayer
 
 class motivationCollectionViewCell: UICollectionViewCell {
     var videoPlayer: YouTubePlayerView!
@@ -32,90 +33,92 @@ class motivationCollectionViewCell: UICollectionViewCell {
     override init(frame: CGRect) {
         super.init(frame: frame)
 
-        barButtonColor = UIColor.grayColor()
+        barButtonColor = #colorLiteral(red: 0.501960814, green: 0.501960814, blue: 0.501960814, alpha: 1)
         barButtonSize = 25.00
 
         titleBarView = UIView()
-        titleBarView.backgroundColor = UIColor.blackColor()
+        titleBarView.backgroundColor = #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1)
         contentView.addSubview(titleBarView)
-        titleBarView.snp_makeConstraints { (make) in
-            make.top.equalTo(contentView.snp_top)
+        titleBarView.snp.makeConstraints { (make) in
+            make.top.equalTo(contentView.snp.top)
             make.width.equalTo(contentView)
             make.height.equalTo(66.0)
         }
 
         textLabel = UILabel()
-        textLabel.textColor = UIColor.whiteColor()
-        textLabel.textAlignment = .Center
+        textLabel.textColor = #colorLiteral(red: 1, green: 1, blue: 1, alpha: 1)
+        textLabel.textAlignment = .center
         titleBarView.addSubview(textLabel)
-        textLabel.snp_makeConstraints { (make) in
+        textLabel.snp.makeConstraints { (make) in
             make.width.equalTo(titleBarView)
             make.centerY.equalTo(titleBarView)
         }
 
         imageView = UIImageView()
-        imageView.contentMode = UIViewContentMode.ScaleAspectFit
+        imageView.contentMode = UIViewContentMode.scaleAspectFit
         contentView.insertSubview(imageView, belowSubview: titleBarView)
-        imageView.snp_makeConstraints { (make) in
-            make.top.equalTo(titleBarView.snp_bottom).inset(40)
+        imageView.snp.makeConstraints { (make) in
+            make.top.equalTo(titleBarView.snp.bottom).inset(40)
             make.width.equalTo(contentView.frame.width)
             make.height.equalTo(contentView.frame.width / 1.3)
         }
 
         videoPlayer = YouTubePlayerView()
-        videoPlayer.contentMode = UIViewContentMode.ScaleAspectFill
+        videoPlayer.contentMode = UIViewContentMode.scaleAspectFill
         contentView.insertSubview(videoPlayer, belowSubview: imageView)
-        videoPlayer.snp_makeConstraints { (make) in
-            make.top.equalTo(imageView.snp_top)
+        videoPlayer.snp.makeConstraints { (make) in
+            make.top.equalTo(imageView.snp.top)
             make.width.equalTo(contentView.frame.width)
             make.height.equalTo(contentView.frame.width / 1.3)
         }
 
         barActionView = UIView()
-        barActionView.backgroundColor = UIColor.blackColor()
+        barActionView.backgroundColor = #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1)
         contentView.insertSubview(barActionView, aboveSubview: imageView)
-        barActionView.snp_makeConstraints { (make) in
-            make.top.equalTo(imageView.snp_bottom).inset(40)
+        barActionView.snp.makeConstraints { (make) in
+            make.top.equalTo(imageView.snp.bottom).inset(40)
             make.width.equalTo(contentView)
             make.height.equalTo(66.0)
         }
 
         favoriteBarButton = UIButton()
         favoriteBarButton.titleLabel?.font = UIFont.fontAwesomeOfSize(barButtonSize)
-        favoriteBarButton.setTitle(String.fontAwesomeIconWithName(.Heart), forState: .Normal)
-        favoriteBarButton.setTitleColor(barButtonColor, forState: .Normal)
+        favoriteBarButton.setTitle(String.fontAwesomeIconWithName(.Heart), for: .normal)
+        favoriteBarButton.setTitleColor(barButtonColor, for: .normal)
         barActionView.addSubview(favoriteBarButton)
-        favoriteBarButton.snp_makeConstraints { (make) in
+        favoriteBarButton.snp.makeConstraints { (make) in
             make.centerY.equalTo(barActionView)
-            make.left.equalTo(barActionView.leftAnchor).offset(10)
+            make.left.equalTo(barActionView.leftAnchor as! ConstraintRelatableTarget).offset(10)
         }
 
         shareBarButton = UIButton()
-        shareBarButton.titleLabel?.font = UIFont.fontAwesomeOfSize(barButtonSize)
-        shareBarButton.setTitle(String.fontAwesomeIconWithName(.Share), forState: .Normal)
-        shareBarButton.setTitleColor(barButtonColor, forState: .Normal)
+//        shareBarButton.titleLabel?.font = UIFont.fontAwesomeOfSize(barButtonSize)
+//        shareBarButton.setTitle(String.fontAwesomeIconWithName(.Share), for: .normal)
+//        shareBarButton.setTitleColor(barButtonColor, for: .normal)
+        shareBarButton.setImage(imageFromSystemBarButton(systemItem: UIBarButtonSystemItem.action), for: .normal)
+        shareBarButton.tintColor = barButtonColor
         barActionView.addSubview(shareBarButton)
-        shareBarButton.snp_makeConstraints { (make) in
+        shareBarButton.snp.makeConstraints { (make) in
             make.centerY.equalTo(barActionView)
-            make.left.equalTo(favoriteBarButton.snp_right).offset(10)
+            make.left.equalTo(favoriteBarButton.snp.right).offset(10)
         }
 
         youtubeBarButton = UIButton()
         youtubeBarButton.titleLabel?.font = UIFont.fontAwesomeOfSize(barButtonSize)
-        youtubeBarButton.setTitle(String.fontAwesomeIconWithName(.YouTube), forState: .Normal)
-        youtubeBarButton.setTitleColor(barButtonColor, forState: .Normal)
+        youtubeBarButton.setTitle(String.fontAwesomeIconWithName(.YouTube), for: .normal)
+        youtubeBarButton.setTitleColor(barButtonColor, for: .normal)
         barActionView.addSubview(youtubeBarButton)
-        youtubeBarButton.snp_makeConstraints { (make) in
+        youtubeBarButton.snp.makeConstraints { (make) in
             make.centerY.equalTo(barActionView)
-            make.left.equalTo(shareBarButton.snp_right).offset(10)
+            make.left.equalTo(shareBarButton.snp.right).offset(10)
         }
 
         playButton = UIButton()
         playButton.titleLabel?.font = UIFont.fontAwesomeOfSize(75)
-        playButton.setTitle(String.fontAwesomeIconWithName(.PlayCircle), forState: .Normal)
+        playButton.setTitle(String.fontAwesomeIconWithName(.PlayCircle), for: .normal)
         playButton.alpha = 0.7
         contentView.insertSubview(playButton, aboveSubview: imageView)
-        playButton.snp_makeConstraints { (make) in
+        playButton.snp.makeConstraints { (make) in
             make.center.equalTo(imageView)
         }
     }
@@ -126,5 +129,23 @@ class motivationCollectionViewCell: UICollectionViewCell {
     
     override func prepareForReuse() {
         super.prepareForReuse()
+    }
+    
+    func imageFromSystemBarButton(systemItem: UIBarButtonSystemItem)-> UIImage {
+        let tempItem = UIBarButtonItem(barButtonSystemItem: systemItem, target: nil, action: nil)
+        
+        // add to toolbar and render it
+        UIToolbar().setItems([tempItem], animated: false)
+        
+        // got image from real uibutton
+        let itemView = tempItem.value(forKey: "view") as! UIView
+        for view in itemView.subviews {
+            if view.isKind(of: UIButton.self){
+                let button = view as! UIButton
+                return button.imageView!.image!
+            }
+        }
+        
+        return UIImage()
     }
 }

@@ -10,6 +10,8 @@
 		447300F81D8DCD1500D8011F /* SnapKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 447300F71D8DCD1500D8011F /* SnapKit.framework */; };
 		447BDE791D93DF3C0034CA93 /* Motivation_HuntTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 447BDE781D93DF3C0034CA93 /* Motivation_HuntTests.swift */; };
 		447BDE821D93E72E0034CA93 /* CDECloudKitFileSystem.m in Sources */ = {isa = PBXBuildFile; fileRef = 447BDE811D93E72E0034CA93 /* CDECloudKitFileSystem.m */; };
+		4492906E1DB2C1DD002CE552 /* Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = B42F85421CDF27840016F9B2 /* Extensions.swift */; };
+		4492906F1DB2C1DD002CE552 /* Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = B42F85421CDF27840016F9B2 /* Extensions.swift */; };
 		44A1E9B71D987998000948A6 /* DZNEmptyDataSet.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 44A1E9B61D987998000948A6 /* DZNEmptyDataSet.framework */; };
 		44EBD8471D8B1985006DE96F /* Ensembles.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 44EBD8451D8B1985006DE96F /* Ensembles.framework */; };
 		B40741F71C89A3AA00AFC870 /* Key.plist in Resources */ = {isa = PBXBuildFile; fileRef = B40741F61C89A3AA00AFC870 /* Key.plist */; };
@@ -36,7 +38,6 @@
 		B42E42811C81CB6C0095B9BF /* VideoItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = B42E42801C81CB6C0095B9BF /* VideoItem.swift */; };
 		B42E42841C81D1350095B9BF /* motivationCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = B42E42831C81D1350095B9BF /* motivationCollectionViewCell.swift */; };
 		B42E42861C81DE720095B9BF /* FavouritesViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B42E42851C81DE720095B9BF /* FavouritesViewController.swift */; };
-		B42F85431CDF27840016F9B2 /* Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = B42F85421CDF27840016F9B2 /* Extensions.swift */; };
 		B43403FB1CBD6BDF00F9793E /* CloudKitHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4F721031C96142700D07A4D /* CloudKitHelper.swift */; };
 		B44ACBC81C89ECEC00C5FF96 /* ImageCache.swift in Sources */ = {isa = PBXBuildFile; fileRef = B44ACBC71C89ECEC00C5FF96 /* ImageCache.swift */; };
 		B46A76C11D58F03F00ADBF43 /* Ensembles.bundle in Resources */ = {isa = PBXBuildFile; fileRef = B46A76C01D58F03F00ADBF43 /* Ensembles.bundle */; };
@@ -540,6 +541,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				B41A9E271C7DAADB001635C2 /* MotivationFeedViewController.swift in Sources */,
+				4492906E1DB2C1DD002CE552 /* Extensions.swift in Sources */,
 				B41BF3521C7D12C800E27074 /* MotivationHunt.xcdatamodeld in Sources */,
 				B42E42861C81DE720095B9BF /* FavouritesViewController.swift in Sources */,
 				B41BF34E1C7D124600E27074 /* ChallengeViewController.swift in Sources */,
@@ -549,7 +551,6 @@
 				B41CE7EC1C8B6F68002FCBC2 /* CustomUIActivityIndicatorView.swift in Sources */,
 				B42E42811C81CB6C0095B9BF /* VideoItem.swift in Sources */,
 				B41BF3381C7D0D7200E27074 /* AppDelegate.swift in Sources */,
-				B42F85431CDF27840016F9B2 /* Extensions.swift in Sources */,
 				B42E42841C81D1350095B9BF /* motivationCollectionViewCell.swift in Sources */,
 				B41CE7EA1C8B5B54002FCBC2 /* challengeTableViewCell.swift in Sources */,
 				B41BF3541C7D149500E27074 /* CoreDataStackManager.swift in Sources */,
@@ -572,6 +573,7 @@
 				B42A4ED41CBD20CC00D9593D /* SecondViewController.swift in Sources */,
 				B48E1ED31CC5A1E600482581 /* MHConstant.swift in Sources */,
 				B42A4ED01CBD20CC00D9593D /* AppDelegate.swift in Sources */,
+				4492906F1DB2C1DD002CE552 /* Extensions.swift in Sources */,
 				B48E1ED11CC5A18100482581 /* MHClient.swift in Sources */,
 				B43403FB1CBD6BDF00F9793E /* CloudKitHelper.swift in Sources */,
 				B48E1ECD1CC5A14F00482581 /* CoreDataStackManager.swift in Sources */,
