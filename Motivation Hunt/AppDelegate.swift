@@ -181,6 +181,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
                 if topController.isKind(of: ChallengeViewController.self) {
                    let challengeViewController = topController as! ChallengeViewController
                     challengeViewController.viewDidLoad()
+                    challengeViewController.editMode = false
                     challengeViewController.showOrHideChallengeView()
                 }
             }
