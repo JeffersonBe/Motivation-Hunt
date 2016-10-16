@@ -160,8 +160,9 @@ class ChallengeViewController: UIViewController {
         return CoreDataStackManager.sharedInstance.managedObjectContext
     }
 
-    lazy var fetchedResultsController: NSFetchedResultsController<Challenge> = {
-        let fetchRequest: NSFetchRequest<Challenge> = Challenge.fetchRequest() as! NSFetchRequest<Challenge>
+    lazy var fetchedResultsController: NSFetchedResultsController<NSFetchRequestResult> = {
+        let fetchRequest = NSFetchRequest<NSFetchRequestResult>(entityName: "Challenge")
+
         fetchRequest.sortDescriptors = [NSSortDescriptor(key: "completed", ascending: false)]
         
         let fetchedResultsController = NSFetchedResultsController(
@@ -227,7 +228,7 @@ extension ChallengeViewController {
         if gestureRecognizer.state == .began {
             let tapPoint: CGPoint = gestureRecognizer.location(in: tableView)
             let indexPath = tableView.indexPathForRow(at: tapPoint)
-            currentChallengeToEdit = fetchedResultsController.object(at: indexPath!) 
+            currentChallengeToEdit = fetchedResultsController.object(at: indexPath!) as! Challenge
             showOrHideChallengeView()
         }
     }
@@ -320,7 +321,7 @@ extension ChallengeViewController: UITableViewDataSource, UITableViewDelegate {
     }
 
     func configureCell(_ cell: challengeTableViewCell, atIndexPath indexPath: IndexPath) {
-        let challenge = fetchedResultsController.object(at: indexPath)
+        let challenge = fetchedResultsController.object(at: indexPath) as! Challenge
         cell.selectionStyle = UITableViewCellSelectionStyle.none
 
         if challenge.completed {
@@ -347,11 +348,12 @@ extension ChallengeViewController: UITableViewDataSource, UITableViewDelegate {
     }
 
     func tableView(_ tableView: UITableView, editActionsForRowAt indexPath: IndexPath) -> [UITableViewRowAction]? {
-        let challenge = fetchedResultsController.object(at: indexPath) 
+        let challenge = fetchedResultsController.object(at: indexPath) as! Challenge
+ 
         let cell = tableView.dequeueReusableCell(withIdentifier: MHClient.CellIdentifier.cellWithReuseIdentifier, for: indexPath)
         
         let modify = UITableViewRowAction(style: .normal, title: MHClient.AppCopy.modify) { action, index in
-            self.currentChallengeToEdit = self.fetchedResultsController.object(at: indexPath)
+            self.currentChallengeToEdit = self.fetchedResultsController.object(at: indexPath) as! Challenge
             self.showOrHideChallengeView()
             self.tableView.deselectRow(at: indexPath, animated: true)
         }
