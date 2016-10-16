@@ -21,7 +21,20 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     private static let pinPointKit = PinpointKit(configuration: Configuration(appearance: InterfaceCustomization.Appearance.init(tintColor: UIColor.black), feedbackConfiguration: FeedbackConfiguration(recipients: ["jefferson.bonnaire+motivationHunt@gmail.com"]))
     )
 
-    var window: UIWindow? = ShakeDetectingWindow(frame: UIScreen.main.bounds, delegate: AppDelegate.pinPointKit)
+    var window: UIWindow? = ShakeDetectingWindow(frame: UIScreen.main.bounds,
+                                                 delegate: AppDelegate.pinPointKit)
+    
+    enum ShortcutIdentifier: String {
+        case OpenFavorites
+        case OpenChallenge
+        
+        init?(fullIdentifier: String) {
+            guard let shortIdentifier = fullIdentifier.components(separatedBy: ".").last else {
+                return nil
+            }
+            self.init(rawValue: shortIdentifier)
+        }
+    }
     
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
         // Override point for customization after application launch.
@@ -29,6 +42,12 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         let _ : CoreDataStackManager = CoreDataStackManager.sharedInstance
         CoreDataStackManager.sharedInstance.saveContext()
         CoreDataStackManager.sharedInstance.enableEnsemble()
+        
+        if let shortcutItem = launchOptions?[UIApplicationLaunchOptionsKey.shortcutItem] as? UIApplicationShortcutItem {
+            
+            _ = handleShortcut(shortcutItem: shortcutItem)
+            return false
+        }
 
         // Listen for local saves, and trigger merges
         NotificationCenter.default.addObserver(self, selector: #selector(AppDelegate.localSaveOccured(_:)), name: NSNotification.Name.CDEMonitoredManagedObjectContextDidSave, object: nil)
@@ -109,5 +128,36 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             completionHandler(UIBackgroundFetchResult.newData)
             UIApplication.shared.isNetworkActivityIndicatorVisible = false
         })
+    }
+    
+    private func application(application: UIApplication,
+                     performActionForShortcutItem shortcutItem: UIApplicationShortcutItem,
+                     completionHandler: (Bool) -> Void) {
+        
+        completionHandler(handleShortcut(shortcutItem: shortcutItem))
+    }
+    
+    private func handleShortcut(shortcutItem: UIApplicationShortcutItem) -> Bool {
+        let shortcutType = shortcutItem.type
+        guard let shortcutIdentifier = ShortcutIdentifier(fullIdentifier: shortcutType) else {
+            return false
+        }
+        return selectTabBarItemForIdentifier(identifier: shortcutIdentifier)
+    }
+    
+    private func selectTabBarItemForIdentifier(identifier: ShortcutIdentifier) -> Bool {
+        
+        guard let tabBarController = self.window?.rootViewController as? UITabBarController else {
+            return false
+        }
+        
+        switch (identifier) {
+        case .OpenFavorites:
+            tabBarController.selectedIndex = 1
+            return true
+        case .OpenChallenge:
+            tabBarController.selectedIndex = 2
+            return true
+        }
     }
 }
