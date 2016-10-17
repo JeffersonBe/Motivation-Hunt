@@ -110,6 +110,7 @@ class ChallengeViewController: UIViewController {
         }
 
         challengeDatePicker = UIDatePicker()
+        challengeDatePicker.minimumDate = Date()
         addChallengeView.addSubview(challengeDatePicker)
         challengeDatePicker.snp.makeConstraints { (make) in
             make.top.equalTo(challengeTextField.snp.bottom)
@@ -163,7 +164,7 @@ class ChallengeViewController: UIViewController {
     lazy var fetchedResultsController: NSFetchedResultsController<NSFetchRequestResult> = {
         let fetchRequest = NSFetchRequest<NSFetchRequestResult>(entityName: "Challenge")
 
-        fetchRequest.sortDescriptors = [NSSortDescriptor(key: "completed", ascending: false)]
+        fetchRequest.sortDescriptors = [NSSortDescriptor(key: "completed", ascending: true), NSSortDescriptor(key: "endDate", ascending: true)]
         
         let fetchedResultsController = NSFetchedResultsController(
             fetchRequest: fetchRequest,
@@ -270,8 +271,8 @@ extension ChallengeViewController {
 
 extension ChallengeViewController: UITextFieldDelegate {
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
-        self.view.endEditing(true)
-        return false
+        view.endEditing(true)
+        return true
     }
 }
 
@@ -372,6 +373,7 @@ extension ChallengeViewController: UITableViewDataSource, UITableViewDelegate {
                 }
             }
             unComplete.backgroundColor = UIColor.gray
+            tableView.deselectRow(at: indexPath, animated: true)
             return [delete, unComplete, modify]
         } else {
             let complete = UITableViewRowAction(style: .normal, title: MHClient.AppCopy.complete) { action, index in
@@ -387,6 +389,7 @@ extension ChallengeViewController: UITableViewDataSource, UITableViewDelegate {
                 self.deleteChallenge(challenge)
             }
             delete.backgroundColor = UIColor.red
+            tableView.deselectRow(at: indexPath, animated: true)
             return [delete, complete, modify]
         }
     }
