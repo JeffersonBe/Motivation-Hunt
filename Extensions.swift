@@ -56,6 +56,16 @@ extension DefaultsKeys {
     static let haveSeenOnBoarding = DefaultsKey<Bool?>("haveSeenOnBoarding")
 }
 
+extension NSDate: Comparable {
+    static public func ==(lhs: NSDate, rhs: NSDate) -> Bool {
+        return lhs === rhs || lhs.compare(rhs as Date) == .orderedSame
+    }
+    
+    static public func <(lhs: NSDate, rhs: NSDate) -> Bool {
+        return lhs.compare(rhs as Date) == .orderedAscending
+    }
+}
+
 extension UIWindow {
     
     func visibleViewController() -> UIViewController? {

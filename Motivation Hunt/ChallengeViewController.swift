@@ -33,6 +33,8 @@ class ChallengeViewController: UIViewController {
         // Initialize delegate
         tableView.delegate = self
         tableView.dataSource = self
+        tableView.register(challengeTableViewCell.self,
+                           forCellReuseIdentifier: MHClient.CellIdentifier.cellWithReuseIdentifier)
         fetchedResultsController.delegate = self
         challengeTextField.delegate = self
         tableView.emptyDataSetSource = self
@@ -87,7 +89,7 @@ class ChallengeViewController: UIViewController {
         }
 
         addChallengeView = UIView()
-        addChallengeView.backgroundColor = UIColor.white
+        addChallengeView.backgroundColor = #colorLiteral(red: 1, green: 1, blue: 1, alpha: 1)
         view.insertSubview(addChallengeView, aboveSubview: tableView)
         addChallengeView.snp.makeConstraints { (make) in
             make.top.equalTo(view).offset(64)
@@ -99,7 +101,7 @@ class ChallengeViewController: UIViewController {
         challengeTextField.leftView = UIView(frame: CGRect(x: 0, y: 0, width: 15, height: 50))
         challengeTextField.leftViewMode = UITextFieldViewMode.always
         challengeTextField.clearButtonMode = UITextFieldViewMode.whileEditing
-        challengeTextField.backgroundColor = UIColor(red: 0.9882, green: 0.9765, blue: 0.9804, alpha: 1.0) /* #fcf9fa */
+        challengeTextField.backgroundColor = #colorLiteral(red: 0.921431005, green: 0.9214526415, blue: 0.9214410186, alpha: 1)
         challengeTextField.attributedPlaceholder = NSAttributedString(string: MHClient.AppCopy.pleaseAddAChallenge, attributes: [NSForegroundColorAttributeName: UIColor.black])
         addChallengeView.addSubview(challengeTextField)
         challengeTextField.snp.makeConstraints { (make) in
@@ -121,7 +123,7 @@ class ChallengeViewController: UIViewController {
 
         addChallengeButton = UIButton()
         addChallengeButton.setTitle(MHClient.AppCopy.addChallenge, for: UIControlState())
-        addChallengeButton.setTitleColor(UIColor.black, for: UIControlState())
+        addChallengeButton.setTitleColor(#colorLiteral(red: 0, green: 0, blue: 0, alpha: 1), for: UIControlState())
         let tapToAddChallenge: UITapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(addChallenge(_:)))
         tapToAddChallenge.numberOfTapsRequired = 1
         addChallengeButton.addGestureRecognizer(tapToAddChallenge)
@@ -136,6 +138,9 @@ class ChallengeViewController: UIViewController {
         dimView = UIView(frame: view.frame)
         dimView.backgroundColor = UIColor.black
         view.insertSubview(dimView, belowSubview: addChallengeView)
+        let tapToDismissAddChallengeView: UITapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(showOrHideChallengeView))
+        tapToDismissAddChallengeView.numberOfTapsRequired = 1
+        dimView.addGestureRecognizer(tapToDismissAddChallengeView)
 
         // Set background View
         layer.frame = view.frame
@@ -145,7 +150,6 @@ class ChallengeViewController: UIViewController {
         layer.contentsGravity = kCAGravityResize
         view.layer.insertSublayer(layer, below: tableView.layer)
 
-        tableView.register(challengeTableViewCell.self, forCellReuseIdentifier: MHClient.CellIdentifier.cellWithReuseIdentifier)
         tableView.allowsMultipleSelection = false
 
         navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: UIBarButtonSystemItem.add, target: self, action: #selector(ChallengeViewController.showOrHideChallengeView))
@@ -164,7 +168,10 @@ class ChallengeViewController: UIViewController {
     lazy var fetchedResultsController: NSFetchedResultsController<NSFetchRequestResult> = {
         let fetchRequest = NSFetchRequest<NSFetchRequestResult>(entityName: "Challenge")
 
-        fetchRequest.sortDescriptors = [NSSortDescriptor(key: "completed", ascending: true), NSSortDescriptor(key: "endDate", ascending: true)]
+        fetchRequest.sortDescriptors = [
+            NSSortDescriptor(key: "completed", ascending: true),
+            NSSortDescriptor(key: "endDate", ascending: true)
+        ]
         
         let fetchedResultsController = NSFetchedResultsController(
             fetchRequest: fetchRequest,
@@ -181,9 +188,10 @@ extension ChallengeViewController {
 
     func showOrHideChallengeView() {
         editMode = editMode ? false : true
-        if editMode {
+        switch editMode {
+        case true:
             showAddChallengeView()
-        } else {
+        case false:
             HideAddChallengeView()
         }
     }
@@ -277,8 +285,6 @@ extension ChallengeViewController: UITextFieldDelegate {
 }
 
 extension ChallengeViewController: DZNEmptyDataSetSource, DZNEmptyDataSetDelegate {
-    //
-    
     func title(forEmptyDataSet scrollView: UIScrollView) -> NSAttributedString? {
         let title = "You don't have any challenge"
         let attrs = [NSFontAttributeName: UIFont.preferredFont(forTextStyle: UIFontTextStyle.headline)]
@@ -326,9 +332,11 @@ extension ChallengeViewController: UITableViewDataSource, UITableViewDelegate {
         cell.selectionStyle = UITableViewCellSelectionStyle.none
 
         if challenge.completed {
-            cell.backgroundColor = UIColor(red:0.52, green:0.86, blue:0.09, alpha:1.0)
+            cell.backgroundColor = #colorLiteral(red: 0.3003999591, green: 0.851647675, blue: 0.4030759931, alpha: 1)
+        } else if challenge.endDate < Date() {
+            cell.backgroundColor = #colorLiteral(red: 0.994312346, green: 0.2319896519, blue: 0.1840049326, alpha: 1)
         } else {
-            cell.backgroundColor = UIColor.white
+            cell.backgroundColor = #colorLiteral(red: 1, green: 1, blue: 1, alpha: 1)
         }
 
         if let challengeDateTextLabel = cell.challengeDateTextLabel {
@@ -350,45 +358,46 @@ extension ChallengeViewController: UITableViewDataSource, UITableViewDelegate {
 
     func tableView(_ tableView: UITableView, editActionsForRowAt indexPath: IndexPath) -> [UITableViewRowAction]? {
         let challenge = fetchedResultsController.object(at: indexPath) as! Challenge
- 
-        let cell = tableView.dequeueReusableCell(withIdentifier: MHClient.CellIdentifier.cellWithReuseIdentifier, for: indexPath)
+        let cell = tableView.cellForRow(at: indexPath)
         
         let modify = UITableViewRowAction(style: .normal, title: MHClient.AppCopy.modify) { action, index in
             self.currentChallengeToEdit = self.fetchedResultsController.object(at: indexPath) as! Challenge
             self.showOrHideChallengeView()
+            
             self.tableView.deselectRow(at: indexPath, animated: true)
         }
+        modify.backgroundColor = #colorLiteral(red: 0.2549019754, green: 0.2745098174, blue: 0.3019607961, alpha: 1)
 
         if challenge.completed {
             let delete = UITableViewRowAction(style: .normal, title: MHClient.AppCopy.delete) { action, index in
                 self.deleteChallenge(challenge)
             }
-            delete.backgroundColor = UIColor.red
+            delete.backgroundColor = #colorLiteral(red: 0.994312346, green: 0.2319896519, blue: 0.1840049326, alpha: 1)
 
             let unComplete = UITableViewRowAction(style: .normal, title: MHClient.AppCopy.unComplete) { action, index in
                 self.updateCompleteStatusChallenge(challenge)
                 DispatchQueue.main.async {
-                    cell.backgroundColor = UIColor.white
+                    cell?.backgroundColor = #colorLiteral(red: 1, green: 1, blue: 1, alpha: 1)
                     tableView.setEditing(false, animated: true)
                 }
             }
-            unComplete.backgroundColor = UIColor.gray
+            unComplete.backgroundColor = #colorLiteral(red: 0.6000000238, green: 0.6000000238, blue: 0.6000000238, alpha: 1)
             tableView.deselectRow(at: indexPath, animated: true)
             return [delete, unComplete, modify]
         } else {
             let complete = UITableViewRowAction(style: .normal, title: MHClient.AppCopy.complete) { action, index in
                 self.updateCompleteStatusChallenge(challenge)
                 DispatchQueue.main.async {
-                    cell.backgroundColor = UIColor(red:0.52, green:0.86, blue:0.09, alpha:1.0)
+                    cell?.backgroundColor = #colorLiteral(red: 0.3003999591, green: 0.851647675, blue: 0.4030759931, alpha: 1)
                     tableView.setEditing(false, animated: true)
                 }
             }
-            complete.backgroundColor = UIColor(red:0.52, green:0.86, blue:0.09, alpha:1.0)
+            complete.backgroundColor = #colorLiteral(red: 0.3003999591, green: 0.851647675, blue: 0.4030759931, alpha: 1)
 
             let delete = UITableViewRowAction(style: .normal, title: MHClient.AppCopy.delete) { action, index in
                 self.deleteChallenge(challenge)
             }
-            delete.backgroundColor = UIColor.red
+            delete.backgroundColor = #colorLiteral(red: 0.994312346, green: 0.2319896519, blue: 0.1840049326, alpha: 1)
             tableView.deselectRow(at: indexPath, animated: true)
             return [delete, complete, modify]
         }
