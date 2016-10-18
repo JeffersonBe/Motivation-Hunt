@@ -24,7 +24,7 @@ class VideoItem: NSManagedObject {
         super.init(entity: entity, insertInto: context)
     }
 
-    init(itemVideoID: String, itemTitle: String, itemDescription: String, itemThumbnailsUrl: String, saved: Bool, theme: Theme.themeName, context: NSManagedObjectContext) {
+    init(itemVideoID: String, itemTitle: String, itemDescription: String, itemThumbnailsUrl: String, saved: Bool, theme: String, context: NSManagedObjectContext) {
         let entity =  NSEntityDescription.entity(forEntityName: "VideoItem", in: context)!
         super.init(entity: entity, insertInto: context)
         self.itemVideoID = itemVideoID
@@ -32,7 +32,7 @@ class VideoItem: NSManagedObject {
         self.itemDescription = itemDescription
         self.itemThumbnailsUrl = itemThumbnailsUrl
         self.saved = saved
-        self.theme = theme.rawValue
+        self.theme = theme
     }
 
     override func awakeFromInsert()  {

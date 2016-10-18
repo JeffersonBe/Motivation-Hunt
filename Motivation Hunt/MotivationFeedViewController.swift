@@ -17,18 +17,27 @@ import GoogleAnalytics
 import DZNEmptyDataSet
 import Onboard
 import SwiftyUserDefaults
-
-let nextPageTokenConstant = "nextPageToken"
+import Segmentio
+import FontAwesome
 
 class MotivationFeedViewController: UIViewController {
-
+    
     var collectionView: UICollectionView!
-    var progressView: UIProgressView!
+    var segmentioView: Segmentio!
+    var segmentioContentDictionary: [SegmentioItem] = []
+    var currentSegmentioItem: String!
     var indicator = CustomUIActivityIndicatorView()
     let refreshCtrl = UIRefreshControl()
     let layer = CAGradientLayer()
     var blockOperations: [BlockOperation] = []
-
+    
+    enum segmentioItemTheme: String {
+        case Everything = "All"
+        case Money = "Money"
+        case Success = "Success"
+        case Love = "Love"
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         setupUI()
@@ -37,53 +46,53 @@ class MotivationFeedViewController: UIViewController {
         collectionView.delegate = self
         collectionView.dataSource = self
         fetchedResultsController.delegate = self
-
+        
         do {
             try fetchedResultsController.performFetch()
         } catch let error as NSError {
             print("Error: \(error.localizedDescription)")
         }
     }
-
+    
     override func viewDidAppear(_ animated: Bool) {
-//        if Defaults[.haveSeenOnBoarding] == nil || false {
-//            onboarding()
-//        }
+        //        if Defaults[.haveSeenOnBoarding] == nil || false {
+        //            onboarding()
+        //        }
     }
-
+    
     func onboarding() {
         // Initialize onboarding view controller
         var onboardingVC = OnboardingViewController()
-
+        
         // Create slides
         let firstPage = OnboardingContentViewController
             .content(withTitle: "Welcome to Motivation Hunt!",
-                              body: "Swipe to begin",
-                              image: nil,
-                              buttonText: nil,
-                              action: nil)
-
+                     body: "Swipe to begin",
+                     image: nil,
+                     buttonText: nil,
+                     action: nil)
+        
         let secondPage = OnboardingContentViewController
             .content(withTitle: "Watch and be inspire",
-                              body: "Watch and be inspire by new daily motivational videos.",
-                              image: UIImage(named: "onboardingFeedIcon"),
-                              buttonText: nil,
-                              action: nil)
-
+                     body: "Watch and be inspire by new daily motivational videos.",
+                     image: UIImage(named: "onboardingFeedIcon"),
+                     buttonText: nil,
+                     action: nil)
+        
         let thirdPage = OnboardingContentViewController
             .content(withTitle: "Save your favorite",
-                              body: "Need a boost? Your favorites videos are easily accessible to you.",
-                              image: UIImage(named: "onboardingFeaturedIcon"),
-                              buttonText: nil,
-                              action: nil)
-
+                     body: "Need a boost? Your favorites videos are easily accessible to you.",
+                     image: UIImage(named: "onboardingFeaturedIcon"),
+                     buttonText: nil,
+                     action: nil)
+        
         let fourthPage = OnboardingContentViewController
             .content(withTitle: "Challenge yourself",
-                              body: "Define your challenge and then complete it!",
-                              image: UIImage(named: "onboardingChallengeIcon"),
-                              buttonText: nil,
-                              action: nil)
-
+                     body: "Define your challenge and then complete it!",
+                     image: UIImage(named: "onboardingChallengeIcon"),
+                     buttonText: nil,
+                     action: nil)
+        
         // Define onboarding view controller properties
         onboardingVC = OnboardingViewController.onboard(withBackgroundImage: UIImage.fromColor(UIColor.black), contents: [firstPage, secondPage, thirdPage, fourthPage])
         onboardingVC.pageControl.pageIndicatorTintColor = UIColor.darkGray
@@ -101,79 +110,126 @@ class MotivationFeedViewController: UIViewController {
         // Present presentation
         parent!.present(onboardingVC, animated: true, completion: nil)
     }
-
+    
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(true)
-
+        
         let tracker = GAI.sharedInstance().defaultTracker
         tracker?.set(kGAIScreenName, value: "MotivationFeedViewController")
-
+        
         let builder: NSObject = GAIDictionaryBuilder.createScreenView().build()
         tracker?.send(builder as! [AnyHashable: Any])
     }
-
+    
     // Initialize CoreData and NSFetchedResultsController
-
+    
     var sharedContext: NSManagedObjectContext {
         return CoreDataStackManager.sharedInstance.managedObjectContext
     }
-
+    
     lazy var fetchedResultsController: NSFetchedResultsController<VideoItem> = {
         let fetchRequest: NSFetchRequest<VideoItem> = VideoItem.fetchRequest() as! NSFetchRequest<VideoItem>
         fetchRequest.sortDescriptors = [NSSortDescriptor(key: "addedDate", ascending: false)]
-
+        
         let fetchedResultsController = NSFetchedResultsController(
             fetchRequest: fetchRequest,
             managedObjectContext: self.sharedContext,
             sectionNameKeyPath: nil,
             cacheName: nil
         )
-
+        
         return fetchedResultsController
     }()
-
+    
     deinit {
         // Cancel all block operations when VC deallocates
         for operation: BlockOperation in blockOperations {
             operation.cancel()
         }
-
+        
         blockOperations.removeAll(keepingCapacity: false)
     }
 }
 
 extension MotivationFeedViewController {
-
+    
     override func viewDidLayoutSubviews() {
         layer.frame = view.frame
         if let rectNavigationBar = navigationController?.navigationBar.frame, let rectTabBar = tabBarController?.tabBar.frame  {
+            let statusBarHeight = UIApplication.shared.statusBarFrame.size.height
             let navigationBarSpace = rectNavigationBar.size.height + rectNavigationBar.origin.y
+            let rectNavigationBarHeight = rectNavigationBar.size.height
             let tabBarSpace = rectTabBar.size.height + rectTabBar.origin.x
-            collectionView.contentInset = UIEdgeInsetsMake(navigationBarSpace, 0, tabBarSpace, 0)
+            collectionView.contentInset = UIEdgeInsetsMake(navigationBarSpace + 100, 0, tabBarSpace, 0)
+            segmentioView.snp.updateConstraints({ (make) in
+                make.top.equalTo(rectNavigationBarHeight + statusBarHeight)
+            })
         }
     }
-
+    
     func setupUI() {
-        view.backgroundColor = UIColor(red: 0, green: 0, blue: 0, alpha: 1.0) /* #000000 */
+        segmentioView = Segmentio()
+        view.addSubview(segmentioView)
+        segmentioView.snp.makeConstraints { (make) in
+            make.top.equalTo(125)
+            make.height.equalTo(100)
+            make.width.equalTo(view)
+            make.centerX.equalTo(view)
+        }
+        segmentioView.setup(content: segmentioContent(),
+                            style: .imageUnderLabel,
+                            options: segmentOptions())
+
+        segmentioView.selectedSegmentioIndex = 0
+        
+        if currentSegmentioItem == nil {
+            currentSegmentioItem = "Motivation"
+        }
+        
+        segmentioView.valueDidChange = { segmentio, segmentIndex in
+            switch segmentIndex {
+            case 1:
+                self.currentSegmentioItem = segmentioItemTheme.Money.rawValue
+            case 2:
+                self.currentSegmentioItem = segmentioItemTheme.Success.rawValue
+            case 3:
+                self.currentSegmentioItem = segmentioItemTheme.Love.rawValue
+            default:
+                self.currentSegmentioItem = segmentioItemTheme.Everything.rawValue
+            }
+            if self.currentSegmentioItem! == segmentioItemTheme.Everything.rawValue {
+                self.navigationItem.rightBarButtonItem = nil
+                self.refreshCtrl.removeFromSuperview()
+            } else {
+                self.navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: UIBarButtonSystemItem.refresh, target: self, action: #selector(self.addNewMotivationItem))
+                self.refreshCtrl.addTarget(self, action: #selector(MotivationFeedViewController.addNewMotivationItem), for: .valueChanged)
+                self.collectionView?.addSubview(self.refreshCtrl)
+            }
+            self.updateFetch(theme: self.currentSegmentioItem)
+        }
+        
+        let blurEffect = UIBlurEffect(style: UIBlurEffectStyle.dark)
+        let blurEffectView = UIVisualEffectView(effect: blurEffect)
+        blurEffectView.autoresizingMask = [.flexibleWidth, .flexibleHeight] // for supporting device rotation
+        view.insertSubview(blurEffectView, belowSubview: segmentioView)
+        blurEffectView.snp.makeConstraints { (make) in
+            make.size.equalTo(segmentioView)
+            make.center.equalTo(segmentioView)
+        }
         
         // Configure CollectionView
         collectionView = UICollectionView(frame: view.frame, collectionViewLayout: UICollectionViewFlowLayout())
         collectionView.register(motivationCollectionViewCell.self, forCellWithReuseIdentifier: MHClient.CellIdentifier.cellWithReuseIdentifier)
         collectionView.backgroundColor = UIColor.clear /* #000000 */
         collectionView.allowsMultipleSelection = false
-        view.addSubview(collectionView)
+        view.insertSubview(collectionView, belowSubview: blurEffectView)
         collectionView.snp.makeConstraints { (make) in
             make.top.equalTo(view)
             make.width.equalTo(view)
             make.bottom.equalTo(view.snp.bottom)
-            make.center.equalTo(view)
+            make.centerX.equalTo(view)
         }
-
-        refreshCtrl.addTarget(self, action: #selector(MotivationFeedViewController.addNewMotivationItem), for: .valueChanged)
-        collectionView?.addSubview(refreshCtrl)
-
-        navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: UIBarButtonSystemItem.refresh, target: self, action: #selector(addNewMotivationItem))
-
+        
         // Set background View
         layer.frame = view.frame
         let color1 = UIColor(red: 0, green: 0, blue: 0, alpha: 1.0).cgColor /* #000000 */
@@ -182,28 +238,119 @@ extension MotivationFeedViewController {
         layer.masksToBounds = true
         layer.contentsGravity = kCAGravityResize
         view.layer.insertSublayer(layer, below: collectionView.layer)
-
+        
         setNeedsStatusBarAppearanceUpdate()
     }
-
+    
     override func willRotate(to toInterfaceOrientation: UIInterfaceOrientation, duration: TimeInterval) {
         collectionView.collectionViewLayout.invalidateLayout()
+    }
+    
+}
+
+extension MotivationFeedViewController {
+    func segmentioContent() -> [SegmentioItem] {
+        let segmentioItemIconSize = 50
+        segmentioContentDictionary = [SegmentioItem]()
+        let everythingItem = SegmentioItem(
+            title: segmentioItemTheme.Everything.rawValue,
+            image: UIImage.fontAwesomeIconWithName(.Circle, textColor: #colorLiteral(red: 1, green: 1, blue: 1, alpha: 1), size: CGSize(width: segmentioItemIconSize, height: segmentioItemIconSize))
+        )
+        segmentioContentDictionary.append(everythingItem)
+        let moneyItem = SegmentioItem(
+            title: segmentioItemTheme.Money.rawValue,
+            image: UIImage.fontAwesomeIconWithName(.Money, textColor: #colorLiteral(red: 1, green: 1, blue: 1, alpha: 1), size: CGSize(width: segmentioItemIconSize, height: segmentioItemIconSize))
+        )
+        segmentioContentDictionary.append(moneyItem)
+        let successItem = SegmentioItem(
+            title: segmentioItemTheme.Success.rawValue,
+            image: UIImage.fontAwesomeIconWithName(.Bolt, textColor: #colorLiteral(red: 1, green: 1, blue: 1, alpha: 1), size: CGSize(width: segmentioItemIconSize, height: segmentioItemIconSize))
+        )
+        segmentioContentDictionary.append(successItem)
+        let loveItem = SegmentioItem(
+            title: segmentioItemTheme.Love.rawValue,
+            image: UIImage.fontAwesomeIconWithName(.Heart, textColor: #colorLiteral(red: 1, green: 1, blue: 1, alpha: 1), size: CGSize(width: segmentioItemIconSize, height: segmentioItemIconSize))
+        )
+        segmentioContentDictionary.append(loveItem)
+        return segmentioContentDictionary
+    }
+    
+    func segmentioIndicatorOptions() -> SegmentioIndicatorOptions {
+        return SegmentioIndicatorOptions(
+            type: .bottom,
+            ratio: 1,
+            height: 5,
+            color: #colorLiteral(red: 1, green: 1, blue: 1, alpha: 1)
+        )
+    }
+    
+    func segmentioHorizontalSeparatorOptions() ->  SegmentioHorizontalSeparatorOptions {
+        return SegmentioHorizontalSeparatorOptions(
+            type: SegmentioHorizontalSeparatorType.bottom, // Top, Bottom, TopAndBottom
+            height: 1,
+            color: #colorLiteral(red: 0.6000000238, green: 0.6000000238, blue: 0.6000000238, alpha: 1)
+        )
+    }
+    
+    func segmentioVerticalSeparatorOptions() -> SegmentioVerticalSeparatorOptions {
+        return SegmentioVerticalSeparatorOptions(
+            ratio: 0.3, // from 0.1 to 1
+            color: #colorLiteral(red: 0.501960814, green: 0.501960814, blue: 0.501960814, alpha: 1)
+        )
+    }
+    
+    func segmentioState(backgroundColor: UIColor, titleFont: UIFont, titleTextColor: UIColor) -> SegmentioState {
+        return SegmentioState(backgroundColor: backgroundColor, titleFont: titleFont, titleTextColor: titleTextColor)
+    }
+    
+    func segmentioStates() -> SegmentioStates {
+        return SegmentioStates(
+            defaultState: SegmentioState (
+                backgroundColor: UIColor.clear,
+                titleFont: UIFont.systemFont(ofSize: UIFont.smallSystemFontSize),
+                titleTextColor: #colorLiteral(red: 1, green: 1, blue: 1, alpha: 1)
+            ),
+            selectedState: SegmentioState (
+                backgroundColor: #colorLiteral(red: 0.8039215803, green: 0.8039215803, blue: 0.8039215803, alpha: 1),
+                titleFont: UIFont.systemFont(ofSize: UIFont.smallSystemFontSize),
+                titleTextColor: #colorLiteral(red: 1, green: 1, blue: 1, alpha: 1)
+            ),
+            highlightedState: SegmentioState (
+                backgroundColor: #colorLiteral(red: 0.8374180198, green: 0.8374378085, blue: 0.8374271393, alpha: 0.5),
+                titleFont: UIFont.boldSystemFont(ofSize: UIFont.smallSystemFontSize),
+                titleTextColor: #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1)
+            )
+        )
+    }
+    
+    func segmentOptions() -> SegmentioOptions {
+        return SegmentioOptions(
+            backgroundColor: UIColor.clear,
+            maxVisibleItems: 3,
+            scrollEnabled: true,
+            indicatorOptions: segmentioIndicatorOptions(),
+            horizontalSeparatorOptions: segmentioHorizontalSeparatorOptions(),
+            verticalSeparatorOptions: segmentioVerticalSeparatorOptions(),
+            imageContentMode: UIViewContentMode.center,
+            labelTextAlignment: NSTextAlignment.center,
+            segmentStates: segmentioStates()
+        )
     }
 }
 
 extension MotivationFeedViewController {
-
+    
     func savedItem(_ gestureRecognizer: UIGestureRecognizer) {
         let tapPoint: CGPoint = gestureRecognizer.location(in: collectionView)
         let indexPath = collectionView.indexPathForItem(at: tapPoint)
         let objet = fetchedResultsController.object(at: indexPath!)
-
+        
         DispatchQueue.main.async {
             objet.saved = objet.saved ? false : true
             CoreDataStackManager.sharedInstance.saveContext()
         }
     }
-
+    
     func playVideo(_ gestureRecognizer: UIGestureRecognizer) {
         let tracker = GAI.sharedInstance().defaultTracker
         let builder: NSObject = GAIDictionaryBuilder.createEvent(
@@ -212,20 +359,20 @@ extension MotivationFeedViewController {
             label: "User play video",
             value: nil).build()
         tracker?.send(builder as! [AnyHashable: Any])
-
+        
         let tapPoint: CGPoint = gestureRecognizer.location(in: collectionView)
         let indexPath = collectionView.indexPathForItem(at: tapPoint)
         let cell = collectionView.cellForItem(at: indexPath!) as! motivationCollectionViewCell
-
+        
         cell.videoPlayer.play()
-
+        
         UIView.animate(withDuration: 0.5, delay: 0.0, options: UIViewAnimationOptions.curveEaseOut, animations: {
             cell.videoPlayer.alpha = 1
             cell.playButton.alpha = 0
             cell.imageView.alpha = 0
             }, completion: nil)
     }
-
+    
     func shareMotivation(_ gestureRecognizer: UIGestureRecognizer) {
         let tapPoint: CGPoint = gestureRecognizer.location(in: collectionView)
         let indexPath = collectionView.indexPathForItem(at: tapPoint)
@@ -234,19 +381,19 @@ extension MotivationFeedViewController {
         let motivationToShare = [motivation.itemTitle, motivation.itemDescription, "\(MHClient.Resources.youtubeBaseUrl)\(motivation.itemVideoID)"]
         let activityViewController = UIActivityViewController(activityItems: motivationToShare, applicationActivities: nil)
         activityViewController.excludedActivityTypes = [UIActivityType.airDrop, UIActivityType.addToReadingList]
-
+        
         activityViewController.popoverPresentationController?.sourceView = cell.imageView
         activityViewController.popoverPresentationController?.sourceRect = cell.imageView.bounds
-
+        
         self.present(activityViewController, animated: true, completion: nil)
     }
-
+    
     func addNewMotivationItem() {
         indicator.startActivity()
         view.addSubview(indicator)
         var mutableParameters: [String : AnyObject]
-        let theme = "motivation+success"
-
+        let theme = "motivation+\(currentSegmentioItem!)"
+        
         let parameters: [String : AnyObject] = [
             MHClient.JSONKeys.part: MHClient.JSONKeys.snippet as AnyObject,
             MHClient.JSONKeys.order: MHClient.JSONKeys.viewCount as AnyObject,
@@ -256,14 +403,14 @@ extension MotivationFeedViewController {
             MHClient.JSONKeys.maxResults: 10 as AnyObject,
             MHClient.JSONKeys.key: MHClient.Constants.ApiKey as AnyObject
         ]
-
+        
         mutableParameters = parameters
-
+        
         let defaults = UserDefaults.standard
-        if let nextPageToken = defaults.string(forKey: nextPageTokenConstant) {
+        if let nextPageToken = defaults.string(forKey: "nextPageTokenConstant\(currentSegmentioItem!)") {
             mutableParameters["pageToken"] = "\(nextPageToken)" as AnyObject?
         }
-
+        
         let request = Alamofire.request(MHClient.Resources.searchVideos, method: .get, parameters: mutableParameters)
         
         request.responseJSON { response in
@@ -272,9 +419,9 @@ extension MotivationFeedViewController {
                     self.indicator.stopActivity()
                     self.indicator.removeFromSuperview()
                     let errorAlert = UIAlertController(title: "Oops… Unable to load feed", message: response.description, preferredStyle: UIAlertControllerStyle.alert)
-                            errorAlert.addAction(UIAlertAction(title: "Dismiss", style: UIAlertActionStyle.default, handler: nil))
+                    errorAlert.addAction(UIAlertAction(title: "Dismiss", style: UIAlertActionStyle.default, handler: nil))
                     self.present(errorAlert, animated: true, completion: nil)
-                    }
+                }
                 Log.warning("There was an error with your request: \(response.description)")
                 return
             }
@@ -283,8 +430,8 @@ extension MotivationFeedViewController {
             let items = results[MHClient.JSONResponseKeys.items] as! [[String:AnyObject]]
             let nextPageTokenKey = results["nextPageToken"] as! String
             let defaults = UserDefaults.standard
-            defaults.set(nextPageTokenKey, forKey:nextPageTokenConstant)
-
+            defaults.set(nextPageTokenKey, forKey:"nextPageTokenConstant\(self.currentSegmentioItem!)")
+            
             for item in items {
                 guard let ID = item[MHClient.JSONResponseKeys.ID] as? [String:AnyObject],
                     let videoID = ID[MHClient.JSONResponseKeys.videoId] as? String,
@@ -302,16 +449,16 @@ extension MotivationFeedViewController {
                                       itemDescription: description,
                                       itemThumbnailsUrl: "https://i.ytimg.com/vi/\(videoID)/hqdefault.jpg",
                         saved: false,
-                        theme: Theme.themeName.Motivation,
+                        theme: self.currentSegmentioItem!,
                         context: self.sharedContext)
-                        // let _ = Item(item: videoItem as AnyObject, theme: Theme.themeName.Motivation, context: self.sharedContext)
+                    // let _ = Item(item: videoItem as AnyObject, theme: Theme.themeName.Motivation, context: self.sharedContext)
                     CoreDataStackManager.sharedInstance.saveContext()
                     self.indicator.stopActivity()
                     self.indicator.removeFromSuperview()
                 }
             }
         }
-
+        
         if refreshCtrl.isRefreshing {
             refreshCtrl.endRefreshing()
         }
@@ -319,46 +466,46 @@ extension MotivationFeedViewController {
 }
 
 extension MotivationFeedViewController: UICollectionViewDelegate, UICollectionViewDataSource {
-
+    
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         let sectionInfo = fetchedResultsController.sections![section] as NSFetchedResultsSectionInfo
         
         return sectionInfo.numberOfObjects
     }
-
+    
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let motivationItem = fetchedResultsController.object(at: indexPath)
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: MHClient.CellIdentifier.cellWithReuseIdentifier, for: indexPath) as! motivationCollectionViewCell
         configureCell(cell, withItem: motivationItem)
         return cell
     }
-
+    
     func configureCell(_ cell: motivationCollectionViewCell, withItem motivationItem: VideoItem) {
         cell.videoPlayer.delegate = self
         cell.textLabel.text = motivationItem.itemTitle
-
+        
         let playVideoOnTapPlayButton: UITapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(playVideo(_:)))
         playVideoOnTapPlayButton.numberOfTapsRequired = 1
         cell.playButton.addGestureRecognizer(playVideoOnTapPlayButton)
-
+        
         let playVideoOnTapImageView: UITapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(playVideo(_:)))
         playVideoOnTapImageView.numberOfTapsRequired = 1
         cell.imageView.addGestureRecognizer(playVideoOnTapImageView)
-
+        
         let tapToSavedItem: UITapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(savedItem(_:)))
         tapToSavedItem.numberOfTapsRequired = 1
         cell.favoriteBarButton.addGestureRecognizer(tapToSavedItem)
-
+        
         let shareOnTapshareBarButton: UITapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(shareMotivation(_:)))
         shareOnTapshareBarButton.numberOfTapsRequired = 1
         cell.shareBarButton.addGestureRecognizer(shareOnTapshareBarButton)
-
+        
         if motivationItem.saved {
             cell.favoriteBarButton.setTitle(String.fontAwesomeIconWithName(.Heart), for: .normal)
         } else {
             cell.favoriteBarButton.setTitle(String.fontAwesomeIconWithName(.HeartO), for: .normal)
         }
-
+        
         guard motivationItem.image != nil else {
             _ = MHClient.sharedInstance.taskForImage(motivationItem.itemThumbnailsUrl) { imageData, error in
                 guard error == nil else {
@@ -374,7 +521,7 @@ extension MotivationFeedViewController: UICollectionViewDelegate, UICollectionVi
         }
         cell.imageView.image = Toucan(image: motivationItem.image!).resize(CGSize(width: cell.frame.width - 10, height: cell.frame.width / 1.8), fitMode: Toucan.Resize.FitMode.crop).maskWithRoundedRect(cornerRadius: 10).image
     }
-
+    
     func collectionView(_ collectionView: UICollectionView, willDisplay cell: UICollectionViewCell, forItemAt indexPath: IndexPath) {
         if let cell = cell as? motivationCollectionViewCell {
             let motivationItem = fetchedResultsController.object(at: indexPath)
@@ -382,48 +529,48 @@ extension MotivationFeedViewController: UICollectionViewDelegate, UICollectionVi
             cell.imageView.alpha = 0
             cell.playButton.alpha = 0
             cell.videoPlayer.alpha = 0
-
+            
             if motivationItem.image != nil {
                 DispatchQueue.main.async {
                     cell.imageView.image = Toucan(image: motivationItem.image!).resize(CGSize(width: cell.frame.width - 10, height: cell.frame.width / 1.8), fitMode: Toucan.Resize.FitMode.crop).maskWithRoundedRect(cornerRadius: 10).image
                 }
             }
-
+            
             UIView.animate(withDuration: 0.5, delay: 0.0, options: UIViewAnimationOptions.curveEaseOut, animations: {
                 cell.imageView.alpha = 1
                 cell.playButton.alpha = 0.7
                 }, completion: nil)
         }
     }
-
+    
     func collectionView(_ collectionView: UICollectionView, didEndDisplaying cell: UICollectionViewCell, forItemAt indexPath: IndexPath) {
         if let cell = cell as? motivationCollectionViewCell {
             cell.videoPlayer.stop()
         }
     }
-
+    
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAtIndexPath indexPath: IndexPath) -> CGSize {
         let device = UIDevice.current.model
         let dimensioniPhone = view.frame.width
         var cellSize: CGSize = CGSize(width: dimensioniPhone, height: dimensioniPhone * 0.8)
         let dimensioniPad = (view.frame.width / 2) - 15
-
+        
         if (device == "iPad" || device == "iPad Simulator") {
             cellSize = CGSize(width: dimensioniPad, height: dimensioniPad * 0.8)
         }
         return cellSize
     }
-
+    
     func collectionView(_ collectionView: UICollectionView,
                         layout collectionViewLayout: UICollectionViewLayout,
-                               insetForSectionAtIndex section: Int) -> UIEdgeInsets {
+                        insetForSectionAtIndex section: Int) -> UIEdgeInsets {
         let device = UIDevice.current.model
         var edgeInsets = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 0)
-
+        
         if (device == "iPad" || device == "iPad Simulator") {
             edgeInsets = UIEdgeInsets(top: 0, left: 10, bottom: 0, right: 10)
         }
-
+        
         return edgeInsets
     }
 }
@@ -494,7 +641,7 @@ extension MotivationFeedViewController: NSFetchedResultsControllerDelegate {
             )
         }
     }
-
+    
     func controller(_ controller: NSFetchedResultsController<NSFetchRequestResult>, didChange sectionInfo: NSFetchedResultsSectionInfo, atSectionIndex sectionIndex: Int, for type: NSFetchedResultsChangeType) {
         switch (type) {
         case .insert:
@@ -531,7 +678,7 @@ extension MotivationFeedViewController: NSFetchedResultsControllerDelegate {
             )
         }
     }
-
+    
     func controllerDidChangeContent(_ controller: NSFetchedResultsController<NSFetchRequestResult>) {
         collectionView!.performBatchUpdates({ () -> Void in
             for operation: BlockOperation in self.blockOperations {
@@ -540,5 +687,24 @@ extension MotivationFeedViewController: NSFetchedResultsControllerDelegate {
             }, completion: { (finished) -> Void in
                 self.blockOperations.removeAll(keepingCapacity: false)
         })
+    }
+    
+    func updateFetch(theme: String) {
+        if currentSegmentioItem == segmentioItemTheme.Everything.rawValue {
+            fetchedResultsController.fetchRequest.predicate = nil
+        } else {
+            let predicate = NSPredicate(format: "theme = '\(currentSegmentioItem!)'")
+            fetchedResultsController.fetchRequest.predicate = predicate
+        }
+        
+        do {
+            try fetchedResultsController.performFetch()
+        } catch let error as NSError {
+            print("Error: \(error.localizedDescription)")
+        }
+        
+        DispatchQueue.main.async {
+            self.collectionView.reloadData()
+        }
     }
 }

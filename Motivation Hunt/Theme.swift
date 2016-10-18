@@ -8,7 +8,8 @@
 
 class Theme {
     enum themeName: String {
-        case Motivation = "motivation"
-        case Success = "success"
+        case Motivation = "Motivation"
+        case Success = "Success"
+        case Money = "Money"
     }
 }

@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		447300F81D8DCD1500D8011F /* SnapKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 447300F71D8DCD1500D8011F /* SnapKit.framework */; };
+		4476C9E11DB578EC004152C6 /* Segmentio.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4476C9E01DB578EC004152C6 /* Segmentio.framework */; };
 		447BDE791D93DF3C0034CA93 /* Motivation_HuntTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 447BDE781D93DF3C0034CA93 /* Motivation_HuntTests.swift */; };
 		447BDE821D93E72E0034CA93 /* CDECloudKitFileSystem.m in Sources */ = {isa = PBXBuildFile; fileRef = 447BDE811D93E72E0034CA93 /* CDECloudKitFileSystem.m */; };
 		4492906E1DB2C1DD002CE552 /* Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = B42F85421CDF27840016F9B2 /* Extensions.swift */; };
@@ -76,6 +77,7 @@
 
 /* Begin PBXFileReference section */
 		447300F71D8DCD1500D8011F /* SnapKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SnapKit.framework; path = Carthage/Build/iOS/SnapKit.framework; sourceTree = "<group>"; };
+		4476C9E01DB578EC004152C6 /* Segmentio.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Segmentio.framework; path = Carthage/Build/iOS/Segmentio.framework; sourceTree = "<group>"; };
 		447BDE761D93DF3C0034CA93 /* Motivation-HuntTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "Motivation-HuntTests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
 		447BDE781D93DF3C0034CA93 /* Motivation_HuntTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Motivation_HuntTests.swift; sourceTree = "<group>"; };
 		447BDE7A1D93DF3C0034CA93 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -150,6 +152,7 @@
 				B4C8D04A1D666E7B00E32FEE /* PinpointKit.framework in Frameworks */,
 				B4ABAA4F1CA0042100EFEBBA /* FontAwesome.framework in Frameworks */,
 				447300F81D8DCD1500D8011F /* SnapKit.framework in Frameworks */,
+				4476C9E11DB578EC004152C6 /* Segmentio.framework in Frameworks */,
 				B4B17E251CE477D800C36F9E /* GoogleAnalytics.framework in Frameworks */,
 				B4DC90D11CCD2CD100CA1C46 /* YouTubePlayer.framework in Frameworks */,
 				B40D683C1D5ED28600B424D0 /* CloudKit.framework in Frameworks */,
@@ -286,6 +289,7 @@
 		B49730EB1CCAEE430086F61D /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				4476C9E01DB578EC004152C6 /* Segmentio.framework */,
 				44A1E9B61D987998000948A6 /* DZNEmptyDataSet.framework */,
 				447300F71D8DCD1500D8011F /* SnapKit.framework */,
 				B41F47301D737E170075C2EA /* SwiftyUserDefaults.framework */,
@@ -518,6 +522,7 @@
 				"$(SRCROOT)/Carthage/Build/iOS/Onboard.framework",
 				"$(SRCROOT)/Carthage/Build/iOS/SwiftyUserDefaults.framework",
 				"$(SRCROOT)/Carthage/Build/iOS/DZNEmptyDataSet.framework",
+				"$(SRCROOT)/Carthage/Build/iOS/Segmentio.framework",
 			);
 			outputPaths = (
 			);
