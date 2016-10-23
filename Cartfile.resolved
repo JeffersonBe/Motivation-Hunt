@@ -1,6 +1,6 @@
 github "Alamofire/Alamofire" "4.0.1"
 github "dzenbot/DZNEmptyDataSet" "v1.8.1"
-github "thii/FontAwesome.swift" "0.11.1"
+github "tidwall/IoniconsSwift" "6189f2c363b7694b89a1efea7bf29f967cb8b464"
 github "delba/Log" "v1.0"
 github "mamaral/Onboard" "v2.3.1"
 github "Lickability/PinpointKit" "32c63256cc6f32bccc0bfb4a331070354ad76b2a"
