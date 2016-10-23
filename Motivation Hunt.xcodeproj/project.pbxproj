@@ -14,6 +14,7 @@
 		4492906E1DB2C1DD002CE552 /* Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = B42F85421CDF27840016F9B2 /* Extensions.swift */; };
 		4492906F1DB2C1DD002CE552 /* Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = B42F85421CDF27840016F9B2 /* Extensions.swift */; };
 		44A1E9B71D987998000948A6 /* DZNEmptyDataSet.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 44A1E9B61D987998000948A6 /* DZNEmptyDataSet.framework */; };
+		44AA57DE1DBCE74A00EBA510 /* IoniconsSwift.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 44AA57DD1DBCE74A00EBA510 /* IoniconsSwift.framework */; };
 		44EBD8471D8B1985006DE96F /* Ensembles.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 44EBD8451D8B1985006DE96F /* Ensembles.framework */; };
 		B40741F71C89A3AA00AFC870 /* Key.plist in Resources */ = {isa = PBXBuildFile; fileRef = B40741F61C89A3AA00AFC870 /* Key.plist */; };
 		B40D683C1D5ED28600B424D0 /* CloudKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B40D683B1D5ED28600B424D0 /* CloudKit.framework */; };
@@ -52,7 +53,6 @@
 		B48E1ED11CC5A18100482581 /* MHClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4DC95511C88CD620041AB31 /* MHClient.swift */; };
 		B48E1ED21CC5A1E200482581 /* ImageCache.swift in Sources */ = {isa = PBXBuildFile; fileRef = B44ACBC71C89ECEC00C5FF96 /* ImageCache.swift */; };
 		B48E1ED31CC5A1E600482581 /* MHConstant.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4DC95531C88CE8E0041AB31 /* MHConstant.swift */; };
-		B4ABAA4F1CA0042100EFEBBA /* FontAwesome.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B4ABAA491CA0042100EFEBBA /* FontAwesome.framework */; };
 		B4B17E251CE477D800C36F9E /* GoogleAnalytics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B4B17E241CE477D800C36F9E /* GoogleAnalytics.framework */; };
 		B4B17E271CE4789300C36F9E /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = B4B17E261CE4789300C36F9E /* GoogleService-Info.plist */; };
 		B4B17E281CE4789300C36F9E /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = B4B17E261CE4789300C36F9E /* GoogleService-Info.plist */; };
@@ -84,6 +84,7 @@
 		447BDE801D93E72E0034CA93 /* CDECloudKitFileSystem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CDECloudKitFileSystem.h; sourceTree = "<group>"; };
 		447BDE811D93E72E0034CA93 /* CDECloudKitFileSystem.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CDECloudKitFileSystem.m; sourceTree = "<group>"; };
 		44A1E9B61D987998000948A6 /* DZNEmptyDataSet.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = DZNEmptyDataSet.framework; path = Carthage/Build/iOS/DZNEmptyDataSet.framework; sourceTree = "<group>"; };
+		44AA57DD1DBCE74A00EBA510 /* IoniconsSwift.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = IoniconsSwift.framework; path = Carthage/Build/iOS/IoniconsSwift.framework; sourceTree = "<group>"; };
 		44EBD8451D8B1985006DE96F /* Ensembles.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Ensembles.framework; sourceTree = "<group>"; };
 		B40741F61C89A3AA00AFC870 /* Key.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = Key.plist; path = "Motivation Hunt/Key.plist"; sourceTree = "<group>"; };
 		B40D683B1D5ED28600B424D0 /* CloudKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CloudKit.framework; path = System/Library/Frameworks/CloudKit.framework; sourceTree = SDKROOT; };
@@ -122,7 +123,6 @@
 		B46A76C51D58F7F000ADBF43 /* Motivation Hunt TV-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Motivation Hunt TV-Bridging-Header.h"; sourceTree = "<group>"; };
 		B471CC0B1CC7A66500A65D01 /* Toucan.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Toucan.framework; path = Carthage/Build/iOS/Toucan.framework; sourceTree = "<group>"; };
 		B47684831CBD3E8C005AB738 /* Log.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Log.framework; path = Carthage/Build/iOS/Log.framework; sourceTree = "<group>"; };
-		B4ABAA491CA0042100EFEBBA /* FontAwesome.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = FontAwesome.framework; path = Carthage/Build/iOS/FontAwesome.framework; sourceTree = "<group>"; };
 		B4B17E241CE477D800C36F9E /* GoogleAnalytics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = GoogleAnalytics.framework; path = Carthage/Build/iOS/GoogleAnalytics.framework; sourceTree = "<group>"; };
 		B4B17E261CE4789300C36F9E /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		B4BB50781D638CB600AE1560 /* Theme.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Theme.swift; sourceTree = "<group>"; };
@@ -146,11 +146,11 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				44AA57DE1DBCE74A00EBA510 /* IoniconsSwift.framework in Frameworks */,
 				B41F472F1D7372E50075C2EA /* Onboard.framework in Frameworks */,
 				B41F47311D737E170075C2EA /* SwiftyUserDefaults.framework in Frameworks */,
 				B4EA3A8E1CD5152B00AE117F /* Alamofire.framework in Frameworks */,
 				B4C8D04A1D666E7B00E32FEE /* PinpointKit.framework in Frameworks */,
-				B4ABAA4F1CA0042100EFEBBA /* FontAwesome.framework in Frameworks */,
 				447300F81D8DCD1500D8011F /* SnapKit.framework in Frameworks */,
 				4476C9E11DB578EC004152C6 /* Segmentio.framework in Frameworks */,
 				B4B17E251CE477D800C36F9E /* GoogleAnalytics.framework in Frameworks */,
@@ -289,6 +289,7 @@
 		B49730EB1CCAEE430086F61D /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				44AA57DD1DBCE74A00EBA510 /* IoniconsSwift.framework */,
 				4476C9E01DB578EC004152C6 /* Segmentio.framework */,
 				44A1E9B61D987998000948A6 /* DZNEmptyDataSet.framework */,
 				447300F71D8DCD1500D8011F /* SnapKit.framework */,
@@ -302,7 +303,6 @@
 				B4EA3A8D1CD5152B00AE117F /* Alamofire.framework */,
 				B4DC90D01CCD2CD100CA1C46 /* YouTubePlayer.framework */,
 				B471CC0B1CC7A66500A65D01 /* Toucan.framework */,
-				B4ABAA491CA0042100EFEBBA /* FontAwesome.framework */,
 				B47684831CBD3E8C005AB738 /* Log.framework */,
 			);
 			name = Frameworks;
@@ -513,7 +513,7 @@
 			inputPaths = (
 				"$(SRCROOT)/Carthage/Build/iOS/SnapKit.framework",
 				"$(SRCROOT)/Carthage/Build/iOS/YouTubePlayer.framework",
-				"$(SRCROOT)/Carthage/Build/iOS/FontAwesome.framework",
+				"$(SRCROOT)/Carthage/Build/iOS/IoniconsSwift.framework",
 				"$(SRCROOT)/Carthage/Build/iOS/Log.framework",
 				"$(SRCROOT)/Carthage/Build/iOS/Toucan.framework",
 				"$(SRCROOT)/Carthage/Build/iOS/Alamofire.framework",
@@ -685,6 +685,7 @@
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				COPY_PHASE_STRIP = NO;
 				DEBUG_INFORMATION_FORMAT = dwarf;
+				DEVELOPMENT_TEAM = DXXE2BH2EU;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				ENABLE_TESTABILITY = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
@@ -729,10 +730,11 @@
 				CLANG_WARN_SUSPICIOUS_MOVE = YES;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
-				CODE_SIGN_IDENTITY = "iPhone Distribution: Jefferson Bonnaire (DXXE2BH2EU)";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: Jefferson Bonnaire (DXXE2BH2EU)";
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				COPY_PHASE_STRIP = NO;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				DEVELOPMENT_TEAM = DXXE2BH2EU;
 				ENABLE_NS_ASSERTIONS = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
@@ -746,7 +748,7 @@
 				IPHONEOS_DEPLOYMENT_TARGET = 9.2;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				SDKROOT = iphoneos;
-				SWIFT_OPTIMIZATION_LEVEL = "-Owholemodule";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				TARGETED_DEVICE_FAMILY = "1,2";
 				VALIDATE_PRODUCT = YES;
 			};
@@ -761,6 +763,7 @@
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				CURRENT_PROJECT_VERSION = 0.6.3;
+				DEVELOPMENT_TEAM = DXXE2BH2EU;
 				ENABLE_BITCODE = NO;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
@@ -789,15 +792,17 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_ENTITLEMENTS = "Motivation Hunt/Motivation Hunt.entitlements";
-				CODE_SIGN_IDENTITY = "iPhone Distribution";
+				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				CURRENT_PROJECT_VERSION = 0.6.3;
+				DEVELOPMENT_TEAM = DXXE2BH2EU;
 				ENABLE_BITCODE = NO;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)/Carthage/Build/iOS",
 					"$(PROJECT_DIR)",
 				);
+				GCC_OPTIMIZATION_LEVEL = 0;
 				INFOPLIST_FILE = "Motivation Hunt/Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
