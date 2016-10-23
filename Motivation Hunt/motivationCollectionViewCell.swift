@@ -9,7 +9,7 @@
 import UIKit
 import YouTubePlayer
 import SnapKit
-import FontAwesome
+import IoniconsSwift
 import Toucan
 
 class motivationCollectionViewCell: UICollectionViewCell {
@@ -64,8 +64,7 @@ class motivationCollectionViewCell: UICollectionViewCell {
         }
 
         playButton = UIButton()
-        playButton.titleLabel?.font = UIFont.fontAwesomeOfSize(75)
-        playButton.setTitle(String.fontAwesomeIconWithName(.PlayCircle), for: .normal)
+        playButton.setImage(Ionicons.iosPlay.image(barButtonSize * 3, color: #colorLiteral(red: 1, green: 1, blue: 1, alpha: 1)), for: .normal)
         contentView.addSubview(playButton)
         playButton.snp.makeConstraints { (make) in
             make.center.equalTo(imageView)
@@ -98,9 +97,7 @@ class motivationCollectionViewCell: UICollectionViewCell {
         }
 
         favoriteBarButton = UIButton()
-        favoriteBarButton.titleLabel?.font = UIFont.fontAwesomeOfSize(27)
-        favoriteBarButton.setTitle(String.fontAwesomeIconWithName(.HeartO), for: .normal)
-        favoriteBarButton.setTitleColor(#colorLiteral(red: 1, green: 1, blue: 1, alpha: 1), for: UIControlState())
+        favoriteBarButton.setImage(Ionicons.iosHeart.image(barButtonSize, color: #colorLiteral(red: 1, green: 1, blue: 1, alpha: 1)), for: .normal)
         barActionView.addSubview(favoriteBarButton)
         favoriteBarButton.snp.makeConstraints { (make) in
             make.centerY.equalTo(barActionView)
@@ -108,15 +105,10 @@ class motivationCollectionViewCell: UICollectionViewCell {
         }
 
         shareBarButton = UIButton()
-        let shareImage = imageFromSystemBarButton(systemItem: UIBarButtonSystemItem.action).imageWithSize(size: CGSize(width: 18, height: 27))
-        shareBarButton.imageView?.contentMode = .scaleAspectFit
-        shareBarButton.setImage(shareImage, for: .normal)
-        shareBarButton.tintColor = #colorLiteral(red: 1, green: 1, blue: 1, alpha: 1)
+        shareBarButton.setImage(Ionicons.iosUploadOutline.image(barButtonSize, color: #colorLiteral(red: 1, green: 1, blue: 1, alpha: 1)), for: .normal)
         barActionView.addSubview(shareBarButton)
         shareBarButton.snp.makeConstraints { (make) in
             make.centerY.equalTo(barActionView)
-            make.width.equalTo(18)
-            make.height.equalTo(27)
             make.left.equalTo(favoriteBarButton.snp.right).offset(15)
         }
     }

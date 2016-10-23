@@ -60,8 +60,6 @@ class ChallengeViewController: UIViewController {
     }
 
     override func viewDidLayoutSubviews() {
-        Log.info("viewDidLayoutSubviews")
-        setNeedsStatusBarAppearanceUpdate()
         layer.frame = view.frame
         if !editMode {
             addChallengeView.center.y -= view.bounds.width

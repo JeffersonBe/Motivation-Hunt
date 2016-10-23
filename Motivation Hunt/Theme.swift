@@ -6,10 +6,8 @@
 //  Copyright © 2016 Jefferson Bonnaire. All rights reserved.
 //
 
-class Theme {
-    enum themeName: String {
-        case Motivation = "Motivation"
-        case Success = "Success"
-        case Money = "Money"
-    }
+enum Theme: String {
+    case Money = "Money"
+    case Success = "Success"
+    case Love = "Love"
 }

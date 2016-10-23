@@ -35,6 +35,7 @@ extension MHClient {
         static let snippet = "snippet"
         static let order = "order"
         static let viewCount = "viewCount"
+        static let relevance = "relevance"
         static let query = "q"
         static let type = "type"
         static let videoType = "video"

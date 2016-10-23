@@ -13,6 +13,7 @@ import CloudKit
 import Toucan
 import DZNEmptyDataSet
 import GoogleAnalytics
+import IoniconsSwift
 
 class FavouritesViewController: UIViewController {
 
@@ -223,9 +224,9 @@ extension FavouritesViewController: UICollectionViewDelegate, UICollectionViewDa
         cell.shareBarButton.addGestureRecognizer(shareOnTapshareBarButton)
 
         if motivationItem.saved {
-            cell.favoriteBarButton.setTitle(String.fontAwesomeIconWithName(.Heart), for: .normal)
+            cell.favoriteBarButton.setImage(Ionicons.iosHeart.image(35, color: #colorLiteral(red: 1, green: 1, blue: 1, alpha: 1)), for: .normal)
         } else {
-            cell.favoriteBarButton.setTitle(String.fontAwesomeIconWithName(.HeartO), for: .normal)
+            cell.favoriteBarButton.setImage(Ionicons.iosHeartOutline.image(35, color: #colorLiteral(red: 1, green: 1, blue: 1, alpha: 1)), for: .normal)
         }
 
         guard motivationItem.image != nil else {

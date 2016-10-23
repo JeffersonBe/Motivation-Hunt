@@ -161,7 +161,6 @@ class CoreDataStackManager: NSObject, CDEPersistentStoreEnsembleDelegate {
 
         if notification.object != nil {
             DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + Double(Int64(0.02 * Double(NSEC_PER_MSEC))) / Double(NSEC_PER_SEC), execute: {
-                Log.info("Database was updated from iCloud")
                 CoreDataStackManager.sharedInstance.saveContext()
                 NotificationCenter.default.post(name: Notification.Name(rawValue: "DB_UPDATED"), object: nil)
             })
@@ -204,7 +203,7 @@ class CoreDataStackManager: NSObject, CDEPersistentStoreEnsembleDelegate {
             if let error = error {
                 switch (error._code) {
                 case 103:
-                        self.perform(#selector(CoreDataStackManager.sharedInstance.syncWithCompletion(_:)), with: nil, afterDelay: 1.0)
+                    self.perform(#selector(CoreDataStackManager.sharedInstance.syncWithCompletion(_:)), with: nil, afterDelay: 1.0)
                         Log.error("Error case 103:", error)
                         return
                 default:

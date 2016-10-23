@@ -49,10 +49,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         CoreDataStackManager.sharedInstance.saveContext()
         CoreDataStackManager.sharedInstance.enableEnsemble()
         
-        Log.info(UIApplicationLaunchOptionsKey.shortcutItem)
-        
         if let shortcutItem = launchOptions?[UIApplicationLaunchOptionsKey.shortcutItem] as? UIApplicationShortcutItem {
-            Log.info("shortcutItem")
             
             launchedShortcutItem = shortcutItem
             
@@ -171,11 +168,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         
         switch (identifier) {
         case .OpenFavorites:
-            Log.info(identifier)
             tabBarController.selectedIndex = 1
             return true
         case .OpenChallenge:
-            Log.info(identifier)
             tabBarController.selectedIndex = 2
             if let topController = window?.visibleViewController() {
                 if topController.isKind(of: ChallengeViewController.self) {
