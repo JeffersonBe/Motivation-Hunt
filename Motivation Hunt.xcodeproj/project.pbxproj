@@ -7,12 +7,15 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		44083A871DBE8354002CC217 /* Motivation_HuntUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 44083A861DBE8354002CC217 /* Motivation_HuntUITests.swift */; };
+		44083A8F1DBE83BB002CC217 /* SnapshotHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 44083A8E1DBE83BB002CC217 /* SnapshotHelper.swift */; };
 		447300F81D8DCD1500D8011F /* SnapKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 447300F71D8DCD1500D8011F /* SnapKit.framework */; };
 		4476C9E11DB578EC004152C6 /* Segmentio.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4476C9E01DB578EC004152C6 /* Segmentio.framework */; };
 		447BDE791D93DF3C0034CA93 /* Motivation_HuntTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 447BDE781D93DF3C0034CA93 /* Motivation_HuntTests.swift */; };
 		447BDE821D93E72E0034CA93 /* CDECloudKitFileSystem.m in Sources */ = {isa = PBXBuildFile; fileRef = 447BDE811D93E72E0034CA93 /* CDECloudKitFileSystem.m */; };
 		4492906E1DB2C1DD002CE552 /* Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = B42F85421CDF27840016F9B2 /* Extensions.swift */; };
 		4492906F1DB2C1DD002CE552 /* Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = B42F85421CDF27840016F9B2 /* Extensions.swift */; };
+		4498D24B1DBEBF020021511A /* XCTestCaseExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4498D24A1DBEBF020021511A /* XCTestCaseExtensions.swift */; };
 		44A1E9B71D987998000948A6 /* DZNEmptyDataSet.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 44A1E9B61D987998000948A6 /* DZNEmptyDataSet.framework */; };
 		44AA57DE1DBCE74A00EBA510 /* IoniconsSwift.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 44AA57DD1DBCE74A00EBA510 /* IoniconsSwift.framework */; };
 		44EBD8471D8B1985006DE96F /* Ensembles.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 44EBD8451D8B1985006DE96F /* Ensembles.framework */; };
@@ -66,6 +69,13 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
+		44083A891DBE8354002CC217 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = B41BF32C1C7D0D7200E27074 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = B41BF3331C7D0D7200E27074;
+			remoteInfo = "Motivation Hunt";
+		};
 		447BDE7B1D93DF3C0034CA93 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = B41BF32C1C7D0D7200E27074 /* Project object */;
@@ -76,6 +86,10 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		44083A841DBE8354002CC217 /* Motivation HuntUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "Motivation HuntUITests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
+		44083A861DBE8354002CC217 /* Motivation_HuntUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Motivation_HuntUITests.swift; sourceTree = "<group>"; };
+		44083A881DBE8354002CC217 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		44083A8E1DBE83BB002CC217 /* SnapshotHelper.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SnapshotHelper.swift; sourceTree = "<group>"; };
 		447300F71D8DCD1500D8011F /* SnapKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SnapKit.framework; path = Carthage/Build/iOS/SnapKit.framework; sourceTree = "<group>"; };
 		4476C9E01DB578EC004152C6 /* Segmentio.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Segmentio.framework; path = Carthage/Build/iOS/Segmentio.framework; sourceTree = "<group>"; };
 		447BDE761D93DF3C0034CA93 /* Motivation-HuntTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "Motivation-HuntTests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -83,6 +97,7 @@
 		447BDE7A1D93DF3C0034CA93 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		447BDE801D93E72E0034CA93 /* CDECloudKitFileSystem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CDECloudKitFileSystem.h; sourceTree = "<group>"; };
 		447BDE811D93E72E0034CA93 /* CDECloudKitFileSystem.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CDECloudKitFileSystem.m; sourceTree = "<group>"; };
+		4498D24A1DBEBF020021511A /* XCTestCaseExtensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = XCTestCaseExtensions.swift; sourceTree = "<group>"; };
 		44A1E9B61D987998000948A6 /* DZNEmptyDataSet.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = DZNEmptyDataSet.framework; path = Carthage/Build/iOS/DZNEmptyDataSet.framework; sourceTree = "<group>"; };
 		44AA57DD1DBCE74A00EBA510 /* IoniconsSwift.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = IoniconsSwift.framework; path = Carthage/Build/iOS/IoniconsSwift.framework; sourceTree = "<group>"; };
 		44EBD8451D8B1985006DE96F /* Ensembles.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Ensembles.framework; sourceTree = "<group>"; };
@@ -135,6 +150,13 @@
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
+		44083A811DBE8354002CC217 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		447BDE731D93DF3C0034CA93 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
@@ -173,6 +195,17 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		44083A851DBE8354002CC217 /* Motivation HuntUITests */ = {
+			isa = PBXGroup;
+			children = (
+				44083A8E1DBE83BB002CC217 /* SnapshotHelper.swift */,
+				44083A861DBE8354002CC217 /* Motivation_HuntUITests.swift */,
+				44083A881DBE8354002CC217 /* Info.plist */,
+				4498D24A1DBEBF020021511A /* XCTestCaseExtensions.swift */,
+			);
+			path = "Motivation HuntUITests";
+			sourceTree = "<group>";
+		};
 		447BDE771D93DF3C0034CA93 /* Motivation-HuntTests */ = {
 			isa = PBXGroup;
 			children = (
@@ -191,6 +224,7 @@
 				B41BF3361C7D0D7200E27074 /* Motivation Hunt */,
 				B42A4ECE1CBD20CC00D9593D /* Motivation Hunt TV */,
 				447BDE771D93DF3C0034CA93 /* Motivation-HuntTests */,
+				44083A851DBE8354002CC217 /* Motivation HuntUITests */,
 				B49730EB1CCAEE430086F61D /* Frameworks */,
 				B41BF3351C7D0D7200E27074 /* Products */,
 			);
@@ -202,6 +236,7 @@
 				B41BF3341C7D0D7200E27074 /* Motivation Hunt.app */,
 				B42A4ECD1CBD20CC00D9593D /* Motivation Hunt TV.app */,
 				447BDE761D93DF3C0034CA93 /* Motivation-HuntTests.xctest */,
+				44083A841DBE8354002CC217 /* Motivation HuntUITests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -335,6 +370,24 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
+		44083A831DBE8354002CC217 /* Motivation HuntUITests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 44083A8D1DBE8354002CC217 /* Build configuration list for PBXNativeTarget "Motivation HuntUITests" */;
+			buildPhases = (
+				44083A801DBE8354002CC217 /* Sources */,
+				44083A811DBE8354002CC217 /* Frameworks */,
+				44083A821DBE8354002CC217 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				44083A8A1DBE8354002CC217 /* PBXTargetDependency */,
+			);
+			name = "Motivation HuntUITests";
+			productName = "Motivation HuntUITests";
+			productReference = 44083A841DBE8354002CC217 /* Motivation HuntUITests.xctest */;
+			productType = "com.apple.product-type.bundle.ui-testing";
+		};
 		447BDE751D93DF3C0034CA93 /* Motivation-HuntTests */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = 447BDE7F1D93DF3C0034CA93 /* Build configuration list for PBXNativeTarget "Motivation-HuntTests" */;
@@ -400,6 +453,12 @@
 				LastUpgradeCheck = 0800;
 				ORGANIZATIONNAME = "Jefferson Bonnaire";
 				TargetAttributes = {
+					44083A831DBE8354002CC217 = {
+						CreatedOnToolsVersion = 8.0;
+						DevelopmentTeam = DXXE2BH2EU;
+						ProvisioningStyle = Automatic;
+						TestTargetID = B41BF3331C7D0D7200E27074;
+					};
 					447BDE751D93DF3C0034CA93 = {
 						CreatedOnToolsVersion = 8.0;
 						DevelopmentTeam = DXXE2BH2EU;
@@ -450,11 +509,19 @@
 				B41BF3331C7D0D7200E27074 /* Motivation Hunt */,
 				B42A4ECC1CBD20CC00D9593D /* Motivation Hunt TV */,
 				447BDE751D93DF3C0034CA93 /* Motivation-HuntTests */,
+				44083A831DBE8354002CC217 /* Motivation HuntUITests */,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin PBXResourcesBuildPhase section */
+		44083A821DBE8354002CC217 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		447BDE741D93DF3C0034CA93 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -533,6 +600,16 @@
 /* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
+		44083A801DBE8354002CC217 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				44083A871DBE8354002CC217 /* Motivation_HuntUITests.swift in Sources */,
+				4498D24B1DBEBF020021511A /* XCTestCaseExtensions.swift in Sources */,
+				44083A8F1DBE83BB002CC217 /* SnapshotHelper.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		447BDE721D93DF3C0034CA93 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -589,6 +666,11 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
+		44083A8A1DBE8354002CC217 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = B41BF3331C7D0D7200E27074 /* Motivation Hunt */;
+			targetProxy = 44083A891DBE8354002CC217 /* PBXContainerItemProxy */;
+		};
 		447BDE7C1D93DF3C0034CA93 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			target = B41BF3331C7D0D7200E27074 /* Motivation Hunt */;
@@ -624,6 +706,42 @@
 /* End PBXVariantGroup section */
 
 /* Begin XCBuildConfiguration section */
+		44083A8B1DBE8354002CC217 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_SUSPICIOUS_MOVES = YES;
+				DEVELOPMENT_TEAM = DXXE2BH2EU;
+				INFOPLIST_FILE = "Motivation HuntUITests/Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = "com.jeffersonbonnaire.motivationhunt.Motivation-HuntUITests";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_VERSION = 3.0;
+				TEST_TARGET_NAME = "Motivation Hunt";
+			};
+			name = Debug;
+		};
+		44083A8C1DBE8354002CC217 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_SUSPICIOUS_MOVES = YES;
+				DEVELOPMENT_TEAM = DXXE2BH2EU;
+				INFOPLIST_FILE = "Motivation HuntUITests/Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = "com.jeffersonbonnaire.motivationhunt.Motivation-HuntUITests";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_OPTIMIZATION_LEVEL = "-Owholemodule";
+				SWIFT_VERSION = 3.0;
+				TEST_TARGET_NAME = "Motivation Hunt";
+			};
+			name = Release;
+		};
 		447BDE7D1D93DF3C0034CA93 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -890,6 +1008,15 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
+		44083A8D1DBE8354002CC217 /* Build configuration list for PBXNativeTarget "Motivation HuntUITests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				44083A8B1DBE8354002CC217 /* Debug */,
+				44083A8C1DBE8354002CC217 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
 		447BDE7F1D93DF3C0034CA93 /* Build configuration list for PBXNativeTarget "Motivation-HuntTests" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
