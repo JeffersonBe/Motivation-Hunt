@@ -46,7 +46,6 @@ platform :ios do
         clean: true
     ) # Build your app - more options available
     
-    skip_waiting_for_build_processing
     pilot
     clear_derived_data
 
