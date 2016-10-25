@@ -10,7 +10,7 @@ import XCTest
 import UIKit
 
 class Motivation_HuntUITests: XCTestCase {
-        
+    
     override func setUp() {
         super.setUp()
         let app = XCUIApplication()
@@ -23,7 +23,7 @@ class Motivation_HuntUITests: XCTestCase {
         continueAfterFailure = false
         // UI tests must launch the application that they test. Doing this in setup will make sure it happens for each test method.
         XCUIApplication().launch()
-
+        
         // In UI tests it’s important to set the initial state - such as interface orientation - required for your tests before they run. The setUp method is a good place to do this.
     }
     
@@ -33,36 +33,59 @@ class Motivation_HuntUITests: XCTestCase {
     }
     
     func testExample() {
-        
+
         let app = XCUIApplication()
         app.buttons["skipButton"].tap()
         //waitForHittable(element: app.buttons["skipButton"], waitSeconds: 2)
         
         // Motivation Feed Screen
         
-        let element2 = app.children(matching: .window).element(boundBy: 0).children(matching: .other).element.children(matching: .other).element.children(matching: .other).element.children(matching: .other).element.children(matching: .other).element.children(matching: .other).element.children(matching: .other).element
-        let collectionViewsQuery = element2.children(matching: .other).element(boundBy: 1).collectionViews
-        collectionViewsQuery.children(matching: .cell).element(boundBy: 0).children(matching: .other).element.children(matching: .other).element(boundBy: 1).children(matching: .image).element.tap()
+        let device = UIDevice.current.model
         
-        let collectionView = element2.children(matching: .collectionView).element
-        let button = collectionView.children(matching: .cell).element(boundBy: 0).children(matching: .other).element.children(matching: .other).element(boundBy: 1).children(matching: .button).element(boundBy: 0)
-        button.tap()
-        
-        let element3 = collectionView.children(matching: .cell).element(boundBy: 1).children(matching: .other).element
-        let element = element3.children(matching: .other).element(boundBy: 0)
-        element.swipeUp()
-        
-        let button2 = element3.children(matching: .other).element(boundBy: 1).children(matching: .button).element(boundBy: 0)
-        button2.tap()
-        collectionViewsQuery.children(matching: .cell).element(boundBy: 1).children(matching: .other).element.children(matching: .other).element(boundBy: 1).children(matching: .image).element.tap()
-        button.tap()
-        element.swipeUp()
-        button2.tap()
-        collectionViewsQuery.children(matching: .cell).element(boundBy: 2).children(matching: .other).element.children(matching: .other).element(boundBy: 1).children(matching: .image).element.tap()
-        button.tap()
-        element.swipeUp()
-        collectionView.swipeUp()
-        snapshot("01MotivationFeedScreen")
+        if (device == "iPad" || device == "iPad Simulator") {
+            let element = app.children(matching: .window).element(boundBy: 0).children(matching: .other).element.children(matching: .other).element.children(matching: .other).element.children(matching: .other).element.children(matching: .other).element.children(matching: .other).element.children(matching: .other).element
+            element.children(matching: .other).element(boundBy: 1).collectionViews.children(matching: .cell).element(boundBy: 0).children(matching: .other).element.tap()
+            
+            let collectionView = element.children(matching: .collectionView).element
+            let button = collectionView.children(matching: .cell).element(boundBy: 0).children(matching: .other).element.children(matching: .other).element(boundBy: 1).children(matching: .button).element(boundBy: 0)
+            button.tap()
+            collectionView.children(matching: .cell).element(boundBy: 5).children(matching: .other).element.children(matching: .other).element(boundBy: 1).children(matching: .button).element(boundBy: 0).tap()
+            collectionView.tap()
+            
+            let button2 = collectionView.children(matching: .cell).element(boundBy: 1).children(matching: .other).element.children(matching: .other).element(boundBy: 1).children(matching: .button).element(boundBy: 0)
+            button2.tap()
+            app.collectionViews.staticTexts["Love"].tap()
+            button2.tap()
+            collectionView.children(matching: .cell).element(boundBy: 3).children(matching: .other).element.children(matching: .other).element(boundBy: 1).children(matching: .button).element(boundBy: 0).tap()
+            collectionView.children(matching: .cell).element(boundBy: 2).children(matching: .other).element.children(matching: .other).element(boundBy: 1).children(matching: .button).element(boundBy: 0).tap()
+            app.collectionViews.staticTexts["Success"].tap()
+            snapshot("01MotivationFeedScreen")
+        } else {
+            let element2 = app.children(matching: .window).element(boundBy: 0).children(matching: .other).element.children(matching: .other).element.children(matching: .other).element.children(matching: .other).element.children(matching: .other).element.children(matching: .other).element.children(matching: .other).element
+            let collectionViewsQuery = element2.children(matching: .other).element(boundBy: 1).collectionViews
+            collectionViewsQuery.children(matching: .cell).element(boundBy: 0).children(matching: .other).element.children(matching: .other).element(boundBy: 1).children(matching: .image).element.tap()
+            
+            let collectionView = element2.children(matching: .collectionView).element
+            let button = collectionView.children(matching: .cell).element(boundBy: 0).children(matching: .other).element.children(matching: .other).element(boundBy: 1).children(matching: .button).element(boundBy: 0)
+            button.tap()
+            
+            let element3 = collectionView.children(matching: .cell).element(boundBy: 1).children(matching: .other).element
+            let element = element3.children(matching: .other).element(boundBy: 0)
+            element.swipeUp()
+            
+            let button2 = element3.children(matching: .other).element(boundBy: 1).children(matching: .button).element(boundBy: 0)
+            button2.tap()
+            collectionViewsQuery.children(matching: .cell).element(boundBy: 1).children(matching: .other).element.children(matching: .other).element(boundBy: 1).children(matching: .image).element.tap()
+            button.tap()
+            element.swipeUp()
+            button2.tap()
+            collectionViewsQuery.children(matching: .cell).element(boundBy: 2).children(matching: .other).element.children(matching: .other).element(boundBy: 1).children(matching: .image).element.tap()
+            button.tap()
+            element.swipeUp()
+            collectionView.swipeUp()
+            app.collectionViews.staticTexts["Success"].tap()
+            snapshot("01MotivationFeedScreen")
+        }
         
         // Favorites Screen
         let tabBar = app.tabBars
@@ -107,7 +130,7 @@ class Motivation_HuntUITests: XCTestCase {
             challengeDatePicker.pickerWheels.element(boundBy: 2).swipeUp()
         }
         snapshot("04ChallengeModalScreen")
-
+        
         addChallengeButton.tap()
         AddOrCancelButton.tap()
         challengeTextField.tap()
