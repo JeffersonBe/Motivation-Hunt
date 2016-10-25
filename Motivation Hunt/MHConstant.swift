@@ -68,6 +68,7 @@ extension MHClient {
         static let unComplete = "Uncompleted"
         static let complete = "Complete"
         static let addChallenge = "Add a challenge"
+        static let modifyChallenge = "Modify a challenge"
         static let pleaseAddAChallenge = "Please add a challenge"
         static let icloudAccountTitleError = "Please add an iCloud Account"
         static let icloudAccountMessageError = "To use Motivation Hunt, you need to add an iCloud account"

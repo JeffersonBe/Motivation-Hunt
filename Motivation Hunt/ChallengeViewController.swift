@@ -125,9 +125,7 @@ class ChallengeViewController: UIViewController {
         addChallengeButton.accessibilityIdentifier = "addChallengeButton"
         addChallengeButton.setTitle(MHClient.AppCopy.addChallenge, for: UIControlState())
         addChallengeButton.setTitleColor(#colorLiteral(red: 0, green: 0, blue: 0, alpha: 1), for: UIControlState())
-        let tapToAddChallenge: UITapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(addChallenge(_:)))
-        tapToAddChallenge.numberOfTapsRequired = 1
-        addChallengeButton.addGestureRecognizer(tapToAddChallenge)
+        addChallengeButton.addTarget(self, action: #selector(ChallengeViewController.addChallenge), for: .touchUpInside)
         addChallengeView.addSubview(addChallengeButton)
         addChallengeButton.snp.makeConstraints { (make) in
             make.top.equalTo(challengeDatePicker.snp.bottom)
@@ -155,10 +153,6 @@ class ChallengeViewController: UIViewController {
 
         navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: UIBarButtonSystemItem.add, target: self, action: #selector(ChallengeViewController.showOrHideChallengeView))
         navigationItem.rightBarButtonItem?.accessibilityIdentifier = "AddOrCancelButton"
-
-        let longTapToEditChallenge: UILongPressGestureRecognizer = UILongPressGestureRecognizer(target: self, action: #selector(ChallengeViewController.editChallenge(_:)))
-        longTapToEditChallenge.minimumPressDuration = 1.5
-        tableView.addGestureRecognizer(longTapToEditChallenge)
     }
 
     // Initialize CoreData and NSFetchedResultsController
@@ -198,94 +192,95 @@ extension ChallengeViewController {
         }
     }
 
-    func addChallenge(_: UIGestureRecognizer) {
-
-        let challengeDictionary: [String : AnyObject] = [
-            "challengeDescription": challengeTextField.text! as AnyObject,
-            "completed": 0 as AnyObject,
-            "endDate": challengeDatePicker.date as AnyObject
-        ]
-
+    func addChallenge() {
         guard challengeTextField.text != "" else {
             challengeTextField.attributedPlaceholder = NSAttributedString(string: MHClient.AppCopy.pleaseAddAChallenge, attributes: [NSForegroundColorAttributeName: UIColor.red])
             return
         }
 
-        // Modify Challenge based on Edit mode
-
         guard currentChallengeToEdit == nil else {
-            DispatchQueue.main.async {
-                if let challengeToEdit = self.currentChallengeToEdit {
-                    challengeToEdit.challengeDescription = self.challengeTextField.text!
-                    challengeToEdit.endDate = self.challengeDatePicker.date
-                    CoreDataStackManager.sharedInstance.saveContext()
-                }
-            }
+            modifyCurrentChallenge(currentChallenge: currentChallengeToEdit!, challengeTextField: challengeTextField.text!, challengeDatePicker: challengeDatePicker.date)
             showOrHideChallengeView()
             return
         }
 
+        addNewChallenge(challengeDescription: challengeTextField.text!, endDate: challengeDatePicker.date)
+
+        showOrHideChallengeView()
+    }
+    
+    func addNewChallenge(challengeDescription: String, endDate: Date) {
         DispatchQueue.main.async {
             let test = Challenge(
-                challengeDescription: challengeDictionary["challengeDescription"] as! String,
-                completed: challengeDictionary["completed"] as! Bool,
-                endDate: challengeDictionary["endDate"] as! Date,
+                challengeDescription: challengeDescription,
+                completed: false as Bool,
+                endDate: endDate,
                 context: self.sharedContext)
             test.uniqueIdentifier = NSUUID().uuidString
             CoreDataStackManager.sharedInstance.saveContext()
         }
-        showOrHideChallengeView()
     }
-
-    func editChallenge(_ gestureRecognizer: UILongPressGestureRecognizer) {
-        if gestureRecognizer.state == .began {
-            let tapPoint: CGPoint = gestureRecognizer.location(in: tableView)
-            let indexPath = tableView.indexPathForRow(at: tapPoint)
-            currentChallengeToEdit = fetchedResultsController.object(at: indexPath!) as? Challenge
-            showOrHideChallengeView()
+    
+    func modifyCurrentChallenge(currentChallenge: Challenge,
+                                challengeTextField: String,
+                                challengeDatePicker: Date) {
+        DispatchQueue.main.async {
+            currentChallenge.challengeDescription = challengeTextField
+            currentChallenge.endDate = challengeDatePicker
+            CoreDataStackManager.sharedInstance.saveContext()
         }
     }
 
     func showAddChallengeView() {
-        challengeTextField.text = ""
         challengeDatePicker.minimumDate = Date().add(minutes: 5)
         challengeDatePicker.date = Date().add(minutes: 5)
+        addChallengeButton.setTitle(MHClient.AppCopy.addChallenge, for: UIControlState())
+
+        navigationItem.rightBarButtonItem = UIBarButtonItem(
+            barButtonSystemItem: UIBarButtonSystemItem.cancel,
+            target: self,
+            action: #selector(ChallengeViewController.showOrHideChallengeView)
+        )
+        // Keep accessibilityIdentifier for UITest
+        navigationItem.rightBarButtonItem?.accessibilityIdentifier = "AddOrCancelButton"
         
         if currentChallengeToEdit != nil {
             challengeTextField.text = currentChallengeToEdit!.challengeDescription
-            challengeDatePicker.date = currentChallengeToEdit!.endDate as Date
-            addChallengeButton.setTitle("Modify challenge", for: UIControlState())
+            challengeDatePicker.setDate(currentChallengeToEdit!.endDate, animated: false)
+            addChallengeButton.setTitle(MHClient.AppCopy.modifyChallenge, for: UIControlState())
         }
-
+        
         UIView.animate(withDuration: 0.3, delay: 0.0, options: .curveEaseOut, animations: {
             self.addChallengeView.center.y += self.view.bounds.width
             self.dimView.alpha = 0.3
-            }, completion: { finished in
-                self.navigationItem.rightBarButtonItem = UIBarButtonItem(
-                    barButtonSystemItem: UIBarButtonSystemItem.cancel,
-                    target: self,
-                    action: #selector(ChallengeViewController.showOrHideChallengeView)
-                )
-                self.navigationItem.rightBarButtonItem?.accessibilityIdentifier = "AddOrCancelButton"
-        })
+            }, completion: nil)
     }
 
     func HideAddChallengeView() {
-        if currentChallengeToEdit != nil {
-            tableView.setEditing(false, animated: true)
-        }
         UIView.animate(withDuration: 0.3, delay: 0.0, options: .curveEaseOut, animations: {
             self.addChallengeView.center.y -= self.view.bounds.width
             self.dimView.alpha = 0
-            }, completion: { finished in
-                self.navigationItem.rightBarButtonItem = UIBarButtonItem(
-                    barButtonSystemItem: UIBarButtonSystemItem.add,
-                    target: self,
-                    action: #selector(ChallengeViewController.showOrHideChallengeView)
-                )
-                self.navigationItem.rightBarButtonItem?.accessibilityIdentifier = "AddOrCancelButton"
-                self.challengeTextField.resignFirstResponder()
-        })
+            }, completion: nil)
+        navigationItem.rightBarButtonItem = UIBarButtonItem(
+            barButtonSystemItem: UIBarButtonSystemItem.add,
+            target: self,
+            action: #selector(ChallengeViewController.showOrHideChallengeView)
+        )
+    
+        // Keep accessibilityIdentifier for UITest
+        navigationItem.rightBarButtonItem?.accessibilityIdentifier = "AddOrCancelButton"
+        
+        challengeTextField.resignFirstResponder()
+        
+        if currentChallengeToEdit != nil {
+            tableView.setEditing(false, animated: true)
+        }
+        
+        challengeTextField.text = ""
+        challengeTextField.attributedPlaceholder = NSAttributedString(
+            string: MHClient.AppCopy.pleaseAddAChallenge,
+            attributes: [NSForegroundColorAttributeName: UIColor.black]
+        )
         currentChallengeToEdit = nil
     }
 }

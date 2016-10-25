@@ -189,7 +189,7 @@ extension MotivationFeedViewController {
     
     func setupUI() {
         segmentioView = Segmentio()
-        view.addSubview(segmentioView)
+        view.addSubview(segmentioView, options: .useAutoresize)
         segmentioView.snp.makeConstraints { (make) in
             make.top.equalTo(125)
             make.height.equalTo(100)
