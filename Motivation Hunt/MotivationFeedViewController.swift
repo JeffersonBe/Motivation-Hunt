@@ -118,6 +118,7 @@ class MotivationFeedViewController: UIViewController {
         onboardingVC.allowSkipping = true
         onboardingVC.skipButton.setTitleColor(UIColor.white, for: UIControlState())
         onboardingVC.skipButton.setTitle("Skip", for: UIControlState())
+        onboardingVC.skipButton.accessibilityIdentifier = "skipButton"
         onboardingVC.skipHandler = {
             self.dismiss(animated: true, completion: nil)
             Defaults[.haveSeenOnBoarding] = true

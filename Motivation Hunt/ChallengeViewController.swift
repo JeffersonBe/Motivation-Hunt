@@ -20,7 +20,7 @@ class ChallengeViewController: UIViewController {
     var challengeDatePicker: UIDatePicker!
     var addChallengeButton: UIButton!
     var addChallengeView: UIView!
-    var currentChallengeToEdit: Challenge!
+    var currentChallengeToEdit: Challenge?
     var editMode: Bool = false
     var dimView: UIView!
     let layer = CAGradientLayer()
@@ -96,6 +96,7 @@ class ChallengeViewController: UIViewController {
         }
 
         challengeTextField = UITextField()
+        challengeTextField.accessibilityIdentifier = "challengeTextField"
         challengeTextField.leftView = UIView(frame: CGRect(x: 0, y: 0, width: 15, height: 50))
         challengeTextField.leftViewMode = UITextFieldViewMode.always
         challengeTextField.clearButtonMode = UITextFieldViewMode.whileEditing
@@ -110,7 +111,8 @@ class ChallengeViewController: UIViewController {
         }
 
         challengeDatePicker = UIDatePicker()
-        challengeDatePicker.minimumDate = Date()
+        challengeDatePicker.accessibilityIdentifier = "challengeDatePicker"
+        challengeDatePicker.minimumDate = Date().add(minutes: 10)
         addChallengeView.addSubview(challengeDatePicker)
         challengeDatePicker.snp.makeConstraints { (make) in
             make.top.equalTo(challengeTextField.snp.bottom)
@@ -120,6 +122,7 @@ class ChallengeViewController: UIViewController {
         }
 
         addChallengeButton = UIButton()
+        addChallengeButton.accessibilityIdentifier = "addChallengeButton"
         addChallengeButton.setTitle(MHClient.AppCopy.addChallenge, for: UIControlState())
         addChallengeButton.setTitleColor(#colorLiteral(red: 0, green: 0, blue: 0, alpha: 1), for: UIControlState())
         let tapToAddChallenge: UITapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(addChallenge(_:)))
@@ -151,6 +154,7 @@ class ChallengeViewController: UIViewController {
         tableView.allowsMultipleSelection = false
 
         navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: UIBarButtonSystemItem.add, target: self, action: #selector(ChallengeViewController.showOrHideChallengeView))
+        navigationItem.rightBarButtonItem?.accessibilityIdentifier = "AddOrCancelButton"
 
         let longTapToEditChallenge: UILongPressGestureRecognizer = UILongPressGestureRecognizer(target: self, action: #selector(ChallengeViewController.editChallenge(_:)))
         longTapToEditChallenge.minimumPressDuration = 1.5
@@ -211,9 +215,11 @@ extension ChallengeViewController {
 
         guard currentChallengeToEdit == nil else {
             DispatchQueue.main.async {
-                self.currentChallengeToEdit.challengeDescription = self.challengeTextField.text!
-                self.currentChallengeToEdit.endDate = self.challengeDatePicker.date
-                CoreDataStackManager.sharedInstance.saveContext()
+                if let challengeToEdit = self.currentChallengeToEdit {
+                    challengeToEdit.challengeDescription = self.challengeTextField.text!
+                    challengeToEdit.endDate = self.challengeDatePicker.date
+                    CoreDataStackManager.sharedInstance.saveContext()
+                }
             }
             showOrHideChallengeView()
             return
@@ -235,13 +241,16 @@ extension ChallengeViewController {
         if gestureRecognizer.state == .began {
             let tapPoint: CGPoint = gestureRecognizer.location(in: tableView)
             let indexPath = tableView.indexPathForRow(at: tapPoint)
-            currentChallengeToEdit = fetchedResultsController.object(at: indexPath!) as! Challenge
+            currentChallengeToEdit = fetchedResultsController.object(at: indexPath!) as? Challenge
             showOrHideChallengeView()
         }
     }
 
     func showAddChallengeView() {
         challengeTextField.text = ""
+        challengeDatePicker.minimumDate = Date().add(minutes: 5)
+        challengeDatePicker.date = Date().add(minutes: 5)
+        
         if currentChallengeToEdit != nil {
             challengeTextField.text = currentChallengeToEdit!.challengeDescription
             challengeDatePicker.date = currentChallengeToEdit!.endDate as Date
@@ -257,10 +266,14 @@ extension ChallengeViewController {
                     target: self,
                     action: #selector(ChallengeViewController.showOrHideChallengeView)
                 )
+                self.navigationItem.rightBarButtonItem?.accessibilityIdentifier = "AddOrCancelButton"
         })
     }
 
     func HideAddChallengeView() {
+        if currentChallengeToEdit != nil {
+            tableView.setEditing(false, animated: true)
+        }
         UIView.animate(withDuration: 0.3, delay: 0.0, options: .curveEaseOut, animations: {
             self.addChallengeView.center.y -= self.view.bounds.width
             self.dimView.alpha = 0
@@ -270,8 +283,10 @@ extension ChallengeViewController {
                     target: self,
                     action: #selector(ChallengeViewController.showOrHideChallengeView)
                 )
+                self.navigationItem.rightBarButtonItem?.accessibilityIdentifier = "AddOrCancelButton"
                 self.challengeTextField.resignFirstResponder()
         })
+        currentChallengeToEdit = nil
     }
 }
 
@@ -359,7 +374,7 @@ extension ChallengeViewController: UITableViewDataSource, UITableViewDelegate {
         let cell = tableView.cellForRow(at: indexPath)
         
         let modify = UITableViewRowAction(style: .normal, title: MHClient.AppCopy.modify) { action, index in
-            self.currentChallengeToEdit = self.fetchedResultsController.object(at: indexPath) as! Challenge
+            self.currentChallengeToEdit = self.fetchedResultsController.object(at: indexPath) as? Challenge
             self.showOrHideChallengeView()
             
             self.tableView.deselectRow(at: indexPath, animated: true)
