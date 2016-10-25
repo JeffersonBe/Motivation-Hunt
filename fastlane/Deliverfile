@@ -8,3 +8,5 @@
 
 app_identifier "com.jeffersonbonnaire.motivationhunt" # The bundle identifier of your app
 username "jefferson.bonnaire@gmail.com" # your Apple ID user
+metadata_path "./fastlane/metadata"
+screenshots_path "./fastlane/screenshots"
