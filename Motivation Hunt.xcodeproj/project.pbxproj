@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		44083A871DBE8354002CC217 /* Motivation_HuntUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 44083A861DBE8354002CC217 /* Motivation_HuntUITests.swift */; };
 		44083A8F1DBE83BB002CC217 /* SnapshotHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 44083A8E1DBE83BB002CC217 /* SnapshotHelper.swift */; };
+		4427E5E51DCB4D3700DE615D /* DeviceKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4427E5E41DCB4D3700DE615D /* DeviceKit.framework */; };
 		447300F81D8DCD1500D8011F /* SnapKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 447300F71D8DCD1500D8011F /* SnapKit.framework */; };
 		4476C9E11DB578EC004152C6 /* Segmentio.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4476C9E01DB578EC004152C6 /* Segmentio.framework */; };
 		447BDE791D93DF3C0034CA93 /* Motivation_HuntTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 447BDE781D93DF3C0034CA93 /* Motivation_HuntTests.swift */; };
@@ -90,6 +91,7 @@
 		44083A861DBE8354002CC217 /* Motivation_HuntUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Motivation_HuntUITests.swift; sourceTree = "<group>"; };
 		44083A881DBE8354002CC217 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		44083A8E1DBE83BB002CC217 /* SnapshotHelper.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SnapshotHelper.swift; sourceTree = "<group>"; };
+		4427E5E41DCB4D3700DE615D /* DeviceKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = DeviceKit.framework; path = Carthage/Build/iOS/DeviceKit.framework; sourceTree = "<group>"; };
 		447300F71D8DCD1500D8011F /* SnapKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SnapKit.framework; path = Carthage/Build/iOS/SnapKit.framework; sourceTree = "<group>"; };
 		4476C9E01DB578EC004152C6 /* Segmentio.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Segmentio.framework; path = Carthage/Build/iOS/Segmentio.framework; sourceTree = "<group>"; };
 		447BDE761D93DF3C0034CA93 /* Motivation-HuntTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "Motivation-HuntTests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -171,6 +173,7 @@
 				44AA57DE1DBCE74A00EBA510 /* IoniconsSwift.framework in Frameworks */,
 				B41F472F1D7372E50075C2EA /* Onboard.framework in Frameworks */,
 				B41F47311D737E170075C2EA /* SwiftyUserDefaults.framework in Frameworks */,
+				4427E5E51DCB4D3700DE615D /* DeviceKit.framework in Frameworks */,
 				B4EA3A8E1CD5152B00AE117F /* Alamofire.framework in Frameworks */,
 				B4C8D04A1D666E7B00E32FEE /* PinpointKit.framework in Frameworks */,
 				447300F81D8DCD1500D8011F /* SnapKit.framework in Frameworks */,
@@ -324,6 +327,7 @@
 		B49730EB1CCAEE430086F61D /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				4427E5E41DCB4D3700DE615D /* DeviceKit.framework */,
 				44AA57DD1DBCE74A00EBA510 /* IoniconsSwift.framework */,
 				4476C9E01DB578EC004152C6 /* Segmentio.framework */,
 				44A1E9B61D987998000948A6 /* DZNEmptyDataSet.framework */,
@@ -450,7 +454,7 @@
 			attributes = {
 				LastSwiftMigration = 0730;
 				LastSwiftUpdateCheck = 0800;
-				LastUpgradeCheck = 0800;
+				LastUpgradeCheck = 0810;
 				ORGANIZATIONNAME = "Jefferson Bonnaire";
 				TargetAttributes = {
 					44083A831DBE8354002CC217 = {
@@ -590,6 +594,7 @@
 				"$(SRCROOT)/Carthage/Build/iOS/SwiftyUserDefaults.framework",
 				"$(SRCROOT)/Carthage/Build/iOS/DZNEmptyDataSet.framework",
 				"$(SRCROOT)/Carthage/Build/iOS/Segmentio.framework",
+				"$(SRCROOT)/Carthage/Build/iOS/DeviceKit.framework",
 			);
 			outputPaths = (
 			);
@@ -866,7 +871,7 @@
 				IPHONEOS_DEPLOYMENT_TARGET = 9.2;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				SDKROOT = iphoneos;
-				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_OPTIMIZATION_LEVEL = "-Owholemodule";
 				TARGETED_DEVICE_FAMILY = "1,2";
 				VALIDATE_PRODUCT = YES;
 			};

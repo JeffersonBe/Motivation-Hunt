@@ -136,7 +136,7 @@ class CoreDataStackManager: NSObject, CDEPersistentStoreEnsembleDelegate {
 
         cloudFileSystem?.subscribeForPushNotifications(completion: { (error) in
             guard error == nil else {
-                Log.error("subscribeForPushNotificationsWithCompletion: ", error)
+                Log.error("subscribeForPushNotificationsWithCompletion: ", error!)
                 return
             }
         })
