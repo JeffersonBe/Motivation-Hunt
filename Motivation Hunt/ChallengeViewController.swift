@@ -46,124 +46,15 @@ class ChallengeViewController: UIViewController {
             Log.error("Error: \(error.localizedDescription)")
         }
     }
-
-    override func viewWillAppear(_ animated: Bool) {
-        super.viewWillAppear(true)
-
-        let tracker = GAI.sharedInstance().defaultTracker
-        tracker?.set(kGAIScreenName, value: "ChallengeViewController")
-
-        let builder: NSObject = GAIDictionaryBuilder.createScreenView().build()
-        tracker?.send(builder as! [AnyHashable: Any])
-        addChallengeView.center.y -= view.bounds.width
-        dimView.alpha = 0
-    }
-
-    override func viewDidLayoutSubviews() {
-        layer.frame = view.frame
-        if !editMode {
-            addChallengeView.center.y -= view.bounds.width
-        }
-        if let rectNavigationBar = navigationController?.navigationBar.frame, let rectTabBar = tabBarController?.tabBar.frame  {
-            let navigationBarSpace = rectNavigationBar.size.height + rectNavigationBar.origin.y
-            let tabBarSpace = rectTabBar.size.height + rectTabBar.origin.x
-            tableView.contentInset = UIEdgeInsetsMake(navigationBarSpace, 0, tabBarSpace, 0)
-            addChallengeView.snp.updateConstraints({ (make) in
-                make.top.equalTo(navigationBarSpace)
-            })
-        }
-    }
-
-    func setupUI() {
-        view.backgroundColor = UIColor(red: 0, green: 0, blue: 0, alpha: 1.0) /* #000000 */
-        tableView = UITableView()
-        tableView.backgroundColor = UIColor.clear
-        tableView.tableFooterView = UIView(frame: CGRect.zero)
-        view.addSubview(tableView)
-        tableView.snp.makeConstraints { (make) in
-            make.top.equalTo(view)
-            make.width.equalTo(view)
-            make.bottom.equalTo(view.snp.bottom)
-        }
-
-        addChallengeView = UIView()
-        addChallengeView.backgroundColor = #colorLiteral(red: 1, green: 1, blue: 1, alpha: 1)
-        view.insertSubview(addChallengeView, aboveSubview: tableView)
-        addChallengeView.snp.makeConstraints { (make) in
-            make.top.equalTo(view).offset(64)
-            make.width.equalTo(view)
-            make.height.equalTo(250)
-        }
-
-        challengeTextField = UITextField()
-        challengeTextField.accessibilityIdentifier = "challengeTextField"
-        challengeTextField.leftView = UIView(frame: CGRect(x: 0, y: 0, width: 15, height: 50))
-        challengeTextField.leftViewMode = UITextFieldViewMode.always
-        challengeTextField.clearButtonMode = UITextFieldViewMode.whileEditing
-        challengeTextField.backgroundColor = #colorLiteral(red: 0.921431005, green: 0.9214526415, blue: 0.9214410186, alpha: 1)
-        challengeTextField.attributedPlaceholder = NSAttributedString(string: MHClient.AppCopy.pleaseAddAChallenge, attributes: [NSForegroundColorAttributeName: UIColor.black])
-        addChallengeView.addSubview(challengeTextField)
-        challengeTextField.snp.makeConstraints { (make) in
-            make.top.equalTo(addChallengeView)
-            make.height.equalTo(50)
-            make.width.equalTo(addChallengeView)
-            make.centerX.equalTo(addChallengeView)
-        }
-
-        challengeDatePicker = UIDatePicker()
-        challengeDatePicker.accessibilityIdentifier = "challengeDatePicker"
-        challengeDatePicker.minimumDate = Date().add(minutes: 10)
-        addChallengeView.addSubview(challengeDatePicker)
-        challengeDatePicker.snp.makeConstraints { (make) in
-            make.top.equalTo(challengeTextField.snp.bottom)
-            make.height.equalTo(150)
-            make.width.equalTo(addChallengeView)
-            make.centerX.equalTo(addChallengeView)
-        }
-
-        addChallengeButton = UIButton()
-        addChallengeButton.accessibilityIdentifier = "addChallengeButton"
-        addChallengeButton.setTitle(MHClient.AppCopy.addChallenge, for: UIControlState())
-        addChallengeButton.setTitleColor(#colorLiteral(red: 0, green: 0, blue: 0, alpha: 1), for: UIControlState())
-        addChallengeButton.addTarget(self, action: #selector(ChallengeViewController.addChallenge), for: .touchUpInside)
-        addChallengeView.addSubview(addChallengeButton)
-        addChallengeButton.snp.makeConstraints { (make) in
-            make.top.equalTo(challengeDatePicker.snp.bottom)
-            make.height.equalTo(50)
-            make.width.equalTo(addChallengeView)
-            make.centerX.equalTo(addChallengeView)
-        }
-
-        dimView = UIView(frame: view.frame)
-        dimView.backgroundColor = UIColor.black
-        view.insertSubview(dimView, belowSubview: addChallengeView)
-        let tapToDismissAddChallengeView: UITapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(showOrHideChallengeView))
-        tapToDismissAddChallengeView.numberOfTapsRequired = 1
-        dimView.addGestureRecognizer(tapToDismissAddChallengeView)
-
-        // Set background View
-        layer.frame = view.frame
-        let color1 = UIColor(red: 0, green: 0, blue: 0, alpha: 1.0).cgColor /* #000000 */
-        let color2 = UIColor(red: 0.1294, green: 0.1294, blue: 0.1294, alpha: 1.0).cgColor /* #212121 */
-        layer.colors = [color1, color2]
-        layer.contentsGravity = kCAGravityResize
-        view.layer.insertSublayer(layer, below: tableView.layer)
-
-        tableView.allowsMultipleSelection = false
-
-        navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: UIBarButtonSystemItem.add, target: self, action: #selector(ChallengeViewController.showOrHideChallengeView))
-        navigationItem.rightBarButtonItem?.accessibilityIdentifier = "AddOrCancelButton"
-    }
-
+    
     // Initialize CoreData and NSFetchedResultsController
-
+    
     var sharedContext: NSManagedObjectContext {
         return CoreDataStackManager.sharedInstance.managedObjectContext
     }
-
-    lazy var fetchedResultsController: NSFetchedResultsController<NSFetchRequestResult> = {
-        let fetchRequest = NSFetchRequest<NSFetchRequestResult>(entityName: "Challenge")
-
+    
+    lazy var fetchedResultsController: NSFetchedResultsController<Challenge> = {
+        let fetchRequest: NSFetchRequest<Challenge> = Challenge.fetchRequest() as! NSFetchRequest<Challenge>
         fetchRequest.sortDescriptors = [
             NSSortDescriptor(key: "completed", ascending: true),
             NSSortDescriptor(key: "endDate", ascending: true)
@@ -178,6 +69,117 @@ class ChallengeViewController: UIViewController {
         
         return fetchedResultsController
     }()
+}
+
+extension ChallengeViewController {
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(true)
+        
+        let tracker = GAI.sharedInstance().defaultTracker
+        tracker?.set(kGAIScreenName, value: "ChallengeViewController")
+        
+        let builder: NSObject = GAIDictionaryBuilder.createScreenView().build()
+        tracker?.send(builder as! [AnyHashable: Any])
+        addChallengeView.center.y -= view.bounds.width
+        dimView.alpha = 0
+    }
+    
+    override func viewDidLayoutSubviews() {
+        layer.frame = view.frame
+        if !editMode {
+            addChallengeView.center.y -= view.bounds.width
+        }
+        if let rectNavigationBar = navigationController?.navigationBar.frame, let rectTabBar = tabBarController?.tabBar.frame  {
+            let navigationBarSpace = rectNavigationBar.size.height + rectNavigationBar.origin.y
+            let tabBarSpace = rectTabBar.size.height + rectTabBar.origin.x
+            tableView.contentInset = UIEdgeInsetsMake(navigationBarSpace, 0, tabBarSpace, 0)
+            addChallengeView.snp.updateConstraints({ (make) in
+                make.top.equalTo(navigationBarSpace)
+            })
+        }
+    }
+    
+    func setupUI() {
+        view.backgroundColor = UIColor(red: 0, green: 0, blue: 0, alpha: 1.0) /* #000000 */
+        tableView = UITableView()
+        tableView.backgroundColor = UIColor.clear
+        tableView.tableFooterView = UIView(frame: CGRect.zero)
+        view.addSubview(tableView)
+        tableView.snp.makeConstraints { (make) in
+            make.top.equalTo(view)
+            make.width.equalTo(view)
+            make.bottom.equalTo(view.snp.bottom)
+        }
+        
+        addChallengeView = UIView()
+        addChallengeView.backgroundColor = #colorLiteral(red: 1, green: 1, blue: 1, alpha: 1)
+        view.insertSubview(addChallengeView, aboveSubview: tableView)
+        addChallengeView.snp.makeConstraints { (make) in
+            make.top.equalTo(view).offset(64)
+            make.width.equalTo(view)
+            make.height.equalTo(250)
+        }
+        
+        challengeTextField = UITextField()
+        challengeTextField.accessibilityIdentifier = "challengeTextField"
+        challengeTextField.leftView = UIView(frame: CGRect(x: 0, y: 0, width: 15, height: 50))
+        challengeTextField.leftViewMode = UITextFieldViewMode.always
+        challengeTextField.clearButtonMode = UITextFieldViewMode.whileEditing
+        challengeTextField.backgroundColor = #colorLiteral(red: 0.921431005, green: 0.9214526415, blue: 0.9214410186, alpha: 1)
+        challengeTextField.attributedPlaceholder = NSAttributedString(string: MHClient.AppCopy.pleaseAddAChallenge, attributes: [NSForegroundColorAttributeName: UIColor.black])
+        addChallengeView.addSubview(challengeTextField)
+        challengeTextField.snp.makeConstraints { (make) in
+            make.top.equalTo(addChallengeView)
+            make.height.equalTo(50)
+            make.width.equalTo(addChallengeView)
+            make.centerX.equalTo(addChallengeView)
+        }
+        
+        challengeDatePicker = UIDatePicker()
+        challengeDatePicker.accessibilityIdentifier = "challengeDatePicker"
+        challengeDatePicker.minimumDate = Date().add(minutes: 10)
+        addChallengeView.addSubview(challengeDatePicker)
+        challengeDatePicker.snp.makeConstraints { (make) in
+            make.top.equalTo(challengeTextField.snp.bottom)
+            make.height.equalTo(150)
+            make.width.equalTo(addChallengeView)
+            make.centerX.equalTo(addChallengeView)
+        }
+        
+        addChallengeButton = UIButton()
+        addChallengeButton.accessibilityIdentifier = "addChallengeButton"
+        addChallengeButton.setTitle(MHClient.AppCopy.addChallenge, for: UIControlState())
+        addChallengeButton.setTitleColor(#colorLiteral(red: 0, green: 0, blue: 0, alpha: 1), for: UIControlState())
+        addChallengeButton.addTarget(self, action: #selector(ChallengeViewController.addChallenge), for: .touchUpInside)
+        addChallengeView.addSubview(addChallengeButton)
+        addChallengeButton.snp.makeConstraints { (make) in
+            make.top.equalTo(challengeDatePicker.snp.bottom)
+            make.height.equalTo(50)
+            make.width.equalTo(addChallengeView)
+            make.centerX.equalTo(addChallengeView)
+        }
+        
+        dimView = UIView(frame: view.frame)
+        dimView.backgroundColor = UIColor.black
+        view.insertSubview(dimView, belowSubview: addChallengeView)
+        let tapToDismissAddChallengeView: UITapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(showOrHideChallengeView))
+        tapToDismissAddChallengeView.numberOfTapsRequired = 1
+        dimView.addGestureRecognizer(tapToDismissAddChallengeView)
+        
+        // Set background View
+        layer.frame = view.frame
+        let color1 = UIColor(red: 0, green: 0, blue: 0, alpha: 1.0).cgColor /* #000000 */
+        let color2 = UIColor(red: 0.1294, green: 0.1294, blue: 0.1294, alpha: 1.0).cgColor /* #212121 */
+        layer.colors = [color1, color2]
+        layer.contentsGravity = kCAGravityResize
+        view.layer.insertSublayer(layer, below: tableView.layer)
+        
+        tableView.allowsMultipleSelection = false
+        
+        navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: UIBarButtonSystemItem.add, target: self, action: #selector(ChallengeViewController.showOrHideChallengeView))
+        navigationItem.rightBarButtonItem?.accessibilityIdentifier = "AddOrCancelButton"
+    }
 }
 
 extension ChallengeViewController {
@@ -336,15 +338,14 @@ extension ChallengeViewController: UITableViewDataSource, UITableViewDelegate {
     }
 
     func configureCell(_ cell: challengeTableViewCell, atIndexPath indexPath: IndexPath) {
-        let challenge = fetchedResultsController.object(at: indexPath) as! Challenge
+        let challenge = fetchedResultsController.object(at: indexPath) 
         cell.selectionStyle = UITableViewCellSelectionStyle.none
+        cell.backgroundColor = #colorLiteral(red: 1, green: 1, blue: 1, alpha: 1)
 
         if challenge.completed {
             cell.backgroundColor = #colorLiteral(red: 0.3003999591, green: 0.851647675, blue: 0.4030759931, alpha: 1)
         } else if challenge.endDate < Date() {
             cell.backgroundColor = #colorLiteral(red: 0.994312346, green: 0.2319896519, blue: 0.1840049326, alpha: 1)
-        } else {
-            cell.backgroundColor = #colorLiteral(red: 1, green: 1, blue: 1, alpha: 1)
         }
 
         if let challengeDateTextLabel = cell.challengeDateTextLabel {
@@ -365,11 +366,11 @@ extension ChallengeViewController: UITableViewDataSource, UITableViewDelegate {
     }
 
     func tableView(_ tableView: UITableView, editActionsForRowAt indexPath: IndexPath) -> [UITableViewRowAction]? {
-        let challenge = fetchedResultsController.object(at: indexPath) as! Challenge
+        let challenge = fetchedResultsController.object(at: indexPath) 
         let cell = tableView.cellForRow(at: indexPath)
         
         let modify = UITableViewRowAction(style: .normal, title: MHClient.AppCopy.modify) { action, index in
-            self.currentChallengeToEdit = self.fetchedResultsController.object(at: indexPath) as? Challenge
+            self.currentChallengeToEdit = self.fetchedResultsController.object(at: indexPath)
             self.showOrHideChallengeView()
             
             self.tableView.deselectRow(at: indexPath, animated: true)
