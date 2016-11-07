@@ -10,4 +10,5 @@ enum Theme: String {
     case Money = "Money"
     case Success = "Success"
     case Love = "Love"
+    case All = "All"
 }

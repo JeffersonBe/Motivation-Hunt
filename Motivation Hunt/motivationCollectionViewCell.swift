@@ -18,6 +18,7 @@ class motivationCollectionViewCell: UICollectionViewCell {
     var titleBarView: UIView!
     var textLabel: UILabel!
     var imageView: UIImageView!
+    var imageViewButton: UIButton!
 
     var playButton: UIButton!
 
@@ -61,6 +62,12 @@ class motivationCollectionViewCell: UICollectionViewCell {
             make.width.equalTo(contentView.frame.width - 20)
             make.height.equalTo(contentView.frame.width / 1.8)
             make.centerX.equalTo(contentView)
+        }
+        
+        imageViewButton = UIButton()
+        contentView.addSubview(imageViewButton)
+        imageViewButton.snp.makeConstraints { (make) in
+            make.edges.equalTo(imageView)
         }
 
         playButton = UIButton()
