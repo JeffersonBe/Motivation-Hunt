@@ -5,9 +5,10 @@ github "jeffersonbe/Toucan" "develop"
 github "dzenbot/DZNEmptyDataSet" "v1.8.1"
 github "Alamofire/Alamofire" "master"
 github "akashivskyy/GoogleAnalytics-Framework" "3.17"
-github "Lickability/PinpointKit" "swift-3.0"
+github "Lickability/PinpointKit" "master"
 github "mamaral/Onboard" "v2.3.1"
 github "radex/SwiftyUserDefaults" "master"
 github "jeffersonbe/Segmentio" "2.0"
-github "tidwall/IoniconsSwift" "master"
-github "dennisweissmann/DeviceKit" "HEAD"
+github "jeffersonbe/IoniconsSwift" "other-OS"
+github "dennisweissmann/DeviceKit" ~> 1.0
+github "0xced/XCDYouTubeKit" ~> 2.5
