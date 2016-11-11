@@ -10,10 +10,19 @@
 		44083A871DBE8354002CC217 /* Motivation_HuntUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 44083A861DBE8354002CC217 /* Motivation_HuntUITests.swift */; };
 		44083A8F1DBE83BB002CC217 /* SnapshotHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 44083A8E1DBE83BB002CC217 /* SnapshotHelper.swift */; };
 		4427E5E51DCB4D3700DE615D /* DeviceKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4427E5E41DCB4D3700DE615D /* DeviceKit.framework */; };
+		4438B4771DD49D7800807ABB /* IoniconsSwift.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4438B4761DD49D7800807ABB /* IoniconsSwift.framework */; };
+		4438B4791DD4AF8E00807ABB /* SnapKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4438B4781DD4AF8E00807ABB /* SnapKit.framework */; };
+		4438B47B1DD4AFA500807ABB /* Alamofire.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4438B47A1DD4AFA500807ABB /* Alamofire.framework */; };
+		4438B47D1DD4AFB200807ABB /* XCDYouTubeKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4438B47C1DD4AFB200807ABB /* XCDYouTubeKit.framework */; };
+		4438B47F1DD4B50300807ABB /* Log.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4438B47E1DD4B50300807ABB /* Log.framework */; };
+		4438B4811DD4B57A00807ABB /* SwiftyUserDefaults.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4438B4801DD4B57900807ABB /* SwiftyUserDefaults.framework */; };
 		447300F81D8DCD1500D8011F /* SnapKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 447300F71D8DCD1500D8011F /* SnapKit.framework */; };
 		4476C9E11DB578EC004152C6 /* Segmentio.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4476C9E01DB578EC004152C6 /* Segmentio.framework */; };
 		447BDE791D93DF3C0034CA93 /* Motivation_HuntTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 447BDE781D93DF3C0034CA93 /* Motivation_HuntTests.swift */; };
 		447BDE821D93E72E0034CA93 /* CDECloudKitFileSystem.m in Sources */ = {isa = PBXBuildFile; fileRef = 447BDE811D93E72E0034CA93 /* CDECloudKitFileSystem.m */; };
+		447F76DF1DD22651000DEBB4 /* ChallengeTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 447F76DE1DD22651000DEBB4 /* ChallengeTableViewCell.swift */; };
+		447F76E91DD2946F000DEBB4 /* CloudKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 447F76E81DD2946F000DEBB4 /* CloudKit.framework */; };
+		447F76EA1DD2958F000DEBB4 /* DZNEmptyDataSet.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 44A1E9B61D987998000948A6 /* DZNEmptyDataSet.framework */; };
 		4492906E1DB2C1DD002CE552 /* Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = B42F85421CDF27840016F9B2 /* Extensions.swift */; };
 		4492906F1DB2C1DD002CE552 /* Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = B42F85421CDF27840016F9B2 /* Extensions.swift */; };
 		4498D24B1DBEBF020021511A /* XCTestCaseExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4498D24A1DBEBF020021511A /* XCTestCaseExtensions.swift */; };
@@ -38,7 +47,7 @@
 		B423E34C1CC627DD0020D39D /* motivationCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = B423E34B1CC627DD0020D39D /* motivationCollectionViewCell.swift */; };
 		B42A4ED01CBD20CC00D9593D /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = B42A4ECF1CBD20CC00D9593D /* AppDelegate.swift */; };
 		B42A4ED21CBD20CC00D9593D /* MotivationFeedViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B42A4ED11CBD20CC00D9593D /* MotivationFeedViewController.swift */; };
-		B42A4ED41CBD20CC00D9593D /* SecondViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B42A4ED31CBD20CC00D9593D /* SecondViewController.swift */; };
+		B42A4ED41CBD20CC00D9593D /* ChallengeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B42A4ED31CBD20CC00D9593D /* ChallengeViewController.swift */; };
 		B42A4ED71CBD20CC00D9593D /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = B42A4ED51CBD20CC00D9593D /* Main.storyboard */; };
 		B42A4ED91CBD20CC00D9593D /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = B42A4ED81CBD20CC00D9593D /* Assets.xcassets */; };
 		B42E42811C81CB6C0095B9BF /* VideoItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = B42E42801C81CB6C0095B9BF /* VideoItem.swift */; };
@@ -92,6 +101,12 @@
 		44083A881DBE8354002CC217 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		44083A8E1DBE83BB002CC217 /* SnapshotHelper.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SnapshotHelper.swift; sourceTree = "<group>"; };
 		4427E5E41DCB4D3700DE615D /* DeviceKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = DeviceKit.framework; path = Carthage/Build/iOS/DeviceKit.framework; sourceTree = "<group>"; };
+		4438B4761DD49D7800807ABB /* IoniconsSwift.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = IoniconsSwift.framework; path = Carthage/Build/tvOS/IoniconsSwift.framework; sourceTree = "<group>"; };
+		4438B4781DD4AF8E00807ABB /* SnapKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SnapKit.framework; path = Carthage/Build/tvOS/SnapKit.framework; sourceTree = "<group>"; };
+		4438B47A1DD4AFA500807ABB /* Alamofire.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Alamofire.framework; path = Carthage/Build/tvOS/Alamofire.framework; sourceTree = "<group>"; };
+		4438B47C1DD4AFB200807ABB /* XCDYouTubeKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = XCDYouTubeKit.framework; path = Carthage/Build/tvOS/XCDYouTubeKit.framework; sourceTree = "<group>"; };
+		4438B47E1DD4B50300807ABB /* Log.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Log.framework; path = Carthage/Build/tvOS/Log.framework; sourceTree = "<group>"; };
+		4438B4801DD4B57900807ABB /* SwiftyUserDefaults.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SwiftyUserDefaults.framework; path = Carthage/Build/tvOS/SwiftyUserDefaults.framework; sourceTree = "<group>"; };
 		447300F71D8DCD1500D8011F /* SnapKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SnapKit.framework; path = Carthage/Build/iOS/SnapKit.framework; sourceTree = "<group>"; };
 		4476C9E01DB578EC004152C6 /* Segmentio.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Segmentio.framework; path = Carthage/Build/iOS/Segmentio.framework; sourceTree = "<group>"; };
 		447BDE761D93DF3C0034CA93 /* Motivation-HuntTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "Motivation-HuntTests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -99,6 +114,8 @@
 		447BDE7A1D93DF3C0034CA93 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		447BDE801D93E72E0034CA93 /* CDECloudKitFileSystem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CDECloudKitFileSystem.h; sourceTree = "<group>"; };
 		447BDE811D93E72E0034CA93 /* CDECloudKitFileSystem.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CDECloudKitFileSystem.m; sourceTree = "<group>"; };
+		447F76DE1DD22651000DEBB4 /* ChallengeTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ChallengeTableViewCell.swift; sourceTree = "<group>"; };
+		447F76E81DD2946F000DEBB4 /* CloudKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CloudKit.framework; path = Platforms/AppleTVOS.platform/Developer/SDKs/AppleTVOS10.0.sdk/System/Library/Frameworks/CloudKit.framework; sourceTree = DEVELOPER_DIR; };
 		4498D24A1DBEBF020021511A /* XCTestCaseExtensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = XCTestCaseExtensions.swift; sourceTree = "<group>"; };
 		44A1E9B61D987998000948A6 /* DZNEmptyDataSet.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = DZNEmptyDataSet.framework; path = Carthage/Build/iOS/DZNEmptyDataSet.framework; sourceTree = "<group>"; };
 		44AA57DD1DBCE74A00EBA510 /* IoniconsSwift.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = IoniconsSwift.framework; path = Carthage/Build/iOS/IoniconsSwift.framework; sourceTree = "<group>"; };
@@ -125,7 +142,7 @@
 		B42A4ECD1CBD20CC00D9593D /* Motivation Hunt TV.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Motivation Hunt TV.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		B42A4ECF1CBD20CC00D9593D /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		B42A4ED11CBD20CC00D9593D /* MotivationFeedViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MotivationFeedViewController.swift; sourceTree = "<group>"; };
-		B42A4ED31CBD20CC00D9593D /* SecondViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SecondViewController.swift; sourceTree = "<group>"; };
+		B42A4ED31CBD20CC00D9593D /* ChallengeViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChallengeViewController.swift; sourceTree = "<group>"; };
 		B42A4ED61CBD20CC00D9593D /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		B42A4ED81CBD20CC00D9593D /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		B42A4EDA1CBD20CC00D9593D /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -192,6 +209,14 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				447F76E91DD2946F000DEBB4 /* CloudKit.framework in Frameworks */,
+				4438B47F1DD4B50300807ABB /* Log.framework in Frameworks */,
+				4438B47D1DD4AFB200807ABB /* XCDYouTubeKit.framework in Frameworks */,
+				4438B4791DD4AF8E00807ABB /* SnapKit.framework in Frameworks */,
+				447F76EA1DD2958F000DEBB4 /* DZNEmptyDataSet.framework in Frameworks */,
+				4438B4811DD4B57A00807ABB /* SwiftyUserDefaults.framework in Frameworks */,
+				4438B47B1DD4AFA500807ABB /* Alamofire.framework in Frameworks */,
+				4438B4771DD49D7800807ABB /* IoniconsSwift.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -216,6 +241,58 @@
 				447BDE7A1D93DF3C0034CA93 /* Info.plist */,
 			);
 			path = "Motivation-HuntTests";
+			sourceTree = "<group>";
+		};
+		447F76D81DD21A3F000DEBB4 /* iOS */ = {
+			isa = PBXGroup;
+			children = (
+				447300F71D8DCD1500D8011F /* SnapKit.framework */,
+				4427E5E41DCB4D3700DE615D /* DeviceKit.framework */,
+				44AA57DD1DBCE74A00EBA510 /* IoniconsSwift.framework */,
+				4476C9E01DB578EC004152C6 /* Segmentio.framework */,
+				B41F47301D737E170075C2EA /* SwiftyUserDefaults.framework */,
+				B41F472E1D7372E50075C2EA /* Onboard.framework */,
+				44EBD8451D8B1985006DE96F /* Ensembles.framework */,
+				B4C8D0491D666E7B00E32FEE /* PinpointKit.framework */,
+				B40D683B1D5ED28600B424D0 /* CloudKit.framework */,
+				B4B17E241CE477D800C36F9E /* GoogleAnalytics.framework */,
+				B4EA3A8D1CD5152B00AE117F /* Alamofire.framework */,
+				B4DC90D01CCD2CD100CA1C46 /* YouTubePlayer.framework */,
+				B471CC0B1CC7A66500A65D01 /* Toucan.framework */,
+				B47684831CBD3E8C005AB738 /* Log.framework */,
+			);
+			name = iOS;
+			sourceTree = "<group>";
+		};
+		447F76D91DD21A4A000DEBB4 /* Shared */ = {
+			isa = PBXGroup;
+			children = (
+				44A1E9B61D987998000948A6 /* DZNEmptyDataSet.framework */,
+				B46A76C01D58F03F00ADBF43 /* Ensembles.bundle */,
+			);
+			name = Shared;
+			sourceTree = "<group>";
+		};
+		447F76DD1DD2251F000DEBB4 /* Controller */ = {
+			isa = PBXGroup;
+			children = (
+				B42A4ED11CBD20CC00D9593D /* MotivationFeedViewController.swift */,
+				B42A4ED31CBD20CC00D9593D /* ChallengeViewController.swift */,
+			);
+			name = Controller;
+			sourceTree = "<group>";
+		};
+		447F76E31DD22EA7000DEBB4 /* tvOS */ = {
+			isa = PBXGroup;
+			children = (
+				4438B4801DD4B57900807ABB /* SwiftyUserDefaults.framework */,
+				4438B47E1DD4B50300807ABB /* Log.framework */,
+				4438B47C1DD4AFB200807ABB /* XCDYouTubeKit.framework */,
+				4438B47A1DD4AFA500807ABB /* Alamofire.framework */,
+				4438B4781DD4AF8E00807ABB /* SnapKit.framework */,
+				4438B4761DD49D7800807ABB /* IoniconsSwift.framework */,
+			);
+			name = tvOS;
 			sourceTree = "<group>";
 		};
 		B41BF32B1C7D0D7200E27074 = {
@@ -293,6 +370,7 @@
 			isa = PBXGroup;
 			children = (
 				B423E34B1CC627DD0020D39D /* motivationCollectionViewCell.swift */,
+				447F76DE1DD22651000DEBB4 /* ChallengeTableViewCell.swift */,
 			);
 			name = View;
 			sourceTree = "<group>";
@@ -300,11 +378,10 @@
 		B42A4ECE1CBD20CC00D9593D /* Motivation Hunt TV */ = {
 			isa = PBXGroup;
 			children = (
+				B42A4ECF1CBD20CC00D9593D /* AppDelegate.swift */,
+				447F76DD1DD2251F000DEBB4 /* Controller */,
 				B423E34A1CC627920020D39D /* View */,
 				B43403FC1CBD6CE500F9793E /* Motivation Hunt TV.entitlements */,
-				B42A4ECF1CBD20CC00D9593D /* AppDelegate.swift */,
-				B42A4ED11CBD20CC00D9593D /* MotivationFeedViewController.swift */,
-				B42A4ED31CBD20CC00D9593D /* SecondViewController.swift */,
 				B42A4ED51CBD20CC00D9593D /* Main.storyboard */,
 				B42A4ED81CBD20CC00D9593D /* Assets.xcassets */,
 				B42A4EDA1CBD20CC00D9593D /* Info.plist */,
@@ -327,22 +404,10 @@
 		B49730EB1CCAEE430086F61D /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
-				4427E5E41DCB4D3700DE615D /* DeviceKit.framework */,
-				44AA57DD1DBCE74A00EBA510 /* IoniconsSwift.framework */,
-				4476C9E01DB578EC004152C6 /* Segmentio.framework */,
-				44A1E9B61D987998000948A6 /* DZNEmptyDataSet.framework */,
-				447300F71D8DCD1500D8011F /* SnapKit.framework */,
-				B41F47301D737E170075C2EA /* SwiftyUserDefaults.framework */,
-				B41F472E1D7372E50075C2EA /* Onboard.framework */,
-				44EBD8451D8B1985006DE96F /* Ensembles.framework */,
-				B4C8D0491D666E7B00E32FEE /* PinpointKit.framework */,
-				B40D683B1D5ED28600B424D0 /* CloudKit.framework */,
-				B46A76C01D58F03F00ADBF43 /* Ensembles.bundle */,
-				B4B17E241CE477D800C36F9E /* GoogleAnalytics.framework */,
-				B4EA3A8D1CD5152B00AE117F /* Alamofire.framework */,
-				B4DC90D01CCD2CD100CA1C46 /* YouTubePlayer.framework */,
-				B471CC0B1CC7A66500A65D01 /* Toucan.framework */,
-				B47684831CBD3E8C005AB738 /* Log.framework */,
+				447F76E81DD2946F000DEBB4 /* CloudKit.framework */,
+				447F76E31DD22EA7000DEBB4 /* tvOS */,
+				447F76D81DD21A3F000DEBB4 /* iOS */,
+				447F76D91DD21A4A000DEBB4 /* Shared */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -489,6 +554,7 @@
 					B42A4ECC1CBD20CC00D9593D = {
 						CreatedOnToolsVersion = 7.3;
 						DevelopmentTeam = DXXE2BH2EU;
+						LastSwiftMigration = 0810;
 						SystemCapabilities = {
 							com.apple.iCloud = {
 								enabled = 1;
@@ -566,9 +632,12 @@
 			files = (
 			);
 			inputPaths = (
-				"$(SRCROOT)/Carthage/Build/tvOS/Log.framework",
 				"$(SRCROOT)/Carthage/Build/tvOS/SnapKit.framework",
-				"$(SRCROOT)/Carthage/Build/tvOS/Async.framework",
+				"$(SRCROOT)/Carthage/Build/tvOS/Alamofire.framework",
+				"$(SRCROOT)/Carthage/Build/tvOS/XCDYouTubeKit.framework",
+				"$(SRCROOT)/Carthage/Build/tvOS/SwiftyUserDefaults.framework",
+				"$(SRCROOT)/Carthage/Build/tvOS/Log.framework",
+				"$(SRCROOT)/Carthage/Build/tvOS/IoniconsSwift.framework",
 			);
 			outputPaths = (
 			);
@@ -657,7 +726,8 @@
 				B423E34C1CC627DD0020D39D /* motivationCollectionViewCell.swift in Sources */,
 				B48E1ECF1CC5A15600482581 /* Challenge.swift in Sources */,
 				B48E1ECE1CC5A15300482581 /* MotivationHunt.xcdatamodeld in Sources */,
-				B42A4ED41CBD20CC00D9593D /* SecondViewController.swift in Sources */,
+				447F76DF1DD22651000DEBB4 /* ChallengeTableViewCell.swift in Sources */,
+				B42A4ED41CBD20CC00D9593D /* ChallengeViewController.swift in Sources */,
 				B48E1ED31CC5A1E600482581 /* MHConstant.swift in Sources */,
 				B42A4ED01CBD20CC00D9593D /* AppDelegate.swift in Sources */,
 				4492906F1DB2C1DD002CE552 /* Extensions.swift in Sources */,
@@ -970,8 +1040,9 @@
 				SDKROOT = appletvos;
 				SWIFT_OBJC_BRIDGING_HEADER = "Motivation Hunt TV-Bridging-Header.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 3.0;
 				TARGETED_DEVICE_FAMILY = 3;
-				TVOS_DEPLOYMENT_TARGET = 9.2;
+				TVOS_DEPLOYMENT_TARGET = 10.0;
 				VERSIONING_SYSTEM = "apple-generic";
 			};
 			name = Debug;
@@ -1004,8 +1075,9 @@
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = appletvos;
 				SWIFT_OBJC_BRIDGING_HEADER = "Motivation Hunt TV-Bridging-Header.h";
+				SWIFT_VERSION = 3.0;
 				TARGETED_DEVICE_FAMILY = 3;
-				TVOS_DEPLOYMENT_TARGET = 9.2;
+				TVOS_DEPLOYMENT_TARGET = 10.0;
 				VERSIONING_SYSTEM = "apple-generic";
 			};
 			name = Release;

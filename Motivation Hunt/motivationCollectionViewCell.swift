@@ -143,22 +143,4 @@ class motivationCollectionViewCell: UICollectionViewCell {
         group.motionEffects = [horizontal, vertical]
         vw.addMotionEffect(group)
     }
-    
-    func imageFromSystemBarButton(systemItem: UIBarButtonSystemItem)-> UIImage {
-        let tempItem = UIBarButtonItem(barButtonSystemItem: systemItem, target: nil, action: nil)
-        
-        // add to toolbar and render it
-        UIToolbar().setItems([tempItem], animated: false)
-        
-        // got image from real uibutton
-        let itemView = tempItem.value(forKey: "view") as! UIView
-        for view in itemView.subviews {
-            if view.isKind(of: UIButton.self){
-                let button = view as! UIButton
-                return button.imageView!.image!.withRenderingMode(.alwaysTemplate)
-            }
-        }
-        
-        return UIImage()
-    }
 }

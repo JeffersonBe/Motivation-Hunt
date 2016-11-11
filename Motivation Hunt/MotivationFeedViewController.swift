@@ -143,11 +143,11 @@ extension MotivationFeedViewController {
         segmentioView.valueDidChange = { segmentio, segmentIndex in
             switch segmentIndex {
             case 0:
-                self.currentSegmentioItem = .Success
-            case 1:
-                self.currentSegmentioItem = .Love
-            case 2:
                 self.currentSegmentioItem = .Money
+            case 1:
+                self.currentSegmentioItem = .Success
+            case 2:
+                self.currentSegmentioItem = .Love
             default:
                 self.currentSegmentioItem = .All
             }
@@ -242,11 +242,11 @@ extension MotivationFeedViewController {
             })
         
         // Define onboarding view controller properties
-        onboardingVC = OnboardingViewController.onboard(withBackgroundImage: UIImage.fromColor(UIColor.black), contents: [firstPage, secondPage, thirdPage, fourthPage])
-        onboardingVC.pageControl.pageIndicatorTintColor = UIColor.darkGray
-        onboardingVC.pageControl.currentPageIndicatorTintColor = UIColor.white
+        onboardingVC = OnboardingViewController.onboard(withBackgroundImage: UIImage.fromColor(color: #colorLiteral(red: 0.1019897072, green: 0.1019897072, blue: 0.1019897072, alpha: 1)), contents: [firstPage, secondPage, thirdPage, fourthPage])
+        onboardingVC.pageControl.pageIndicatorTintColor = #colorLiteral(red: 0.501960814, green: 0.501960814, blue: 0.501960814, alpha: 1)
+        onboardingVC.pageControl.currentPageIndicatorTintColor = #colorLiteral(red: 1, green: 1, blue: 1, alpha: 1)
         onboardingVC.allowSkipping = true
-        onboardingVC.skipButton.setTitleColor(UIColor.white, for: UIControlState())
+        onboardingVC.skipButton.setTitleColor(#colorLiteral(red: 1, green: 1, blue: 1, alpha: 1), for: UIControlState())
         onboardingVC.skipButton.setTitle("Skip", for: UIControlState())
         onboardingVC.skipButton.accessibilityIdentifier = "skipButton"
         onboardingVC.skipHandler = {
@@ -653,7 +653,7 @@ extension MotivationFeedViewController: UICollectionViewDelegateFlowLayout {
         case .iPhone5, .iPhone5c, .iPhone5s, .iPhoneSE, .simulator(.iPhone5), .simulator(.iPhone5c), .simulator(.iPhone5s), .simulator(.iPhoneSE):
             heightPerItem = widthPerItem * 0.85
         case .iPhone6, .iPhone6s, .iPhone6Plus, .simulator(.iPhone6), .simulator(.iPhone6s), .simulator(.iPhone6Plus):
-            heightPerItem = widthPerItem * 0.9
+            heightPerItem = widthPerItem * 0.8
         default:
             heightPerItem = widthPerItem * 0.8
         }

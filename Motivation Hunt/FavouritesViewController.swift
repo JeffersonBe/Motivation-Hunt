@@ -322,7 +322,7 @@ extension FavouritesViewController: UICollectionViewDelegateFlowLayout {
         case .iPhone5, .iPhone5c, .iPhone5s, .iPhoneSE, .simulator(.iPhone5), .simulator(.iPhone5c), .simulator(.iPhone5s), .simulator(.iPhoneSE):
             heightPerItem = widthPerItem * 0.85
         case .iPhone6, .iPhone6s, .iPhone6Plus, .simulator(.iPhone6), .simulator(.iPhone6s), .simulator(.iPhone6Plus):
-            heightPerItem = widthPerItem * 0.9
+            heightPerItem = widthPerItem * 0.8
         default:
             heightPerItem = widthPerItem * 0.8
         }
