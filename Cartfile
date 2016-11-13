@@ -1,7 +1,7 @@
 github "jeffersonBe/Swift-YouTube-Player" "master"
 github "delba/Log" "v1.0"
 github "SnapKit/SnapKit" "master"
-github "jeffersonbe/Toucan" "develop"
+github "kean/Toucan" "swift3"
 github "dzenbot/DZNEmptyDataSet" "v1.8.1"
 github "Alamofire/Alamofire" "master"
 github "akashivskyy/GoogleAnalytics-Framework" "3.17"

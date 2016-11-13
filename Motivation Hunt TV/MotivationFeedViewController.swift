@@ -10,12 +10,15 @@ import UIKit
 import SnapKit
 import CloudKit
 import CoreData
+import Toucan
 
 class MotivationFeedViewController: UIViewController {
 
     var collectionView: UICollectionView!
-    let originalCellSize = CGSize(width: 700, height: 394)
-    let focusCellSize = CGSize(width: 750, height: 422)
+    let originalCellWidth: CGFloat = 500
+    var originalCellHeight: CGFloat!
+    var originalCellSize: CGSize!
+    let focusValue: CGFloat = 1.15
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -69,25 +72,26 @@ class MotivationFeedViewController: UIViewController {
 }
 extension MotivationFeedViewController {
     func setupUI() {
+        // Configure original and Focus CellSize
+        originalCellHeight = ((originalCellWidth / 16) * 9) // Keep 16:9 ratio
+        originalCellSize = CGSize(width: originalCellWidth, height: originalCellHeight + 44)
+        
+        Log.info(originalCellSize)
+        
         let layout: UICollectionViewFlowLayout = UICollectionViewFlowLayout()
-        layout.sectionInset = UIEdgeInsets(top: 0, left: 10, bottom: 0, right: 10)
+        layout.sectionInset = UIEdgeInsets(top: 0, left: 75, bottom: 0, right: 75)
         layout.itemSize = originalCellSize
         layout.minimumInteritemSpacing = CGFloat(50)
         layout.minimumLineSpacing = CGFloat(50)
-        layout.scrollDirection = .horizontal
+        layout.scrollDirection = .vertical
         
-        fetchedResultsController.delegate = self
-        
-        collectionView = UICollectionView(frame: self.view.frame, collectionViewLayout: layout)
-        collectionView.register(UICollectionViewCell.self, forCellWithReuseIdentifier: "Cell")
+        collectionView = UICollectionView(frame: view.frame, collectionViewLayout: layout)
         collectionView.register(MotivationCollectionViewCell.self, forCellWithReuseIdentifier: MHClient.CellIdentifier.cellWithReuseIdentifier)
         collectionView.backgroundColor = UIColor.clear
         collectionView.isScrollEnabled = true
         self.view.addSubview(collectionView)
         collectionView.snp.makeConstraints { (make) in
-            make.width.equalTo(view)
-            make.height.equalTo(800)
-            make.center.equalTo(view)
+            make.edges.equalTo(view)
         }
     }
 }
@@ -102,6 +106,8 @@ extension MotivationFeedViewController: UICollectionViewDelegate, UICollectionVi
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let motivationItem = fetchedResultsController.object(at: indexPath)
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: MHClient.CellIdentifier.cellWithReuseIdentifier, for: indexPath) as! MotivationCollectionViewCell
+        cell.textLabel.text = motivationItem.itemTitle
+
         if motivationItem.image == nil {
             _ = MHClient.sharedInstance.taskForImage(motivationItem.itemThumbnailsUrl) { imageData, error in
                 guard error == nil else {
@@ -109,18 +115,31 @@ extension MotivationFeedViewController: UICollectionViewDelegate, UICollectionVi
                 }
                 DispatchQueue.main.async {
                     motivationItem.image = UIImage(data: imageData!)
-                    cell.imageView.image = motivationItem.image
+                    cell.imageView.image = Toucan(image: motivationItem.image!).resize(CGSize(width: cell.frame.width, height: cell.frame.width / 1.8), fitMode: Toucan.Resize.FitMode.crop).maskWithRoundedRect(cornerRadius: 10).image
                 }
             }
         }
         return cell
     }
-
-    func collectionView(_ collectionView: UICollectionView, shouldHighlightItemAt indexPath: IndexPath) -> Bool {
-        return true
+    
+    func collectionView(_ collectionView: UICollectionView, willDisplay cell: UICollectionViewCell, forItemAt indexPath: IndexPath) {
+        if let cell = cell as? MotivationCollectionViewCell {
+            let motivationItem = fetchedResultsController.object(at: indexPath)
+            cell.imageView.alpha = 0
+            
+            if motivationItem.image != nil {
+                DispatchQueue.main.async {
+                    cell.imageView.image = Toucan(image: motivationItem.image!).resize(CGSize(width: cell.frame.width, height: cell.frame.width / 1.8), fitMode: Toucan.Resize.FitMode.crop).maskWithRoundedRect(cornerRadius: 10).image
+                }
+            }
+            
+            UIView.animate(withDuration: 0.5, delay: 0.0, options: UIViewAnimationOptions.curveEaseOut, animations: {
+                cell.imageView.alpha = 1
+            }, completion: nil)
+        }
     }
 
-    func collectionView(_ collectionView: UICollectionView, shouldDeselectItemAt indexPath: IndexPath) -> Bool {
+    func collectionView(_ collectionView: UICollectionView, shouldHighlightItemAt indexPath: IndexPath) -> Bool {
         return true
     }
     
@@ -131,17 +150,18 @@ extension MotivationFeedViewController: UICollectionViewDelegate, UICollectionVi
     
     func collectionView(_ collectionView: UICollectionView, didUpdateFocusIn context: UICollectionViewFocusUpdateContext, with coordinator: UIFocusAnimationCoordinator) {
         if let previousIndexPath = context.previouslyFocusedIndexPath,
-            let
-            _ = collectionView.cellForItem(at: previousIndexPath) {
+            let cell = collectionView.cellForItem(at: previousIndexPath) as? MotivationCollectionViewCell {
+            cell.imageView.adjustsImageWhenAncestorFocused = false
             coordinator.addCoordinatedAnimations({() -> Void in
                 context.previouslyFocusedView!.transform = CGAffineTransform(scaleX: 1.0, y: 1.0)
             }, completion: { _ in })
         }
         
         if let indexPath = context.nextFocusedIndexPath,
-            let _ = collectionView.cellForItem(at: indexPath) {
+            let cell = collectionView.cellForItem(at: indexPath) as? MotivationCollectionViewCell{
+            cell.imageView.adjustsImageWhenAncestorFocused = true
             coordinator.addCoordinatedAnimations({() -> Void in
-                context.nextFocusedView!.transform = CGAffineTransform(scaleX: 1.1, y: 1.1)
+                context.nextFocusedView!.transform = CGAffineTransform(scaleX: self.focusValue, y: self.focusValue)
             }, completion: { _ in })
             collectionView.scrollToItem(at: indexPath, at: [.centeredHorizontally], animated: true)
         }

@@ -13,6 +13,7 @@
 		44083A8F1DBE83BB002CC217 /* SnapshotHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 44083A8E1DBE83BB002CC217 /* SnapshotHelper.swift */; };
 		440E5C9E1DD790A0003E2C45 /* Ensembles.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 440E5C9D1DD790A0003E2C45 /* Ensembles.framework */; };
 		440E5C9F1DD790A0003E2C45 /* Ensembles.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 440E5C9D1DD790A0003E2C45 /* Ensembles.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		441172DA1DD8DFA000E41E87 /* Toucan.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 441172D91DD8DFA000E41E87 /* Toucan.framework */; };
 		4427E5E51DCB4D3700DE615D /* DeviceKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4427E5E41DCB4D3700DE615D /* DeviceKit.framework */; };
 		4438B4771DD49D7800807ABB /* IoniconsSwift.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4438B4761DD49D7800807ABB /* IoniconsSwift.framework */; };
 		4438B4791DD4AF8E00807ABB /* SnapKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4438B4781DD4AF8E00807ABB /* SnapKit.framework */; };
@@ -127,6 +128,7 @@
 		44083A881DBE8354002CC217 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		44083A8E1DBE83BB002CC217 /* SnapshotHelper.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SnapshotHelper.swift; sourceTree = "<group>"; };
 		440E5C9D1DD790A0003E2C45 /* Ensembles.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Ensembles.framework; path = "Motivation Hunt/Ensembles.framework"; sourceTree = "<group>"; };
+		441172D91DD8DFA000E41E87 /* Toucan.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Toucan.framework; path = Carthage/Build/tvOS/Toucan.framework; sourceTree = "<group>"; };
 		4427E5E41DCB4D3700DE615D /* DeviceKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = DeviceKit.framework; path = Carthage/Build/iOS/DeviceKit.framework; sourceTree = "<group>"; };
 		4438B4761DD49D7800807ABB /* IoniconsSwift.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = IoniconsSwift.framework; path = Carthage/Build/tvOS/IoniconsSwift.framework; sourceTree = "<group>"; };
 		4438B4781DD4AF8E00807ABB /* SnapKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SnapKit.framework; path = Carthage/Build/tvOS/SnapKit.framework; sourceTree = "<group>"; };
@@ -237,6 +239,7 @@
 				446A34261DD614C9000A7AD4 /* CloudKit.framework in Frameworks */,
 				4438B47F1DD4B50300807ABB /* Log.framework in Frameworks */,
 				4438B47D1DD4AFB200807ABB /* XCDYouTubeKit.framework in Frameworks */,
+				441172DA1DD8DFA000E41E87 /* Toucan.framework in Frameworks */,
 				4438B4791DD4AF8E00807ABB /* SnapKit.framework in Frameworks */,
 				4438B4811DD4B57A00807ABB /* SwiftyUserDefaults.framework in Frameworks */,
 				44CABB0D1DD7A945003069AB /* Ensembles.framework in Frameworks */,
@@ -303,6 +306,7 @@
 			isa = PBXGroup;
 			children = (
 				44CABB0A1DD7A4E8003069AB /* Ensembles.framework */,
+				441172D91DD8DFA000E41E87 /* Toucan.framework */,
 				446A34251DD614C9000A7AD4 /* CloudKit.framework */,
 				4438B4801DD4B57900807ABB /* SwiftyUserDefaults.framework */,
 				4438B47E1DD4B50300807ABB /* Log.framework */,
@@ -655,6 +659,7 @@
 				"$(SRCROOT)/Carthage/Build/tvOS/SwiftyUserDefaults.framework",
 				"$(SRCROOT)/Carthage/Build/tvOS/Log.framework",
 				"$(SRCROOT)/Carthage/Build/tvOS/IoniconsSwift.framework",
+				"$(SRCROOT)/Carthage/Build/tvOS/Toucan.framework",
 			);
 			outputPaths = (
 			);

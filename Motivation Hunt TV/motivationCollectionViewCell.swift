@@ -16,27 +16,25 @@ class MotivationCollectionViewCell: UICollectionViewCell {
     var titleBarView: UIView!
     var textLabel: UILabel!
     var imageView: UIImageView!
-    var imageViewButton: UIButton!
-    
-    var playButton: UIButton!
-    
-    var barActionView: UIView!
-    var favoriteBarButton: UIButton!
-    var shareBarButton: UIButton!
-    
-    var barButtonColor: UIColor!
-    var barButtonSize: CGFloat!
     
     override init(frame: CGRect) {
         super.init(frame: frame)
         
-        barButtonColor = UIColor.gray
-        barButtonSize = 35
+        imageView = UIImageView()
+        imageView.contentMode = .scaleAspectFit
+        contentView.addSubview(imageView)
+        imageView.snp.makeConstraints { (make) in
+            make.centerX.equalTo(contentView)
+            make.width.equalTo(contentView)
+            // Calculation to keep 16:9 ratio
+            make.height.equalTo((contentView.frame.width / 16) * 9)
+            make.top.equalTo(contentView)
+        }
         
         titleBarView = UIView()
         contentView.addSubview(titleBarView)
         titleBarView.snp.makeConstraints { (make) in
-            make.top.equalTo(contentView.snp.top)
+            make.top.equalTo(imageView.snp.bottom)
             make.width.equalTo(contentView.frame.width - 20)
             make.height.equalTo(44)
             make.centerX.equalTo(contentView)
@@ -50,55 +48,6 @@ class MotivationCollectionViewCell: UICollectionViewCell {
             make.width.equalTo(titleBarView)
             make.center.equalTo(titleBarView)
         }
-        
-        imageView = UIImageView()
-        imageView.contentMode = UIViewContentMode.scaleAspectFit
-        contentView.addSubview(imageView)
-        addParallaxToView(imageView)
-        imageView.snp.makeConstraints { (make) in
-            make.top.equalTo(titleBarView.snp.bottom)
-            make.width.equalTo(contentView.frame.width - 20)
-            make.height.equalTo(contentView.frame.width / 1.8)
-            make.centerX.equalTo(contentView)
-        }
-        
-        imageViewButton = UIButton()
-        contentView.addSubview(imageViewButton)
-        imageViewButton.snp.makeConstraints { (make) in
-            make.edges.equalTo(imageView)
-        }
-        
-        playButton = UIButton()
-        playButton.setImage(Ionicons.iosPlay.image(barButtonSize * 3, color: #colorLiteral(red: 1, green: 1, blue: 1, alpha: 1)), for: .normal)
-        contentView.addSubview(playButton)
-        playButton.snp.makeConstraints { (make) in
-            make.center.equalTo(imageView)
-        }
-        
-        barActionView = UIView()
-        contentView.addSubview(barActionView)
-        barActionView.snp.makeConstraints { (make) in
-            make.top.equalTo(imageView.snp.bottom)
-            make.width.equalTo(contentView.frame.width - 40)
-            make.height.equalTo(44.0)
-            make.centerX.equalTo(contentView)
-        }
-        
-        favoriteBarButton = UIButton()
-        favoriteBarButton.setImage(Ionicons.iosHeart.image(barButtonSize, color: #colorLiteral(red: 1, green: 1, blue: 1, alpha: 1)), for: .normal)
-        barActionView.addSubview(favoriteBarButton)
-        favoriteBarButton.snp.makeConstraints { (make) in
-            make.centerY.equalTo(barActionView)
-            make.left.equalTo(barActionView.snp.left)
-        }
-        
-        shareBarButton = UIButton()
-        shareBarButton.setImage(Ionicons.iosUploadOutline.image(barButtonSize, color: #colorLiteral(red: 1, green: 1, blue: 1, alpha: 1)), for: .normal)
-        barActionView.addSubview(shareBarButton)
-        shareBarButton.snp.makeConstraints { (make) in
-            make.centerY.equalTo(barActionView)
-            make.left.equalTo(favoriteBarButton.snp.right).offset(15)
-        }
     }
     
     required init?(coder aDecoder: NSCoder) {
@@ -107,21 +56,5 @@ class MotivationCollectionViewCell: UICollectionViewCell {
     
     override func prepareForReuse() {
         super.prepareForReuse()
-    }
-    
-    func addParallaxToView(_ vw: UIView) {
-        let amount = 15
-        
-        let horizontal = UIInterpolatingMotionEffect(keyPath: "center.x", type: .tiltAlongHorizontalAxis)
-        horizontal.minimumRelativeValue = -amount
-        horizontal.maximumRelativeValue = amount
-        
-        let vertical = UIInterpolatingMotionEffect(keyPath: "center.y", type: .tiltAlongVerticalAxis)
-        vertical.minimumRelativeValue = -amount
-        vertical.maximumRelativeValue = amount
-        
-        let group = UIMotionEffectGroup()
-        group.motionEffects = [horizontal, vertical]
-        vw.addMotionEffect(group)
     }
 }
