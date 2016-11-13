@@ -34,8 +34,7 @@ class CoreDataStackManager: NSObject, CDEPersistentStoreEnsembleDelegate {
             try directoryURL = FileManager.default.url(for: FileManager.SearchPathDirectory.applicationSupportDirectory, in: .userDomainMask, appropriateFor: nil, create: true)
             directoryURL = directoryURL!.appendingPathComponent(Bundle.main.bundleIdentifier!, isDirectory: true)
         } catch {
-            NSLog("Unresolved error: Application's document directory is unreachable")
-            abort()
+            fatalError("Unresolved error: Application's document directory is unreachable")
         }
         return directoryURL!
     }()
@@ -70,8 +69,7 @@ class CoreDataStackManager: NSObject, CDEPersistentStoreEnsembleDelegate {
         do {
             try FileManager.default.createDirectory(at: self.storeDirectoryURL, withIntermediateDirectories: true, attributes: nil)
         } catch {
-            NSLog("Unresolved error: local database storage position is unavailable.")
-            abort()
+            fatalError("Unresolved error: local database storage position is unavailable.")
         }
 
         do {
@@ -89,8 +87,7 @@ class CoreDataStackManager: NSObject, CDEPersistentStoreEnsembleDelegate {
             let wrappedError = NSError(domain: "YOUR_ERROR_DOMAIN", code: 9999, userInfo: dict)
             // Replace this with code to handle the error appropriately.
             // abort() causes the application to generate a crash log and terminate. You should not use this function in a shipping application, although it may be useful during development.
-            NSLog("Unresolved error \(wrappedError), \(wrappedError.userInfo)")
-            abort()
+            fatalError("Unresolved error \(wrappedError), \(wrappedError.userInfo)")
         }
 
         return coordinator
@@ -115,8 +112,7 @@ class CoreDataStackManager: NSObject, CDEPersistentStoreEnsembleDelegate {
                 // Replace this implementation with code to handle the error appropriately.
                 // abort() causes the application to generate a crash log and terminate. You should not use this function in a shipping application, although it may be useful during development.
                 let nserror = error as NSError
-                NSLog("Unresolved error \(nserror), \(nserror.userInfo)")
-                abort()
+                fatalError("Unresolved error \(nserror), \(nserror.userInfo)")
             }
         }
     }
@@ -149,8 +145,11 @@ class CoreDataStackManager: NSObject, CDEPersistentStoreEnsembleDelegate {
 
         CoreDataStackManager.sharedInstance.ensemble!.delegate = CoreDataStackManager.sharedInstance
         
-        ensemble?.leechPersistentStore(with: CDESeedPolicy.mergeAllData, completion: { (NSError) in
-            Log.info("leechPersistentStoreWithSeedPolicy")
+        ensemble?.leechPersistentStore(with: CDESeedPolicy.mergeAllData, completion: { (error) in
+            guard error == nil else {
+                Log.info("leechPersistentStoreWithSeedPolicy :", error!)
+                return
+            }
         })
     }
 
