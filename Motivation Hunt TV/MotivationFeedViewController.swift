@@ -11,6 +11,8 @@ import SnapKit
 import CloudKit
 import CoreData
 import Toucan
+import XCDYouTubeKit
+import AVKit
 
 class MotivationFeedViewController: UIViewController {
 
@@ -19,6 +21,7 @@ class MotivationFeedViewController: UIViewController {
     var originalCellHeight: CGFloat!
     var originalCellSize: CGSize!
     let focusValue: CGFloat = 1.15
+    let playerViewController = AVPlayerViewController()
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -70,13 +73,12 @@ class MotivationFeedViewController: UIViewController {
         NotificationCenter.default.removeObserver(self)
     }
 }
+
 extension MotivationFeedViewController {
     func setupUI() {
         // Configure original and Focus CellSize
         originalCellHeight = ((originalCellWidth / 16) * 9) // Keep 16:9 ratio
         originalCellSize = CGSize(width: originalCellWidth, height: originalCellHeight + 44)
-        
-        Log.info(originalCellSize)
         
         let layout: UICollectionViewFlowLayout = UICollectionViewFlowLayout()
         layout.sectionInset = UIEdgeInsets(top: 0, left: 75, bottom: 0, right: 75)
@@ -96,8 +98,37 @@ extension MotivationFeedViewController {
     }
 }
 
-extension MotivationFeedViewController: UICollectionViewDelegate, UICollectionViewDataSource {
+extension MotivationFeedViewController  {
+    struct YouTubeVideoQuality {
+        static let hd720 = NSNumber(value: XCDYouTubeVideoQuality.HD720.rawValue)
+        static let medium360 = NSNumber(value: XCDYouTubeVideoQuality.medium360.rawValue)
+        static let small240 = NSNumber(value: XCDYouTubeVideoQuality.small240.rawValue)
+    }
     
+    func playVideo(withIdentifier Identifier: String?) {
+        present(playerViewController, animated: true, completion: nil)
+        
+        XCDYouTubeClient.default().getVideoWithIdentifier(Identifier) { (video: XCDYouTubeVideo?, error: Error?) in
+            guard let streamURLs = video?.streamURLs, let streamURL = (streamURLs[XCDYouTubeVideoQualityHTTPLiveStreaming] ?? streamURLs[YouTubeVideoQuality.hd720] ?? streamURLs[YouTubeVideoQuality.medium360] ?? streamURLs[YouTubeVideoQuality.small240]) else {
+                self.dismiss(animated: true, completion: nil)
+                return
+            }
+            
+            self.playerViewController.player = AVPlayer(url: streamURL)
+            
+            if self.playerViewController.player?.currentItem != nil {
+                NotificationCenter.default.addObserver(self, selector: Selector(("playerDidFinishPlaying:")), name: NSNotification.Name.AVPlayerItemDidPlayToEndTime, object: nil)
+                self.playerViewController.player!.play()
+            }
+        }
+    }
+    func playerDidFinishPlaying(note: NSNotification) {
+        Log.info("playerDidFinishPlaying")
+    }
+}
+
+extension MotivationFeedViewController: UICollectionViewDelegate, UICollectionViewDataSource {
+
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         let sectionInfo = fetchedResultsController.sections![section] as NSFetchedResultsSectionInfo
         return sectionInfo.numberOfObjects
@@ -139,7 +170,13 @@ extension MotivationFeedViewController: UICollectionViewDelegate, UICollectionVi
         }
     }
 
-    func collectionView(_ collectionView: UICollectionView, shouldHighlightItemAt indexPath: IndexPath) -> Bool {
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        let motivationItem = fetchedResultsController.object(at: indexPath)
+        playVideo(withIdentifier: motivationItem.itemVideoID)
+        collectionView.deselectItem(at: indexPath, animated: false)
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, shouldDeselectItemAt indexPath: IndexPath) -> Bool {
         return true
     }
     
