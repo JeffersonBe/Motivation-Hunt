@@ -182,7 +182,7 @@ extension FavouritesViewController: DZNEmptyDataSetSource, DZNEmptyDataSetDelega
     }
     
     func description(forEmptyDataSet scrollView: UIScrollView) -> NSAttributedString? {
-        let description = "Add a favourites to watch later!"
+        let description = "Add a favourite to watch later!"
         let attrs = [NSFontAttributeName: UIFont.preferredFont(forTextStyle: UIFontTextStyle.body)]
         return NSAttributedString(string: description, attributes: attrs)
     }

@@ -200,7 +200,7 @@ extension MotivationFeedViewController {
         
         let secondPage = OnboardingContentViewController
             .content(withTitle: "Watch and be inspire",
-                     body: "Watch and be inspire by new daily motivational videos.",
+                     body: "Watch and be inspired by new daily motivational videos.",
                      image: UIImage(named: "onboardingFeedIcon"),
                      buttonText: nil,
                      action: nil)
@@ -507,7 +507,7 @@ extension MotivationFeedViewController: DZNEmptyDataSetSource, DZNEmptyDataSetDe
     }
     
     func description(forEmptyDataSet scrollView: UIScrollView) -> NSAttributedString? {
-        let description = "Choose one of the theme to see motivational videos!"
+        let description = "Choose one of the themes to see motivational videos!"
         let attrs = [NSFontAttributeName: UIFont.preferredFont(forTextStyle: UIFontTextStyle.body)]
         return NSAttributedString(string: description, attributes: attrs)
     }

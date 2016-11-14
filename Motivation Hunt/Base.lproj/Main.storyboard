@@ -1,8 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="11201" systemVersion="16A323" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="akH-JK-9Wm">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="11542" systemVersion="16B2555" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="akH-JK-9Wm">
+    <device id="retina4_7" orientation="portrait">
+        <adaptation id="fullscreen"/>
+    </device>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="11161"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="11524"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <scenes>
@@ -19,7 +22,7 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                     </view>
-                    <tabBarItem key="tabBarItem" title="Favorites" image="iconFeatured" id="XMr-37-6fv"/>
+                    <tabBarItem key="tabBarItem" title="Favourites" image="iconFeatured" id="XMr-37-6fv"/>
                     <navigationItem key="navigationItem" title="Favourites" id="K1X-2u-j8y"/>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="j8h-Vc-48R" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -145,6 +148,6 @@
     <resources>
         <image name="iconChallenge" width="26" height="25"/>
         <image name="iconFeatured" width="28" height="26"/>
-        <image name="iconFeed" width="22" height="25"/>
+        <image name="iconFeed" width="24" height="25"/>
     </resources>
 </document>

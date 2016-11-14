@@ -296,7 +296,7 @@ extension ChallengeViewController: UITextFieldDelegate {
 
 extension ChallengeViewController: DZNEmptyDataSetSource, DZNEmptyDataSetDelegate {
     func title(forEmptyDataSet scrollView: UIScrollView) -> NSAttributedString? {
-        let title = "You don't have any challenge"
+        let title = "You don't have any challenges"
         let attrs = [NSFontAttributeName: UIFont.preferredFont(forTextStyle: UIFontTextStyle.headline)]
         return NSAttributedString(string: title, attributes: attrs)
     }
