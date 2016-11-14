@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		4405EBB31DDA55770070CB98 /* FavouritesViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4405EBB21DDA55770070CB98 /* FavouritesViewController.swift */; };
 		44076CBB1DD60E63002F25F4 /* CoreDataStackManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = B41BF3531C7D149500E27074 /* CoreDataStackManager.swift */; };
 		44076CBC1DD60E65002F25F4 /* CoreDataStackManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = B41BF3531C7D149500E27074 /* CoreDataStackManager.swift */; };
 		44083A871DBE8354002CC217 /* Motivation_HuntUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 44083A861DBE8354002CC217 /* Motivation_HuntUITests.swift */; };
@@ -14,6 +15,7 @@
 		440E5C9E1DD790A0003E2C45 /* Ensembles.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 440E5C9D1DD790A0003E2C45 /* Ensembles.framework */; };
 		440E5C9F1DD790A0003E2C45 /* Ensembles.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 440E5C9D1DD790A0003E2C45 /* Ensembles.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		441172DA1DD8DFA000E41E87 /* Toucan.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 441172D91DD8DFA000E41E87 /* Toucan.framework */; };
+		441172DE1DD9C76100E41E87 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 441172DD1DD9C76100E41E87 /* Assets.xcassets */; };
 		4427E5E51DCB4D3700DE615D /* DeviceKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4427E5E41DCB4D3700DE615D /* DeviceKit.framework */; };
 		4438B4771DD49D7800807ABB /* IoniconsSwift.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4438B4761DD49D7800807ABB /* IoniconsSwift.framework */; };
 		4438B4791DD4AF8E00807ABB /* SnapKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4438B4781DD4AF8E00807ABB /* SnapKit.framework */; };
@@ -56,7 +58,6 @@
 		B42A4ED21CBD20CC00D9593D /* MotivationFeedViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B42A4ED11CBD20CC00D9593D /* MotivationFeedViewController.swift */; };
 		B42A4ED41CBD20CC00D9593D /* ChallengeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B42A4ED31CBD20CC00D9593D /* ChallengeViewController.swift */; };
 		B42A4ED71CBD20CC00D9593D /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = B42A4ED51CBD20CC00D9593D /* Main.storyboard */; };
-		B42A4ED91CBD20CC00D9593D /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = B42A4ED81CBD20CC00D9593D /* Assets.xcassets */; };
 		B42E42811C81CB6C0095B9BF /* VideoItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = B42E42801C81CB6C0095B9BF /* VideoItem.swift */; };
 		B42E42841C81D1350095B9BF /* motivationCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = B42E42831C81D1350095B9BF /* motivationCollectionViewCell.swift */; };
 		B42E42861C81DE720095B9BF /* FavouritesViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B42E42851C81DE720095B9BF /* FavouritesViewController.swift */; };
@@ -123,12 +124,14 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		4405EBB21DDA55770070CB98 /* FavouritesViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FavouritesViewController.swift; sourceTree = "<group>"; };
 		44083A841DBE8354002CC217 /* Motivation HuntUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "Motivation HuntUITests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
 		44083A861DBE8354002CC217 /* Motivation_HuntUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Motivation_HuntUITests.swift; sourceTree = "<group>"; };
 		44083A881DBE8354002CC217 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		44083A8E1DBE83BB002CC217 /* SnapshotHelper.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SnapshotHelper.swift; sourceTree = "<group>"; };
 		440E5C9D1DD790A0003E2C45 /* Ensembles.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Ensembles.framework; path = "Motivation Hunt/Ensembles.framework"; sourceTree = "<group>"; };
 		441172D91DD8DFA000E41E87 /* Toucan.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Toucan.framework; path = Carthage/Build/tvOS/Toucan.framework; sourceTree = "<group>"; };
+		441172DD1DD9C76100E41E87 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		4427E5E41DCB4D3700DE615D /* DeviceKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = DeviceKit.framework; path = Carthage/Build/iOS/DeviceKit.framework; sourceTree = "<group>"; };
 		4438B4761DD49D7800807ABB /* IoniconsSwift.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = IoniconsSwift.framework; path = Carthage/Build/tvOS/IoniconsSwift.framework; sourceTree = "<group>"; };
 		4438B4781DD4AF8E00807ABB /* SnapKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SnapKit.framework; path = Carthage/Build/tvOS/SnapKit.framework; sourceTree = "<group>"; };
@@ -173,7 +176,6 @@
 		B42A4ED11CBD20CC00D9593D /* MotivationFeedViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MotivationFeedViewController.swift; sourceTree = "<group>"; };
 		B42A4ED31CBD20CC00D9593D /* ChallengeViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChallengeViewController.swift; sourceTree = "<group>"; };
 		B42A4ED61CBD20CC00D9593D /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
-		B42A4ED81CBD20CC00D9593D /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		B42A4EDA1CBD20CC00D9593D /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		B42E42801C81CB6C0095B9BF /* VideoItem.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = VideoItem.swift; sourceTree = "<group>"; };
 		B42E42831C81D1350095B9BF /* motivationCollectionViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = motivationCollectionViewCell.swift; sourceTree = "<group>"; };
@@ -297,6 +299,7 @@
 			isa = PBXGroup;
 			children = (
 				B42A4ED11CBD20CC00D9593D /* MotivationFeedViewController.swift */,
+				4405EBB21DDA55770070CB98 /* FavouritesViewController.swift */,
 				B42A4ED31CBD20CC00D9593D /* ChallengeViewController.swift */,
 			);
 			name = Controller;
@@ -405,8 +408,8 @@
 				447F76DD1DD2251F000DEBB4 /* Controller */,
 				B423E34A1CC627920020D39D /* View */,
 				B43403FC1CBD6CE500F9793E /* Motivation Hunt TV.entitlements */,
+				441172DD1DD9C76100E41E87 /* Assets.xcassets */,
 				B42A4ED51CBD20CC00D9593D /* Main.storyboard */,
-				B42A4ED81CBD20CC00D9593D /* Assets.xcassets */,
 				B42A4EDA1CBD20CC00D9593D /* Info.plist */,
 			);
 			path = "Motivation Hunt TV";
@@ -637,9 +640,9 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				B42A4ED91CBD20CC00D9593D /* Assets.xcassets in Resources */,
 				44FBE5F51DD6000100B8E527 /* Key.plist in Resources */,
 				B42A4ED71CBD20CC00D9593D /* Main.storyboard in Resources */,
+				441172DE1DD9C76100E41E87 /* Assets.xcassets in Resources */,
 				B4B17E281CE4789300C36F9E /* GoogleService-Info.plist in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -742,6 +745,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				4405EBB31DDA55770070CB98 /* FavouritesViewController.swift in Sources */,
 				B48E1ED21CC5A1E200482581 /* ImageCache.swift in Sources */,
 				B48E1ED01CC5A15E00482581 /* VideoItem.swift in Sources */,
 				B423E34C1CC627DD0020D39D /* MotivationCollectionViewCell.swift in Sources */,

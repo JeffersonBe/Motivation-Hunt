@@ -30,7 +30,6 @@ class MotivationFeedViewController: UIViewController {
     var indicator = CustomUIActivityIndicatorView()
     let refreshCtrl = UIRefreshControl()
     let layer = CAGradientLayer()
-    var blockOperations: [BlockOperation] = []
     var sectionInsets = UIEdgeInsets(top: 1.0, left: 1.0, bottom: 1.0, right: 1.0)
     
     override func viewDidLoad() {
@@ -71,13 +70,19 @@ class MotivationFeedViewController: UIViewController {
         return fetchedResultsController
     }()
     
-    // Cancel all block operations when VC deallocates
+    // MARK: - NSFetchedResultsController related property
+    var blockOperations: [BlockOperation] = []
+    
     deinit {
+        // Cancel all block operations when VC deallocates
         for operation: BlockOperation in blockOperations {
             operation.cancel()
         }
         
         blockOperations.removeAll(keepingCapacity: false)
+        
+        // Deinitialise Listener
+        NotificationCenter.default.removeObserver(self)
     }
 }
 
