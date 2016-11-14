@@ -9,10 +9,10 @@
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <scenes>
-        <!--Motivation-->
+        <!--Feeds-->
         <scene sceneID="hNz-n2-bh7">
             <objects>
-                <viewController id="9pv-A4-QxB" customClass="MotivationFeedViewController" customModule="Motivation_Hunt_TV" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController title="Feeds" id="9pv-A4-QxB" customClass="MotivationFeedViewController" customModule="Motivation_Hunt_TV" customModuleProvider="target" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="Ia1-K6-d13"/>
                         <viewControllerLayoutGuide type="bottom" id="4ug-Mw-9AY"/>
@@ -22,11 +22,29 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" red="0.0" green="0.0" blue="0.0" alpha="0.0" colorSpace="custom" customColorSpace="sRGB"/>
                     </view>
-                    <tabBarItem key="tabBarItem" title="Motivation" image="first" id="acW-dT-cKf"/>
+                    <tabBarItem key="tabBarItem" title="Feeds" image="first" id="acW-dT-cKf"/>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="W5J-7L-Pyd" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="2622" y="0.0"/>
+            <point key="canvasLocation" x="2525" y="-1426"/>
+        </scene>
+        <!--Favourites-->
+        <scene sceneID="okg-qk-Kmr">
+            <objects>
+                <viewController id="h4F-7u-VpG" customClass="FavouritesViewController" customModule="Motivation_Hunt_TV" customModuleProvider="target" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="kP2-We-azh"/>
+                        <viewControllerLayoutGuide type="bottom" id="ctF-BU-bTW"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="9oD-K0-6kj">
+                        <rect key="frame" x="0.0" y="0.0" width="1920" height="1080"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                    </view>
+                    <tabBarItem key="tabBarItem" title="Favourites" id="AcI-4p-cUy"/>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="VlG-BX-8XP" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="2525" y="-51"/>
         </scene>
         <!--Tab Bar Controller-->
         <scene sceneID="yl2-sM-qoP">
@@ -40,11 +58,12 @@
                     </tabBar>
                     <connections>
                         <segue destination="9pv-A4-QxB" kind="relationship" relationship="viewControllers" id="u7Y-xg-7CH"/>
+                        <segue destination="h4F-7u-VpG" kind="relationship" relationship="viewControllers" id="w3i-oS-cQh"/>
                     </connections>
                 </tabBarController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="HuB-VB-40B" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="0.0" y="0.0"/>
+            <point key="canvasLocation" x="-149" y="-697"/>
         </scene>
     </scenes>
     <resources>

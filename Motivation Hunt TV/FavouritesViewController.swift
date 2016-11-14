@@ -1,5 +1,5 @@
 //
-//  MotivationFeedViewController.swift
+//  FavouritesViewController.swift
 //  Motivation Hunt TV
 //
 //  Created by Jefferson Bonnaire on 12/04/2016.
@@ -14,15 +14,15 @@ import Toucan
 import XCDYouTubeKit
 import AVKit
 
-class MotivationFeedViewController: UIViewController {
-
+class FavouritesViewController: UIViewController {
+    
     var collectionView: UICollectionView!
     let originalCellWidth: CGFloat = 500
     var originalCellHeight: CGFloat!
     var originalCellSize: CGSize!
     let focusValue: CGFloat = 1.15
     let playerViewController = AVPlayerViewController()
-
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -37,15 +37,17 @@ class MotivationFeedViewController: UIViewController {
             print("Error: \(error.localizedDescription)")
         }
     }
-
+    
     // Initialize CoreData and NSFetchedResultsController
-
+    
     var sharedContext: NSManagedObjectContext {
         return CoreDataStackManager.sharedInstance.managedObjectContext
     }
-
+    
     lazy var fetchedResultsController: NSFetchedResultsController<VideoItem> = {
         let fetchRequest: NSFetchRequest<VideoItem> = VideoItem.fetchRequest() as! NSFetchRequest<VideoItem>
+        let predicate = NSPredicate(format: "saved == 1")
+        fetchRequest.predicate = predicate
         fetchRequest.sortDescriptors = [NSSortDescriptor(key: "addedDate", ascending: false)]
         
         let fetchedResultsController = NSFetchedResultsController(
@@ -57,24 +59,24 @@ class MotivationFeedViewController: UIViewController {
         
         return fetchedResultsController
     }()
-
+    
     // MARK: - NSFetchedResultsController related property
     var blockOperations: [BlockOperation] = []
-
+    
     deinit {
         // Cancel all block operations when VC deallocates
         for operation: BlockOperation in blockOperations {
             operation.cancel()
         }
-
+        
         blockOperations.removeAll(keepingCapacity: false)
-
+        
         // Deinitialise Listener
         NotificationCenter.default.removeObserver(self)
     }
 }
 
-extension MotivationFeedViewController {
+extension FavouritesViewController {
     func setupUI() {
         // Configure original and Focus CellSize
         originalCellHeight = ((originalCellWidth / 16) * 9) // Keep 16:9 ratio
@@ -98,7 +100,7 @@ extension MotivationFeedViewController {
     }
 }
 
-extension MotivationFeedViewController  {
+extension FavouritesViewController  {
     struct YouTubeVideoQuality {
         static let hd720 = NSNumber(value: XCDYouTubeVideoQuality.HD720.rawValue)
         static let medium360 = NSNumber(value: XCDYouTubeVideoQuality.medium360.rawValue)
@@ -123,18 +125,18 @@ extension MotivationFeedViewController  {
     }
 }
 
-extension MotivationFeedViewController: UICollectionViewDelegate, UICollectionViewDataSource {
-
+extension FavouritesViewController: UICollectionViewDelegate, UICollectionViewDataSource {
+    
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         let sectionInfo = fetchedResultsController.sections![section] as NSFetchedResultsSectionInfo
         return sectionInfo.numberOfObjects
     }
-
+    
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let motivationItem = fetchedResultsController.object(at: indexPath)
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: MHClient.CellIdentifier.cellWithReuseIdentifier, for: indexPath) as! MotivationCollectionViewCell
         cell.textLabel.text = motivationItem.itemTitle
-
+        
         if motivationItem.image == nil {
             _ = MHClient.sharedInstance.taskForImage(motivationItem.itemThumbnailsUrl) { imageData, error in
                 guard error == nil else {
@@ -165,7 +167,7 @@ extension MotivationFeedViewController: UICollectionViewDelegate, UICollectionVi
             }, completion: nil)
         }
     }
-
+    
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         let motivationItem = fetchedResultsController.object(at: indexPath)
         playVideo(withIdentifier: motivationItem.itemVideoID)
@@ -201,19 +203,19 @@ extension MotivationFeedViewController: UICollectionViewDelegate, UICollectionVi
     }
 }
 
-extension MotivationFeedViewController: NSFetchedResultsControllerDelegate {
+extension FavouritesViewController: NSFetchedResultsControllerDelegate {
     // MARK: NSFetchedResultsController delegate
     // Used GIST: https://gist.github.com/AppsTitude/ce072627c61ea3999b8d#file-uicollection-and-nsfetchedresultscontrollerdelegate-integration-swift-L78
-
+    
     func controller(_ controller: NSFetchedResultsController<NSFetchRequestResult>, didChange anObject: Any, at indexPath: IndexPath?, for type: NSFetchedResultsChangeType, newIndexPath: IndexPath?) {
-
+        
         if type == NSFetchedResultsChangeType.insert {
             blockOperations.append(
                 BlockOperation(block: { [weak self] in
                     if let this = self {
                         this.collectionView!.insertItems(at: [newIndexPath!])
                     }
-                    })
+                })
             )
         } else if type == NSFetchedResultsChangeType.update {
             blockOperations.append(
@@ -221,7 +223,7 @@ extension MotivationFeedViewController: NSFetchedResultsControllerDelegate {
                     if let this = self {
                         this.collectionView!.reloadItems(at: [indexPath!])
                     }
-                    })
+                })
             )
         } else if type == NSFetchedResultsChangeType.move {
             blockOperations.append(
@@ -229,7 +231,7 @@ extension MotivationFeedViewController: NSFetchedResultsControllerDelegate {
                     if let this = self {
                         this.collectionView!.moveItem(at: indexPath!, to: newIndexPath!)
                     }
-                    })
+                })
             )
         } else if type == NSFetchedResultsChangeType.delete {
             blockOperations.append(
@@ -237,21 +239,21 @@ extension MotivationFeedViewController: NSFetchedResultsControllerDelegate {
                     if let this = self {
                         this.collectionView!.deleteItems(at: [indexPath!])
                     }
-                    })
+                })
             )
         }
     }
-
+    
     func controller(_ controller: NSFetchedResultsController<NSFetchRequestResult>, didChange sectionInfo: NSFetchedResultsSectionInfo, atSectionIndex sectionIndex: Int, for type: NSFetchedResultsChangeType) {
-
+        
         if type == NSFetchedResultsChangeType.insert {
-
+            
             blockOperations.append(
                 BlockOperation(block: { [weak self] in
                     if let this = self {
                         this.collectionView!.insertSections(IndexSet(integer: sectionIndex))
                     }
-                    })
+                })
             )
         } else if type == NSFetchedResultsChangeType.update {
             blockOperations.append(
@@ -259,7 +261,7 @@ extension MotivationFeedViewController: NSFetchedResultsControllerDelegate {
                     if let this = self {
                         this.collectionView!.reloadSections(IndexSet(integer: sectionIndex))
                     }
-                    })
+                })
             )
         } else if type == NSFetchedResultsChangeType.delete {
             blockOperations.append(
@@ -267,18 +269,18 @@ extension MotivationFeedViewController: NSFetchedResultsControllerDelegate {
                     if let this = self {
                         this.collectionView!.deleteSections(IndexSet(integer: sectionIndex))
                     }
-                    })
+                })
             )
         }
     }
-
+    
     func controllerDidChangeContent(_ controller: NSFetchedResultsController<NSFetchRequestResult>) {
         collectionView!.performBatchUpdates({ () -> Void in
             for operation: BlockOperation in self.blockOperations {
                 operation.start()
             }
-            }, completion: { (finished) -> Void in
-                self.blockOperations.removeAll(keepingCapacity: false)
+        }, completion: { (finished) -> Void in
+            self.blockOperations.removeAll(keepingCapacity: false)
         })
     }
 }
