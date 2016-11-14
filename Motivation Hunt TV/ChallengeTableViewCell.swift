@@ -20,7 +20,7 @@ class challengeTableViewCell: UITableViewCell {
         challengeDescriptionTextLabel.snp.makeConstraints { (make) in
             make.top.equalTo(10)
             make.left.equalTo(15)
-            make.height.equalTo(20)
+            make.height.equalTo(50)
             make.width.equalTo(self).inset(15)
         }
         
@@ -30,7 +30,7 @@ class challengeTableViewCell: UITableViewCell {
         challengeDateTextLabel.snp.makeConstraints { (make) in
             make.top.equalTo(challengeDescriptionTextLabel.snp.bottom).offset(5)
             make.left.equalTo(15)
-            make.height.equalTo(20)
+            make.height.equalTo(50)
             make.width.equalTo(self).inset(15)
         }
     }
