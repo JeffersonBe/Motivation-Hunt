@@ -35,7 +35,6 @@
 		4498D24B1DBEBF020021511A /* XCTestCaseExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4498D24A1DBEBF020021511A /* XCTestCaseExtensions.swift */; };
 		44A1E9B71D987998000948A6 /* DZNEmptyDataSet.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 44A1E9B61D987998000948A6 /* DZNEmptyDataSet.framework */; };
 		44AA57DE1DBCE74A00EBA510 /* IoniconsSwift.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 44AA57DD1DBCE74A00EBA510 /* IoniconsSwift.framework */; };
-		44C10FEE1DDB21390092F0DE /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 44C10FED1DDB21390092F0DE /* Assets.xcassets */; };
 		44CABB0D1DD7A945003069AB /* Ensembles.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 44CABB0A1DD7A4E8003069AB /* Ensembles.framework */; };
 		44CABB0E1DD7A945003069AB /* Ensembles.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 44CABB0A1DD7A4E8003069AB /* Ensembles.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		44FBE5F51DD6000100B8E527 /* Key.plist in Resources */ = {isa = PBXBuildFile; fileRef = B40741F61C89A3AA00AFC870 /* Key.plist */; };
@@ -152,7 +151,7 @@
 		4498D24A1DBEBF020021511A /* XCTestCaseExtensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = XCTestCaseExtensions.swift; sourceTree = "<group>"; };
 		44A1E9B61D987998000948A6 /* DZNEmptyDataSet.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = DZNEmptyDataSet.framework; path = Carthage/Build/iOS/DZNEmptyDataSet.framework; sourceTree = "<group>"; };
 		44AA57DD1DBCE74A00EBA510 /* IoniconsSwift.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = IoniconsSwift.framework; path = Carthage/Build/iOS/IoniconsSwift.framework; sourceTree = "<group>"; };
-		44C10FED1DDB21390092F0DE /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		44C10FEF1DDB63C40092F0DE /* Motivation Hunt.entitlements */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.entitlements; path = "Motivation Hunt.entitlements"; sourceTree = "<group>"; };
 		44CABB0A1DD7A4E8003069AB /* Ensembles.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Ensembles.framework; path = Carthage/Build/tvOS/Ensembles.framework; sourceTree = "<group>"; };
 		B40741F61C89A3AA00AFC870 /* Key.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Key.plist; sourceTree = "<group>"; };
 		B40D683B1D5ED28600B424D0 /* CloudKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CloudKit.framework; path = System/Library/Frameworks/CloudKit.framework; sourceTree = SDKROOT; };
@@ -171,7 +170,6 @@
 		B41CE7EB1C8B6F68002FCBC2 /* CustomUIActivityIndicatorView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CustomUIActivityIndicatorView.swift; sourceTree = "<group>"; };
 		B41F472E1D7372E50075C2EA /* Onboard.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Onboard.framework; path = Carthage/Build/iOS/Onboard.framework; sourceTree = "<group>"; };
 		B41F47301D737E170075C2EA /* SwiftyUserDefaults.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SwiftyUserDefaults.framework; path = Carthage/Build/iOS/SwiftyUserDefaults.framework; sourceTree = "<group>"; };
-		B423BDD61C96110700CD7224 /* Motivation Hunt.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = "Motivation Hunt.entitlements"; sourceTree = "<group>"; };
 		B423E34B1CC627DD0020D39D /* MotivationCollectionViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MotivationCollectionViewCell.swift; sourceTree = "<group>"; };
 		B42A4ECD1CBD20CC00D9593D /* Motivation Hunt TV.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Motivation Hunt TV.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		B42A4ECF1CBD20CC00D9593D /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -323,14 +321,6 @@
 			name = tvOS;
 			sourceTree = "<group>";
 		};
-		44C10FEC1DDB21390092F0DE /* Motivation%20Hunt */ = {
-			isa = PBXGroup;
-			children = (
-				44C10FED1DDB21390092F0DE /* Assets.xcassets */,
-			);
-			path = "Motivation%20Hunt";
-			sourceTree = "<group>";
-		};
 		B41BF32B1C7D0D7200E27074 = {
 			isa = PBXGroup;
 			children = (
@@ -343,7 +333,6 @@
 				B42280081C9D720D0017D5AB /* Shared */,
 				B46A76C51D58F7F000ADBF43 /* Motivation Hunt TV-Bridging-Header.h */,
 				B46A76C41D58F7EF00ADBF43 /* Motivation Hunt-Bridging-Header.h */,
-				44C10FEC1DDB21390092F0DE /* Motivation%20Hunt */,
 			);
 			sourceTree = "<group>";
 		};
@@ -366,6 +355,7 @@
 				B41BF3371C7D0D7200E27074 /* AppDelegate.swift */,
 				B41BF3411C7D0D7200E27074 /* Assets.xcassets */,
 				B41BF3461C7D0D7200E27074 /* Info.plist */,
+				44C10FEF1DDB63C40092F0DE /* Motivation Hunt.entitlements */,
 			);
 			path = "Motivation Hunt";
 			sourceTree = "<group>";
@@ -464,7 +454,6 @@
 				B44ACBC71C89ECEC00C5FF96 /* ImageCache.swift */,
 				B40741F61C89A3AA00AFC870 /* Key.plist */,
 				B4DC95531C88CE8E0041AB31 /* MHConstant.swift */,
-				B423BDD61C96110700CD7224 /* Motivation Hunt.entitlements */,
 			);
 			path = Helpers;
 			sourceTree = "<group>";
@@ -642,7 +631,6 @@
 				B41BF3451C7D0D7200E27074 /* LaunchScreen.storyboard in Resources */,
 				B4B17E271CE4789300C36F9E /* GoogleService-Info.plist in Resources */,
 				B41BF3421C7D0D7200E27074 /* Assets.xcassets in Resources */,
-				44C10FEE1DDB21390092F0DE /* Assets.xcassets in Resources */,
 				B41BF33D1C7D0D7200E27074 /* Main.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

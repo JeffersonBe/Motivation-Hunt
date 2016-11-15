@@ -1,6 +1,6 @@
 # Hide API Key
-
-Motivation Hunt/Key.plist
+Shared/Helpers/Key.plist
+Shared/Helpers/GoogleService-Info.plist
 
 # Xcode
 #
