@@ -15,6 +15,11 @@ extension MHClient {
         static let BaseUrl = "https://developers.google.com/apis-explorer/#p/youtube/v3/youtube"
         static let CKBaseUrl = "iCloud.com.jeffersonbonnaire.motivationhunt"
         static let StoreName = "MotivationHunt"
+        static let StoreMomdExtension = ".momd"
+        static let StoreSQLITExtension = ".sqlite"
+        static let storeMomdNameAndExtension = MHClient.Constants.StoreName + MHClient.Constants.StoreMomdExtension
+        static let storeSQLITENameAndExtension = MHClient.Constants.StoreName + MHClient.Constants.StoreSQLITExtension
+        static let securityApplicationGroupIdentifier = "group.com.jeffersonbonnaire.motivationhunt"
     }
 
     struct Resources {
