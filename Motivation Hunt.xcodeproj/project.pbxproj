@@ -37,6 +37,7 @@
 		44A1E9B71D987998000948A6 /* DZNEmptyDataSet.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 44A1E9B61D987998000948A6 /* DZNEmptyDataSet.framework */; };
 		44AA57DE1DBCE74A00EBA510 /* IoniconsSwift.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 44AA57DD1DBCE74A00EBA510 /* IoniconsSwift.framework */; };
 		44DE147C1E000DF300BD223B /* CloudKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 44DE147B1E000DF300BD223B /* CloudKit.framework */; };
+		44F3EA541E3F546600683A28 /* DeviceKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4427E5E41DCB4D3700DE615D /* DeviceKit.framework */; };
 		44FBE5F51DD6000100B8E527 /* Key.plist in Resources */ = {isa = PBXBuildFile; fileRef = B40741F61C89A3AA00AFC870 /* Key.plist */; };
 		44FBE5F71DD6001D00B8E527 /* Theme.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4BB50781D638CB600AE1560 /* Theme.swift */; };
 		B40741F71C89A3AA00AFC870 /* Key.plist in Resources */ = {isa = PBXBuildFile; fileRef = B40741F61C89A3AA00AFC870 /* Key.plist */; };
@@ -241,6 +242,7 @@
 				449B11E41E001F6F00686474 /* Ensembles.framework in Frameworks */,
 				44DE147C1E000DF300BD223B /* CloudKit.framework in Frameworks */,
 				4438B47F1DD4B50300807ABB /* Log.framework in Frameworks */,
+				44F3EA541E3F546600683A28 /* DeviceKit.framework in Frameworks */,
 				4438B47D1DD4AFB200807ABB /* XCDYouTubeKit.framework in Frameworks */,
 				441172DA1DD8DFA000E41E87 /* Toucan.framework in Frameworks */,
 				4438B4791DD4AF8E00807ABB /* SnapKit.framework in Frameworks */,
@@ -1074,6 +1076,7 @@
 					"$(PROJECT_DIR)",
 					"$(SRCROOT)",
 					"$(PROJECT_DIR)/Carthage/Build/tvOS",
+					"$(PROJECT_DIR)/Carthage/Build/iOS",
 				);
 				INFOPLIST_FILE = "Motivation Hunt TV/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
@@ -1106,6 +1109,7 @@
 					"$(PROJECT_DIR)",
 					"$(SRCROOT)",
 					"$(PROJECT_DIR)/Carthage/Build/tvOS",
+					"$(PROJECT_DIR)/Carthage/Build/iOS",
 				);
 				INFOPLIST_FILE = "Motivation Hunt TV/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
