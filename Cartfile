@@ -10,5 +10,5 @@ github "mamaral/Onboard" "v2.3.1"
 github "radex/SwiftyUserDefaults" "master"
 github "jeffersonbe/Segmentio" "2.0"
 github "jeffersonbe/IoniconsSwift" "other-OS"
-github "dennisweissmann/DeviceKit" ~> 1.0
+github "dennisweissmann/DeviceKit" ~> 1.0.1
 github "0xced/XCDYouTubeKit" ~> 2.5

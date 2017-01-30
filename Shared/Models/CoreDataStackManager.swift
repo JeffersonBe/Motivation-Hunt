@@ -9,34 +9,35 @@
 import Foundation
 import CoreData
 import Ensembles
-import DeviceKit
 
 class CoreDataStack: NSObject {
     
     static let shared = CoreDataStack()
     
     // MARK: Initialization
-    private override init() { }
+    private override init() {}
     
     var ensemble : CDEPersistentStoreEnsemble?
     var cloudFileSystem : CDECloudKitFileSystem?
     
     var storeDirectoryURL: URL {
         do {
-            var directoryToWriteFiles: FileManager.SearchPathDirectory
-            if Device().isPhone || Device().isPad {
-                directoryToWriteFiles = .applicationSupportDirectory
-            } else {
-                // tvOS uses the cache directory to write the sqlite files
-                directoryToWriteFiles = .cachesDirectory
-            }
-            
+            #if os(tvOS)
             let storeDirectoryURL = try FileManager.default.url(
-                for: directoryToWriteFiles,
+                for: .cachesDirectory,
                 in: .userDomainMask,
                 appropriateFor: nil,
                 create: true)
             return storeDirectoryURL
+            #endif
+            #if os(iOS)
+            let storeDirectoryURL = try FileManager.default.url(
+                for: .applicationSupportDirectory,
+                in: .userDomainMask,
+                appropriateFor: nil,
+                create: true)
+            return storeDirectoryURL
+            #endif
         } catch {
             fatalError("Couldn't find storeDirectoryURL")
         }
