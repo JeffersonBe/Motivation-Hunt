@@ -46,23 +46,16 @@ class FavouritesViewController: UIViewController {
 
     // Initialize CoreData and NSFetchedResultsController
     var sharedContext: NSManagedObjectContext {
-        return CoreDataStackManager.sharedInstance.managedObjectContext
+        return CoreDataStack.shared.persistentContainer.viewContext
     }
     
     lazy var fetchedResultsController: NSFetchedResultsController<VideoItem> = {
-        let fetchRequest: NSFetchRequest<VideoItem> = VideoItem.fetchRequest() as! NSFetchRequest<VideoItem>
+        let fetchRequest = NSFetchRequest<NSFetchRequestResult>(entityName: "VideoItem")
         let predicate = NSPredicate(format: "saved == 1")
         fetchRequest.predicate = predicate
         fetchRequest.sortDescriptors = [NSSortDescriptor(key: "addedDate", ascending: false)]
-        
-        let fetchedResultsController = NSFetchedResultsController(
-            fetchRequest: fetchRequest,
-            managedObjectContext: self.sharedContext,
-            sectionNameKeyPath: nil,
-            cacheName: nil
-        )
-        
-        return fetchedResultsController
+        let fetchedResultsController = NSFetchedResultsController(fetchRequest: fetchRequest, managedObjectContext: CoreDataStack.shared.persistentContainer.viewContext, sectionNameKeyPath    : nil, cacheName: nil)
+        return fetchedResultsController as! NSFetchedResultsController<VideoItem>
     }()
 
     // MARK: - NSFetchedResultsController related property
@@ -132,9 +125,9 @@ extension FavouritesViewController {
         } else {
             cell.favoriteBarButton.setImage(Ionicons.iosHeartOutline.image(35, color: #colorLiteral(red: 1, green: 1, blue: 1, alpha: 1)), for: .normal)
         }
-        DispatchQueue.main.async {
+        CoreDataStack.shared.persistentContainer.performBackgroundTask { (NSManagedObjectContext) in
             motivationItem.saved = motivationItem.saved ? false : true
-            CoreDataStackManager.sharedInstance.saveContext()
+            CoreDataStack.shared.saveContext()
         }
     }
     

@@ -8,8 +8,6 @@
 
 /* Begin PBXBuildFile section */
 		4405EBB31DDA55770070CB98 /* FavouritesViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4405EBB21DDA55770070CB98 /* FavouritesViewController.swift */; };
-		44076CBB1DD60E63002F25F4 /* CoreDataStackManager22.swift in Sources */ = {isa = PBXBuildFile; fileRef = B41BF3531C7D149500E27074 /* CoreDataStackManager22.swift */; };
-		44076CBC1DD60E65002F25F4 /* CoreDataStackManager22.swift in Sources */ = {isa = PBXBuildFile; fileRef = B41BF3531C7D149500E27074 /* CoreDataStackManager22.swift */; };
 		44083A871DBE8354002CC217 /* Motivation_HuntUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 44083A861DBE8354002CC217 /* Motivation_HuntUITests.swift */; };
 		44083A8F1DBE83BB002CC217 /* SnapshotHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 44083A8E1DBE83BB002CC217 /* SnapshotHelper.swift */; };
 		440E5C9E1DD790A0003E2C45 /* Ensembles.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 440E5C9D1DD790A0003E2C45 /* Ensembles.framework */; };
@@ -25,7 +23,6 @@
 		4438B47D1DD4AFB200807ABB /* XCDYouTubeKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4438B47C1DD4AFB200807ABB /* XCDYouTubeKit.framework */; };
 		4438B47F1DD4B50300807ABB /* Log.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4438B47E1DD4B50300807ABB /* Log.framework */; };
 		4438B4811DD4B57A00807ABB /* SwiftyUserDefaults.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4438B4801DD4B57900807ABB /* SwiftyUserDefaults.framework */; };
-		446A34261DD614C9000A7AD4 /* CloudKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 446A34251DD614C9000A7AD4 /* CloudKit.framework */; };
 		447300F81D8DCD1500D8011F /* SnapKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 447300F71D8DCD1500D8011F /* SnapKit.framework */; };
 		4476C9E11DB578EC004152C6 /* Segmentio.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4476C9E01DB578EC004152C6 /* Segmentio.framework */; };
 		447BDE791D93DF3C0034CA93 /* Motivation_HuntTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 447BDE781D93DF3C0034CA93 /* Motivation_HuntTests.swift */; };
@@ -35,10 +32,11 @@
 		4492906E1DB2C1DD002CE552 /* Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = B42F85421CDF27840016F9B2 /* Extensions.swift */; };
 		4492906F1DB2C1DD002CE552 /* Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = B42F85421CDF27840016F9B2 /* Extensions.swift */; };
 		4498D24B1DBEBF020021511A /* XCTestCaseExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4498D24A1DBEBF020021511A /* XCTestCaseExtensions.swift */; };
+		449B11E41E001F6F00686474 /* Ensembles.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 449B11E21E001F6100686474 /* Ensembles.framework */; };
+		449B11E51E001F6F00686474 /* Ensembles.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 449B11E21E001F6100686474 /* Ensembles.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		44A1E9B71D987998000948A6 /* DZNEmptyDataSet.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 44A1E9B61D987998000948A6 /* DZNEmptyDataSet.framework */; };
 		44AA57DE1DBCE74A00EBA510 /* IoniconsSwift.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 44AA57DD1DBCE74A00EBA510 /* IoniconsSwift.framework */; };
-		44CABB0D1DD7A945003069AB /* Ensembles.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 44CABB0A1DD7A4E8003069AB /* Ensembles.framework */; };
-		44CABB0E1DD7A945003069AB /* Ensembles.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 44CABB0A1DD7A4E8003069AB /* Ensembles.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		44DE147C1E000DF300BD223B /* CloudKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 44DE147B1E000DF300BD223B /* CloudKit.framework */; };
 		44FBE5F51DD6000100B8E527 /* Key.plist in Resources */ = {isa = PBXBuildFile; fileRef = B40741F61C89A3AA00AFC870 /* Key.plist */; };
 		44FBE5F71DD6001D00B8E527 /* Theme.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4BB50781D638CB600AE1560 /* Theme.swift */; };
 		B40741F71C89A3AA00AFC870 /* Key.plist in Resources */ = {isa = PBXBuildFile; fileRef = B40741F61C89A3AA00AFC870 /* Key.plist */; };
@@ -112,13 +110,13 @@
 			name = "Embed Frameworks";
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		44CABB0F1DD7A945003069AB /* Embed Frameworks */ = {
+		44D94B3E1E00108B00E17FCA /* Embed Frameworks */ = {
 			isa = PBXCopyFilesBuildPhase;
 			buildActionMask = 2147483647;
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
-				44CABB0E1DD7A945003069AB /* Ensembles.framework in Embed Frameworks */,
+				449B11E51E001F6F00686474 /* Ensembles.framework in Embed Frameworks */,
 			);
 			name = "Embed Frameworks";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -142,7 +140,6 @@
 		4438B47C1DD4AFB200807ABB /* XCDYouTubeKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = XCDYouTubeKit.framework; path = Carthage/Build/tvOS/XCDYouTubeKit.framework; sourceTree = "<group>"; };
 		4438B47E1DD4B50300807ABB /* Log.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Log.framework; path = Carthage/Build/tvOS/Log.framework; sourceTree = "<group>"; };
 		4438B4801DD4B57900807ABB /* SwiftyUserDefaults.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SwiftyUserDefaults.framework; path = Carthage/Build/tvOS/SwiftyUserDefaults.framework; sourceTree = "<group>"; };
-		446A34251DD614C9000A7AD4 /* CloudKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CloudKit.framework; path = Platforms/AppleTVOS.platform/Developer/SDKs/AppleTVOS10.0.sdk/System/Library/Frameworks/CloudKit.framework; sourceTree = DEVELOPER_DIR; };
 		447300F71D8DCD1500D8011F /* SnapKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SnapKit.framework; path = Carthage/Build/iOS/SnapKit.framework; sourceTree = "<group>"; };
 		4476C9E01DB578EC004152C6 /* Segmentio.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Segmentio.framework; path = Carthage/Build/iOS/Segmentio.framework; sourceTree = "<group>"; };
 		447BDE761D93DF3C0034CA93 /* Motivation-HuntTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "Motivation-HuntTests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -152,10 +149,11 @@
 		448F6B671DD672BD002E570C /* CDECloudKitFileSystem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CDECloudKitFileSystem.h; sourceTree = "<group>"; };
 		448F6B681DD672BD002E570C /* CDECloudKitFileSystem.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CDECloudKitFileSystem.m; sourceTree = "<group>"; };
 		4498D24A1DBEBF020021511A /* XCTestCaseExtensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = XCTestCaseExtensions.swift; sourceTree = "<group>"; };
+		449B11E21E001F6100686474 /* Ensembles.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Ensembles.framework; path = Carthage/Build/tvOS/Ensembles.framework; sourceTree = "<group>"; };
 		44A1E9B61D987998000948A6 /* DZNEmptyDataSet.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = DZNEmptyDataSet.framework; path = Carthage/Build/iOS/DZNEmptyDataSet.framework; sourceTree = "<group>"; };
 		44AA57DD1DBCE74A00EBA510 /* IoniconsSwift.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = IoniconsSwift.framework; path = Carthage/Build/iOS/IoniconsSwift.framework; sourceTree = "<group>"; };
 		44C10FEF1DDB63C40092F0DE /* Motivation Hunt.entitlements */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.entitlements; path = "Motivation Hunt.entitlements"; sourceTree = "<group>"; };
-		44CABB0A1DD7A4E8003069AB /* Ensembles.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Ensembles.framework; path = Carthage/Build/tvOS/Ensembles.framework; sourceTree = "<group>"; };
+		44DE147B1E000DF300BD223B /* CloudKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CloudKit.framework; path = Platforms/AppleTVOS.platform/Developer/SDKs/AppleTVOS10.1.sdk/System/Library/Frameworks/CloudKit.framework; sourceTree = DEVELOPER_DIR; };
 		B40741F61C89A3AA00AFC870 /* Key.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Key.plist; sourceTree = "<group>"; };
 		B40D683B1D5ED28600B424D0 /* CloudKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CloudKit.framework; path = System/Library/Frameworks/CloudKit.framework; sourceTree = SDKROOT; };
 		B41BF3341C7D0D7200E27074 /* Motivation Hunt.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Motivation Hunt.app"; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -167,7 +165,6 @@
 		B41BF3461C7D0D7200E27074 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		B41BF34D1C7D124600E27074 /* ChallengeViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ChallengeViewController.swift; sourceTree = "<group>"; };
 		B41BF3511C7D12C800E27074 /* MotivationHunt.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = MotivationHunt.xcdatamodel; sourceTree = "<group>"; };
-		B41BF3531C7D149500E27074 /* CoreDataStackManager22.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CoreDataStackManager22.swift; sourceTree = "<group>"; };
 		B41BF3551C7D153300E27074 /* Challenge.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Challenge.swift; sourceTree = "<group>"; };
 		B41CE7E91C8B5B54002FCBC2 /* challengeTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = challengeTableViewCell.swift; sourceTree = "<group>"; };
 		B41CE7EB1C8B6F68002FCBC2 /* CustomUIActivityIndicatorView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CustomUIActivityIndicatorView.swift; sourceTree = "<group>"; };
@@ -241,13 +238,13 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				446A34261DD614C9000A7AD4 /* CloudKit.framework in Frameworks */,
+				449B11E41E001F6F00686474 /* Ensembles.framework in Frameworks */,
+				44DE147C1E000DF300BD223B /* CloudKit.framework in Frameworks */,
 				4438B47F1DD4B50300807ABB /* Log.framework in Frameworks */,
 				4438B47D1DD4AFB200807ABB /* XCDYouTubeKit.framework in Frameworks */,
 				441172DA1DD8DFA000E41E87 /* Toucan.framework in Frameworks */,
 				4438B4791DD4AF8E00807ABB /* SnapKit.framework in Frameworks */,
 				4438B4811DD4B57A00807ABB /* SwiftyUserDefaults.framework in Frameworks */,
-				44CABB0D1DD7A945003069AB /* Ensembles.framework in Frameworks */,
 				4438B47B1DD4AFA500807ABB /* Alamofire.framework in Frameworks */,
 				4438B4771DD49D7800807ABB /* IoniconsSwift.framework in Frameworks */,
 			);
@@ -311,9 +308,9 @@
 		447F76E31DD22EA7000DEBB4 /* tvOS */ = {
 			isa = PBXGroup;
 			children = (
-				44CABB0A1DD7A4E8003069AB /* Ensembles.framework */,
+				449B11E21E001F6100686474 /* Ensembles.framework */,
+				44DE147B1E000DF300BD223B /* CloudKit.framework */,
 				441172D91DD8DFA000E41E87 /* Toucan.framework */,
-				446A34251DD614C9000A7AD4 /* CloudKit.framework */,
 				4438B4801DD4B57900807ABB /* SwiftyUserDefaults.framework */,
 				4438B47E1DD4B50300807ABB /* Log.framework */,
 				4438B47C1DD4AFB200807ABB /* XCDYouTubeKit.framework */,
@@ -377,7 +374,6 @@
 			isa = PBXGroup;
 			children = (
 				B41BF3551C7D153300E27074 /* Challenge.swift */,
-				B41BF3531C7D149500E27074 /* CoreDataStackManager22.swift */,
 				440F69741DDB8FDA00A7D7BB /* CoreDataStackManager.swift */,
 				B41BF3501C7D12C800E27074 /* MotivationHunt.xcdatamodeld */,
 				B4BB50781D638CB600AE1560 /* Theme.swift */,
@@ -528,7 +524,7 @@
 				B42A4ECA1CBD20CC00D9593D /* Frameworks */,
 				B42A4ECB1CBD20CC00D9593D /* Resources */,
 				B42A4EDF1CBD210200D9593D /* ShellScript */,
-				44CABB0F1DD7A945003069AB /* Embed Frameworks */,
+				44D94B3E1E00108B00E17FCA /* Embed Frameworks */,
 			);
 			buildRules = (
 			);
@@ -588,6 +584,9 @@
 						LastSwiftMigration = 0810;
 						SystemCapabilities = {
 							com.apple.ApplicationGroups.iOS = {
+								enabled = 1;
+							};
+							com.apple.Push = {
 								enabled = 1;
 							};
 							com.apple.iCloud = {
@@ -743,7 +742,6 @@
 				B41CE7EC1C8B6F68002FCBC2 /* CustomUIActivityIndicatorView.swift in Sources */,
 				B42E42811C81CB6C0095B9BF /* VideoItem.swift in Sources */,
 				B41BF3381C7D0D7200E27074 /* AppDelegate.swift in Sources */,
-				44076CBB1DD60E63002F25F4 /* CoreDataStackManager22.swift in Sources */,
 				B42E42841C81D1350095B9BF /* motivationCollectionViewCell.swift in Sources */,
 				B41CE7EA1C8B5B54002FCBC2 /* challengeTableViewCell.swift in Sources */,
 				B4BB50791D638CB600AE1560 /* Theme.swift in Sources */,
@@ -766,7 +764,6 @@
 				B42A4ED41CBD20CC00D9593D /* ChallengeViewController.swift in Sources */,
 				448F6B6A1DD672BD002E570C /* CDECloudKitFileSystem.m in Sources */,
 				B48E1ED31CC5A1E600482581 /* MHConstant.swift in Sources */,
-				44076CBC1DD60E65002F25F4 /* CoreDataStackManager22.swift in Sources */,
 				44FBE5F71DD6001D00B8E527 /* Theme.swift in Sources */,
 				B42A4ED01CBD20CC00D9593D /* AppDelegate.swift in Sources */,
 				4492906F1DB2C1DD002CE552 /* Extensions.swift in Sources */,

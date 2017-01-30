@@ -48,26 +48,22 @@ class ChallengeViewController: UIViewController {
     }
     
     // Initialize CoreData and NSFetchedResultsController
-    
     var sharedContext: NSManagedObjectContext {
-        return CoreDataStackManager.sharedInstance.managedObjectContext
+        return CoreDataStack.shared.persistentContainer.viewContext
     }
     
     lazy var fetchedResultsController: NSFetchedResultsController<Challenge> = {
-        let fetchRequest: NSFetchRequest<Challenge> = Challenge.fetchRequest() as! NSFetchRequest<Challenge>
+        let fetchRequest = NSFetchRequest<NSFetchRequestResult>(entityName: "Challenge")
         fetchRequest.sortDescriptors = [
             NSSortDescriptor(key: "completed", ascending: true),
             NSSortDescriptor(key: "endDate", ascending: true)
         ]
         
-        let fetchedResultsController = NSFetchedResultsController(
-            fetchRequest: fetchRequest,
-            managedObjectContext: self.sharedContext,
-            sectionNameKeyPath: nil,
-            cacheName: nil
-        )
-        
-        return fetchedResultsController
+        let fetchedResultsController = NSFetchedResultsController(fetchRequest: fetchRequest,
+                                                                  managedObjectContext: CoreDataStack.shared.persistentContainer.viewContext,
+                                                                  sectionNameKeyPath: nil,
+                                                                  cacheName: nil)
+        return fetchedResultsController as! NSFetchedResultsController<Challenge>
     }()
 }
 
@@ -212,24 +208,24 @@ extension ChallengeViewController {
     }
     
     func addNewChallenge(challengeDescription: String, endDate: Date) {
-        DispatchQueue.main.async {
+        CoreDataStack.shared.persistentContainer.performBackgroundTask { (NSManagedObjectContext) in
             let test = Challenge(
                 challengeDescription: challengeDescription,
                 completed: false as Bool,
                 endDate: endDate,
                 context: self.sharedContext)
             test.uniqueIdentifier = NSUUID().uuidString
-            CoreDataStackManager.sharedInstance.saveContext()
+            CoreDataStack.shared.saveContext()
         }
     }
     
     func modifyCurrentChallenge(currentChallenge: Challenge,
                                 challengeTextField: String,
                                 challengeDatePicker: Date) {
-        DispatchQueue.main.async {
+        CoreDataStack.shared.persistentContainer.performBackgroundTask { (NSManagedObjectContext) in
             currentChallenge.challengeDescription = challengeTextField
             currentChallenge.endDate = challengeDatePicker
-            CoreDataStackManager.sharedInstance.saveContext()
+            CoreDataStack.shared.saveContext()
         }
     }
 
@@ -417,27 +413,27 @@ extension ChallengeViewController: UITableViewDataSource, UITableViewDelegate {
     }
 
     func addChallengeToCoreData(_ challengeDictionary: [String:AnyObject], challengeRecordID: String) {
-        DispatchQueue.main.async {
+        CoreDataStack.shared.persistentContainer.performBackgroundTask { (NSManagedObjectContext) in
             let _ = Challenge(
                 challengeDescription: challengeDictionary["challengeDescription"] as! String,
                 completed: challengeDictionary["completed"] as! Bool,
                 endDate: challengeDictionary["endDate"] as! Date,
                 context: self.sharedContext)
-            CoreDataStackManager.sharedInstance.saveContext()
+            CoreDataStack.shared.saveContext()
         }
     }
 
     func deleteChallenge(_ challenge: Challenge) {
-        DispatchQueue.main.async {
+        CoreDataStack.shared.persistentContainer.performBackgroundTask { (NSManagedObjectContext) in
             self.sharedContext.delete(challenge)
-            CoreDataStackManager.sharedInstance.saveContext()
+            CoreDataStack.shared.saveContext()
         }
     }
 
     func updateCompleteStatusChallenge(_ challenge: Challenge) {
-        DispatchQueue.main.async {
+        CoreDataStack.shared.persistentContainer.performBackgroundTask { (NSManagedObjectContext) in
             challenge.completed = challenge.completed ? false : true
-            CoreDataStackManager.sharedInstance.saveContext()
+            CoreDataStack.shared.saveContext()
         }
     }
 }

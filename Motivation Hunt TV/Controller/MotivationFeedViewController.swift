@@ -13,6 +13,7 @@ import CoreData
 import Toucan
 import XCDYouTubeKit
 import AVKit
+import Alamofire
 
 class MotivationFeedViewController: UIViewController {
 
@@ -41,21 +42,15 @@ class MotivationFeedViewController: UIViewController {
     // Initialize CoreData and NSFetchedResultsController
 
     var sharedContext: NSManagedObjectContext {
-        return CoreDataStackManager.sharedInstance.managedObjectContext
+        return CoreDataStack.shared.persistentContainer.viewContext
     }
 
     lazy var fetchedResultsController: NSFetchedResultsController<VideoItem> = {
-        let fetchRequest: NSFetchRequest<VideoItem> = VideoItem.fetchRequest() as! NSFetchRequest<VideoItem>
+        let fetchRequest = NSFetchRequest<NSFetchRequestResult>(entityName: "VideoItem")
         fetchRequest.sortDescriptors = [NSSortDescriptor(key: "addedDate", ascending: false)]
         
-        let fetchedResultsController = NSFetchedResultsController(
-            fetchRequest: fetchRequest,
-            managedObjectContext: self.sharedContext,
-            sectionNameKeyPath: nil,
-            cacheName: nil
-        )
-        
-        return fetchedResultsController
+        let fetchedResultsController = NSFetchedResultsController(fetchRequest: fetchRequest, managedObjectContext: CoreDataStack.shared.persistentContainer.viewContext, sectionNameKeyPath: nil, cacheName: nil)
+        return fetchedResultsController as! NSFetchedResultsController<VideoItem>
     }()
 
     // MARK: - NSFetchedResultsController related property
@@ -81,7 +76,7 @@ extension MotivationFeedViewController {
         originalCellSize = CGSize(width: originalCellWidth, height: originalCellHeight + 44)
         
         let layout: UICollectionViewFlowLayout = UICollectionViewFlowLayout()
-        layout.sectionInset = UIEdgeInsets(top: 0, left: 75, bottom: 0, right: 75)
+        layout.sectionInset = UIEdgeInsets(top: 90, left: 90, bottom: 90, right: 90)
         layout.itemSize = originalCellSize
         layout.minimumInteritemSpacing = CGFloat(50)
         layout.minimumLineSpacing = CGFloat(50)
@@ -94,6 +89,58 @@ extension MotivationFeedViewController {
         self.view.addSubview(collectionView)
         collectionView.snp.makeConstraints { (make) in
             make.edges.equalTo(view)
+        }
+    }
+    
+    func addNewMotivationItem() {
+        let theme: String = "motivation+success"
+        let parameters: [String : AnyObject] = [
+            MHClient.JSONKeys.part: MHClient.JSONKeys.snippet as AnyObject,
+            MHClient.JSONKeys.order: MHClient.JSONKeys.relevance as AnyObject,
+            MHClient.JSONKeys.query: theme as AnyObject,
+            MHClient.JSONKeys.type: MHClient.JSONKeys.videoType as AnyObject,
+            MHClient.JSONKeys.videoDefinition: MHClient.JSONKeys.qualityHigh as AnyObject,
+            MHClient.JSONKeys.maxResults: 10 as AnyObject,
+            MHClient.JSONKeys.key: MHClient.Constants.ApiKey as AnyObject
+        ]
+        
+        let request = Alamofire.request(MHClient.Resources.searchVideos, method: .get, parameters: parameters)
+        
+        request.responseJSON { response in
+            guard response.result.isSuccess else {
+                DispatchQueue.main.async {
+                    let errorAlert = UIAlertController(title: "Oops… Unable to load feed", message: response.result.description, preferredStyle: UIAlertControllerStyle.alert)
+                    errorAlert.addAction(UIAlertAction(title: "Dismiss", style: UIAlertActionStyle.default, handler: nil))
+                    self.present(errorAlert, animated: true, completion: nil)
+                }
+                return
+            }
+            
+            let results = response.result.value as! [String:AnyObject]
+            let items = results[MHClient.JSONResponseKeys.items] as! [[String:AnyObject]]
+            
+            for item in items {
+                guard let ID = item[MHClient.JSONResponseKeys.ID] as? [String:AnyObject],
+                    let videoID = ID[MHClient.JSONResponseKeys.videoId] as? String,
+                    let snippet = item[MHClient.JSONResponseKeys.snippet] as? [String:AnyObject],
+                    let title = snippet[MHClient.JSONResponseKeys.title] as? String,
+                    let description = snippet[MHClient.JSONResponseKeys.description] as? String
+                    else {
+                        return
+                }
+                
+                CoreDataStack.shared.persistentContainer.performBackgroundTask { (NSManagedObjectContext) in
+                    let _ = VideoItem(itemVideoID: videoID,
+                                      itemTitle: title,
+                                      itemDescription: description,
+                                      itemThumbnailsUrl: "https://i.ytimg.com/vi/\(videoID)/hqdefault.jpg",
+                        saved: false,
+                        theme: Theme.Success.rawValue,
+                        context: self.sharedContext)
+                    
+                    CoreDataStack.shared.saveContext()
+                }
+            }
         }
     }
 }

@@ -34,32 +34,24 @@ class ChallengeViewController: UIViewController {
     // Initialize CoreData and NSFetchedResultsController
     
     var sharedContext: NSManagedObjectContext {
-        return CoreDataStackManager.sharedInstance.managedObjectContext
+        return CoreDataStack.shared.persistentContainer.viewContext
     }
     
     lazy var fetchedResultsController: NSFetchedResultsController<Challenge> = {
-        let fetchRequest: NSFetchRequest<Challenge> = Challenge.fetchRequest() as! NSFetchRequest<Challenge>
+        let fetchRequest = NSFetchRequest<NSFetchRequestResult>(entityName: "Challenge")
         fetchRequest.sortDescriptors = [
             NSSortDescriptor(key: "completed", ascending: true),
             NSSortDescriptor(key: "endDate", ascending: true)
         ]
         
-        let fetchedResultsController = NSFetchedResultsController(
-            fetchRequest: fetchRequest,
-            managedObjectContext: self.sharedContext,
-            sectionNameKeyPath: nil,
-            cacheName: nil
-        )
-        
-        return fetchedResultsController
+        let fetchedResultsController = NSFetchedResultsController(fetchRequest: fetchRequest, managedObjectContext: CoreDataStack.shared.persistentContainer.viewContext, sectionNameKeyPath: nil, cacheName: nil)
+        return fetchedResultsController as! NSFetchedResultsController<Challenge>
     }()
 }
 
 extension ChallengeViewController {
     func setupUI() {
-        view.backgroundColor = UIColor(red: 0, green: 0, blue: 0, alpha: 1.0) /* #000000 */
         tableView = UITableView()
-        tableView.backgroundColor = UIColor.clear
         tableView.tableFooterView = UIView(frame: CGRect.zero)
         view.addSubview(tableView)
         tableView.snp.makeConstraints { (make) in
@@ -71,12 +63,12 @@ extension ChallengeViewController {
 extension ChallengeViewController: UITableViewDataSource, UITableViewDelegate {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         let sectionInfo = fetchedResultsController.sections![section] as NSFetchedResultsSectionInfo
+        print(sectionInfo.numberOfObjects)
         
         return sectionInfo.numberOfObjects
     }
     
-    func tableView(_ tableView: UITableView,
-                   cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: MHClient.CellIdentifier.cellWithReuseIdentifier, for: indexPath) as! challengeTableViewCell
         configureCell(cell, atIndexPath: indexPath)
         return cell

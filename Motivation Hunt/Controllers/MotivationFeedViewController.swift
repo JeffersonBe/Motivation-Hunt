@@ -53,22 +53,17 @@ class MotivationFeedViewController: UIViewController {
     
     // Initialize CoreData and NSFetchedResultsController
     var sharedContext: NSManagedObjectContext {
-        return CoreDataStackManager.sharedInstance.managedObjectContext
+        return CoreDataStack.shared.persistentContainer.viewContext
     }
     
     lazy var fetchedResultsController: NSFetchedResultsController<VideoItem> = {
-        let fetchRequest: NSFetchRequest<VideoItem> = VideoItem.fetchRequest() as! NSFetchRequest<VideoItem>
+        let fetchRequest = NSFetchRequest<NSFetchRequestResult>(entityName: "VideoItem")
         fetchRequest.sortDescriptors = [NSSortDescriptor(key: "addedDate", ascending: false)]
         
-        let fetchedResultsController = NSFetchedResultsController(
-            fetchRequest: fetchRequest,
-            managedObjectContext: self.sharedContext,
-            sectionNameKeyPath: nil,
-            cacheName: nil
-        )
-        
-        return fetchedResultsController
+        let fetchedResultsController = NSFetchedResultsController(fetchRequest: fetchRequest, managedObjectContext: CoreDataStack.shared.persistentContainer.viewContext, sectionNameKeyPath: nil, cacheName: nil)
+        return fetchedResultsController as! NSFetchedResultsController<VideoItem>
     }()
+
     
     // MARK: - NSFetchedResultsController related property
     var blockOperations: [BlockOperation] = []
@@ -370,9 +365,9 @@ extension MotivationFeedViewController {
         } else {
             cell.favoriteBarButton.setImage(Ionicons.iosHeartOutline.image(35, color: #colorLiteral(red: 1, green: 1, blue: 1, alpha: 1)), for: .normal)
         }
-        DispatchQueue.main.async {
+        CoreDataStack.shared.persistentContainer.performBackgroundTask { (NSManagedObjectContext) in
             motivationItem.saved = motivationItem.saved ? false : true
-            CoreDataStackManager.sharedInstance.saveContext()
+            CoreDataStack.shared.saveContext()
         }
     }
     
@@ -482,19 +477,21 @@ extension MotivationFeedViewController {
                         return
                 }
                 
-                DispatchQueue.main.async {
-                    let _ = VideoItem(itemVideoID: videoID,
-                                      itemTitle: title,
-                                      itemDescription: description,
-                                      itemThumbnailsUrl: "https://i.ytimg.com/vi/\(videoID)/hqdefault.jpg",
+                CoreDataStack.shared.persistentContainer.performBackgroundTask { (NSManagedObjectContext) in
+                    let _ = VideoItem(
+                        itemVideoID: videoID,
+                        itemTitle: title,
+                        itemDescription: description,
+                        itemThumbnailsUrl: "https://i.ytimg.com/vi/\(videoID)/hqdefault.jpg",
                         saved: false,
                         theme: self.currentSegmentioItem!.rawValue,
                         context: self.sharedContext)
-                    
-                    CoreDataStackManager.sharedInstance.saveContext()
-                    self.indicator.stopActivity()
-                    self.indicator.removeFromSuperview()
                 }
+            }
+            CoreDataStack.shared.saveContext()
+            DispatchQueue.main.async {
+                self.indicator.stopActivity()
+                self.indicator.removeFromSuperview()
             }
         }
         
