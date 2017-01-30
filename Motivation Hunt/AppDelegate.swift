@@ -45,9 +45,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         // Override point for customization after application launch.
         var shouldPerformAdditionalDelegateHandling = true
 
-        let _ : CoreDataStackManager = CoreDataStackManager.sharedInstance
-        CoreDataStackManager.sharedInstance.saveContext()
-        CoreDataStackManager.sharedInstance.enableEnsemble()
+        CoreDataStack.shared.saveContext()
+        CoreDataStack.shared.enableEnsemble()
         
         if let shortcutItem = launchOptions?[UIApplicationLaunchOptionsKey.shortcutItem] as? UIApplicationShortcutItem {
             
@@ -93,20 +92,20 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         // If your application supports background execution, this method is called instead of applicationWillTerminate: when the user quits.
 
         let identifier : UIBackgroundTaskIdentifier = UIApplication.shared.beginBackgroundTask(expirationHandler: nil)
-        CoreDataStackManager.sharedInstance.saveContext()
-        CoreDataStackManager.sharedInstance.syncWithCompletion( { () -> Void in
+        CoreDataStack.shared.saveContext()
+        CoreDataStack.shared.syncWithCompletion( { () -> Void in
             UIApplication.shared.endBackgroundTask(identifier)
         })
     }
 
     func applicationWillEnterForeground(_ application: UIApplication) {
         // Called as part of the transition from the background to the inactive state; here you can undo many of the changes made on entering the background.
-        CoreDataStackManager.sharedInstance.syncWithCompletion(nil)
+        CoreDataStack.shared.syncWithCompletion(nil)
     }
 
     func applicationDidBecomeActive(_ application: UIApplication) {
         // Restart any tasks that were paused (or not yet started) while the application was inactive. If the application was previously in the background, optionally refresh the user interface.
-        CoreDataStackManager.sharedInstance.syncWithCompletion(nil)
+        CoreDataStack.shared.syncWithCompletion(nil)
         
         guard let shortcut = launchedShortcutItem else { return }
         
@@ -118,17 +117,17 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     func applicationWillTerminate(_ application: UIApplication) {
         // Called when the application is about to terminate. Save data if appropriate. See also applicationDidEnterBackground:.
         // Saves changes in the application's managed object context before the application terminates.
-        CoreDataStackManager.sharedInstance.saveContext()
+        CoreDataStack.shared.saveContext()
     }
 
     // MARK: Notification Handlers
 
     func localSaveOccured(_ notif: Notification) {
-        CoreDataStackManager.sharedInstance.syncWithCompletion(nil)
+        CoreDataStack.shared.syncWithCompletion(nil)
     }
 
     func cloudDataDidDownload(_ notif: Notification) {
-        CoreDataStackManager.sharedInstance.syncWithCompletion(nil)
+        CoreDataStack.shared.syncWithCompletion(nil)
     }
 
     // MARK: Notification Handlers
@@ -138,7 +137,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         UIApplication.shared.isNetworkActivityIndicatorVisible = true
         let backgroundIdentifier = UIApplication.shared.beginBackgroundTask(expirationHandler: nil)
 
-        CoreDataStackManager.sharedInstance.syncWithCompletion({
+        CoreDataStack.shared.syncWithCompletion({
             UIApplication.shared.endBackgroundTask(backgroundIdentifier)
             completionHandler(UIBackgroundFetchResult.newData)
             UIApplication.shared.isNetworkActivityIndicatorVisible = false
