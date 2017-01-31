@@ -1,6 +1,6 @@
 github "Alamofire/Alamofire" "c71f503898cb24d56857e4e6f0ec7899a9b6fc7b"
 github "dzenbot/DZNEmptyDataSet" "v1.8.1"
-github "dennisweissmann/DeviceKit" "1.0.0"
+github "dennisweissmann/DeviceKit" "1.0.1"
 github "jeffersonbe/IoniconsSwift" "d6885ed94fde821d3777c1c6fc1b700bf73fea65"
 github "delba/Log" "v1.0"
 github "mamaral/Onboard" "v2.3.1"
