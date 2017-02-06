@@ -22,10 +22,6 @@
 	<string>0.2.1</string>
 	<key>LSRequiresNativeExecution</key>
 	<true/>
-	<key>UIBackgroundModes</key>
-	<array>
-		<string>remote-notification</string>
-	</array>
 	<key>UIMainStoryboardFile</key>
 	<string>Main</string>
 	<key>UIRequiredDeviceCapabilities</key>
