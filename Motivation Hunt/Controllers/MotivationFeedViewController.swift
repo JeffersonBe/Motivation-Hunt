@@ -95,7 +95,10 @@ extension MotivationFeedViewController {
     
     override func viewDidAppear(_ animated: Bool) {
         if Defaults[.haveSeenOnBoarding] == nil || false {
-            onboarding()
+            let onboard = Onboarding().presentOnboarding()
+            onboard.modalPresentationStyle = .fullScreen
+            onboard.modalTransitionStyle = .coverVertical
+            present(onboard, animated: true, completion: nil)
         }
     }
     
@@ -184,80 +187,6 @@ extension MotivationFeedViewController {
         collectionView.snp.makeConstraints { (make) in
             make.edges.equalTo(view)
         }
-    }
-    
-    func onboarding() {
-        // Initialize onboarding view controller
-        var onboardingVC = OnboardingViewController()
-        
-        // Create slides
-        let firstPage = OnboardingContentViewController
-            .content(withTitle: "Welcome to Motivation Hunt!",
-                     body: "Swipe to begin",
-                     image: nil,
-                     buttonText: nil,
-                     action: nil)
-        
-        let secondPage = OnboardingContentViewController
-            .content(withTitle: "Watch and be inspire",
-                     body: "Watch and be inspired by new daily motivational videos.",
-                     image: UIImage(named: "onboardingFeedIcon"),
-                     buttonText: nil,
-                     action: nil)
-        
-        let thirdPage = OnboardingContentViewController
-            .content(withTitle: "Save your favorite",
-                     body: "Need a boost? Your favorites videos are easily accessible to you.",
-                     image: UIImage(named: "onboardingFeaturedIcon"),
-                     buttonText: nil,
-                     action: nil)
-        
-        let fourthPage = OnboardingContentViewController
-            .content(withTitle: "Challenge yourself",
-                     body: "Define your challenge and then complete it!",
-                     image: UIImage(named: "onboardingChallengeIcon"),
-                     buttonText: "Add a challenge",
-                     action: {
-                        Defaults[.haveSeenOnBoarding] = true
-                        
-                        self.dismiss(animated: true, completion: {
-                            let window :UIWindow = UIApplication.shared.keyWindow!
-                            
-                            guard let tabBarController = window.rootViewController as? UITabBarController else {
-                                return
-                            }
-                            
-                            tabBarController.selectedIndex = 2
-                            
-                            if let topController = window.visibleViewController() {
-                                Log.info(topController.isKind(of: ChallengeViewController.self))
-                                if topController.isKind(of: ChallengeViewController.self) {
-                                    let challengeViewController = topController as! ChallengeViewController
-                                    challengeViewController.viewDidLoad()
-                                    challengeViewController.editMode = false
-                                    challengeViewController.showOrHideChallengeView()
-                                }
-                            }
-                        })
-            })
-        
-        // Define onboarding view controller properties
-        onboardingVC = OnboardingViewController.onboard(withBackgroundImage: UIImage.fromColor(color: #colorLiteral(red: 0.1019897072, green: 0.1019897072, blue: 0.1019897072, alpha: 1)), contents: [firstPage, secondPage, thirdPage, fourthPage])
-        onboardingVC.pageControl.pageIndicatorTintColor = #colorLiteral(red: 0.501960814, green: 0.501960814, blue: 0.501960814, alpha: 1)
-        onboardingVC.pageControl.currentPageIndicatorTintColor = #colorLiteral(red: 1, green: 1, blue: 1, alpha: 1)
-        onboardingVC.allowSkipping = true
-        onboardingVC.skipButton.setTitleColor(#colorLiteral(red: 1, green: 1, blue: 1, alpha: 1), for: UIControlState())
-        onboardingVC.skipButton.setTitle("Skip", for: UIControlState())
-        onboardingVC.skipButton.accessibilityIdentifier = "skipButton"
-        onboardingVC.skipHandler = {
-            self.dismiss(animated: true, completion: nil)
-            Defaults[.haveSeenOnBoarding] = true
-        }
-        onboardingVC.fadePageControlOnLastPage = true
-        onboardingVC.fadeSkipButtonOnLastPage = true
-        
-        // Present presentation
-        parent!.present(onboardingVC, animated: true, completion: nil)
     }
 }
 
@@ -414,85 +343,41 @@ extension MotivationFeedViewController {
     func addNewMotivationItem() {
         indicator.startActivity()
         view.addSubview(indicator)
-        var mutableParameters: [String : AnyObject]
-        var theme: String = "motivation"
-        
+
+        let downloader = MotivationVideoDownloader()
+
         if let currentTheme = currentSegmentioItem {
-            switch currentTheme as Theme {
-            case .Love:
-                theme = "motivation+human+\(currentSegmentioItem!)"
-            case .Money:
-                theme = "motivation+rich+\(currentSegmentioItem!)"
-            case .Success:
-                theme = "motivation+\(currentSegmentioItem!)"
-            case .All:
-                return
-            }
+            downloader.downloadNewItemVideo(theme: currentTheme, completionHandler: { (success, videoItems) in
+                guard success, videoItems != nil else {
+                    DispatchQueue.main.async {
+                        self.indicator.stopActivity()
+                        self.indicator.removeFromSuperview()
+                        let errorAlert = UIAlertController(title: "Oops… Unable to load feed", message: "We haven't been able to retrieves your content", preferredStyle: UIAlertControllerStyle.alert)
+                        errorAlert.addAction(UIAlertAction(title: "Dismiss", style: UIAlertActionStyle.default, handler: nil))
+                        self.present(errorAlert, animated: true, completion: nil)
+                    }
+                    return
+                }
+            
+                for item in videoItems! {
+                    CoreDataStack.shared.persistentContainer.performBackgroundTask { (NSManagedObjectContext) in
+                        let _ = VideoItem(
+                            itemVideoID: item["itemVideoID"] as! String,
+                            itemTitle: item["itemTitle"] as! String,
+                            itemDescription: item["itemDescription"] as! String,
+                            itemThumbnailsUrl: item["itemThumbnailsUrl"] as! String,
+                            saved: false,
+                            theme: item["theme"] as! String,
+                            context: self.sharedContext)
+                    }
+                    CoreDataStack.shared.saveContext()
+                }
+            })
         }
         
-        let parameters: [String : AnyObject] = [
-            MHClient.JSONKeys.part: MHClient.JSONKeys.snippet as AnyObject,
-            MHClient.JSONKeys.order: MHClient.JSONKeys.relevance as AnyObject,
-            MHClient.JSONKeys.query: theme as AnyObject,
-            MHClient.JSONKeys.type: MHClient.JSONKeys.videoType as AnyObject,
-            MHClient.JSONKeys.videoDefinition: MHClient.JSONKeys.qualityHigh as AnyObject,
-            MHClient.JSONKeys.maxResults: 10 as AnyObject,
-            MHClient.JSONKeys.key: MHClient.Constants.ApiKey as AnyObject
-        ]
-        
-        mutableParameters = parameters
-        
-        let defaults = UserDefaults.standard
-        if let nextPageToken = defaults.string(forKey: "nextPageTokenConstant\(currentSegmentioItem!)") {
-            mutableParameters["pageToken"] = "\(nextPageToken)" as AnyObject?
-        }
-        
-        let request = Alamofire.request(MHClient.Resources.searchVideos, method: .get, parameters: mutableParameters)
-        
-        request.responseJSON { response in
-            guard response.result.isSuccess else {
-                DispatchQueue.main.async {
-                    self.indicator.stopActivity()
-                    self.indicator.removeFromSuperview()
-                    let errorAlert = UIAlertController(title: "Oops… Unable to load feed", message: response.result.description, preferredStyle: UIAlertControllerStyle.alert)
-                    errorAlert.addAction(UIAlertAction(title: "Dismiss", style: UIAlertActionStyle.default, handler: nil))
-                    self.present(errorAlert, animated: true, completion: nil)
-                }
-                return
-            }
-            
-            let results = response.result.value as! [String:AnyObject]
-            let items = results[MHClient.JSONResponseKeys.items] as! [[String:AnyObject]]
-            let nextPageTokenKey = results["nextPageToken"] as! String
-            let defaults = UserDefaults.standard
-            defaults.set(nextPageTokenKey, forKey:"nextPageTokenConstant\(self.currentSegmentioItem!)")
-            
-            for item in items {
-                guard let ID = item[MHClient.JSONResponseKeys.ID] as? [String:AnyObject],
-                    let videoID = ID[MHClient.JSONResponseKeys.videoId] as? String,
-                    let snippet = item[MHClient.JSONResponseKeys.snippet] as? [String:AnyObject],
-                    let title = snippet[MHClient.JSONResponseKeys.title] as? String,
-                    let description = snippet[MHClient.JSONResponseKeys.description] as? String
-                    else {
-                        return
-                }
-                
-                CoreDataStack.shared.persistentContainer.performBackgroundTask { (NSManagedObjectContext) in
-                    let _ = VideoItem(
-                        itemVideoID: videoID,
-                        itemTitle: title,
-                        itemDescription: description,
-                        itemThumbnailsUrl: "https://i.ytimg.com/vi/\(videoID)/hqdefault.jpg",
-                        saved: false,
-                        theme: self.currentSegmentioItem!.rawValue,
-                        context: self.sharedContext)
-                }
-            }
-            CoreDataStack.shared.saveContext()
-            DispatchQueue.main.async {
-                self.indicator.stopActivity()
-                self.indicator.removeFromSuperview()
-            }
+        DispatchQueue.main.async {
+            self.indicator.stopActivity()
+            self.indicator.removeFromSuperview()
         }
         
         if refreshCtrl.isRefreshing {
