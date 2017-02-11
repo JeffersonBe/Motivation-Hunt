@@ -25,6 +25,7 @@ class motivationCollectionViewCell: UICollectionViewCell {
     var barActionView: UIView!
     var favoriteBarButton: UIButton!
     var shareBarButton: UIButton!
+    var deleteBarButton: UIButton!
 
     var barButtonColor: UIColor!
     var barButtonSize: CGFloat!
@@ -117,6 +118,14 @@ class motivationCollectionViewCell: UICollectionViewCell {
         shareBarButton.snp.makeConstraints { (make) in
             make.centerY.equalTo(barActionView)
             make.left.equalTo(favoriteBarButton.snp.right).offset(15)
+        }
+        
+        deleteBarButton = UIButton()
+        deleteBarButton.setImage(Ionicons.iosTrashOutline.image(barButtonSize, color: #colorLiteral(red: 1, green: 1, blue: 1, alpha: 1)), for: .normal)
+        barActionView.addSubview(deleteBarButton)
+        deleteBarButton.snp.makeConstraints { (make) in
+            make.centerY.equalTo(barActionView)
+            make.right.equalTo(barActionView.snp.right)
         }
     }
 

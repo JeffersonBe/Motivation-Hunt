@@ -340,6 +340,38 @@ extension MotivationFeedViewController {
         }, completion: nil)
     }
     
+    func deleteVideo(sender: UIButton) {
+        guard let cell = sender.superview?.superview?.superview as? motivationCollectionViewCell,
+            let indexPath = collectionView.indexPath(for: cell) else {
+                return
+        }
+        showDeleteActionSheet(for: indexPath)
+    }
+    
+    func showDeleteActionSheet(for indexPath: IndexPath) {
+        let optionMenu = UIAlertController(title: "Are you sure to delete this video?",
+                                           message: "This cannot be undone!",
+                                           preferredStyle: .actionSheet)
+        
+        let deleteAction = UIAlertAction(title: "Delete", style: .default, handler: {
+            (alert: UIAlertAction!) -> Void in
+            let motivation = self.fetchedResultsController.object(at: indexPath)
+            
+            motivation.prepareForDeletion()
+            self.fetchedResultsController.managedObjectContext.delete(motivation)
+        })
+        
+        let cancelAction = UIAlertAction(title: "Cancel", style: .cancel, handler: {
+            (alert: UIAlertAction!) -> Void in
+            optionMenu.dismiss(animated: true, completion: nil)
+        })
+        
+        optionMenu.addAction(deleteAction)
+        optionMenu.addAction(cancelAction)
+        
+        present(optionMenu, animated: true, completion: nil)
+    }
+    
     func addNewMotivationItem() {
         indicator.startActivity()
         view.addSubview(indicator)
@@ -441,10 +473,21 @@ extension MotivationFeedViewController: UICollectionViewDelegate, UICollectionVi
             cell.favoriteBarButton.setImage(Ionicons.iosHeartOutline.image(35, color: #colorLiteral(red: 1, green: 1, blue: 1, alpha: 1)), for: .normal)
         }
     
-        cell.playButton.addTarget(self, action: #selector(MotivationFeedViewController.playVideo), for: .touchUpInside)
-        cell.imageViewButton.addTarget(self, action: #selector(MotivationFeedViewController.playVideo),for: .touchUpInside)
-        cell.favoriteBarButton.addTarget(self, action: #selector(MotivationFeedViewController.savedItem), for: .touchUpInside)
-        cell.shareBarButton.addTarget(self, action: #selector(MotivationFeedViewController.shareMotivationItem), for: .touchUpInside)
+        cell.playButton.addTarget(self,
+                                  action: #selector(MotivationFeedViewController.playVideo),
+                                  for: .touchUpInside)
+        cell.imageViewButton.addTarget(self,
+                                       action: #selector(MotivationFeedViewController.playVideo),
+                                       for: .touchUpInside)
+        cell.favoriteBarButton.addTarget(self,
+                                         action: #selector(MotivationFeedViewController.savedItem),
+                                         for: .touchUpInside)
+        cell.shareBarButton.addTarget(self,
+                                      action: #selector(MotivationFeedViewController.shareMotivationItem),
+                                      for: .touchUpInside)
+        cell.deleteBarButton.addTarget(self,
+                                       action: #selector(MotivationFeedViewController.deleteVideo),
+                                       for: .touchUpInside)
         return cell
     }
     
